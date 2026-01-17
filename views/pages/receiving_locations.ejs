@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('../partials/head'); %>
+  </head>
+
+  <body>
+    <div id="page-container" class="sidebar-o sidebar-dark enable-page-overlay side-scroll page-header-fixed page-footer-fixed sidebar-o side-trans-enabled">
+      <nav id="sidebar" aria-label="Main Navigation"><%- include('../partials/navigasi'); %></nav>
+      <!-- END Sidebar -->
+
+      <!-- Header -->
+      <header id="page-header">
+        <!-- Header Content -->
+        <%- include('../partials/header'); %>
+      </header>
+      <!-- END Header -->
+
+      <!-- Main Container -->
+      <main id="main-container">
+        <!-- Page Content -->
+        <div class="content">
+          <h4 id="titlePage" class="content-heading text-uppercase"></h4>
+          <div class="block block-rounded">
+            <div class="block-header">
+              <!-- <h3 class="block-title">add</h3> -->
+              <div class="block-title">
+                <button title="Add" type="submit" onclick="showModalInsertReceivingLocations()" class="btn btn-primary">
+                  <i class="fa-solid fa-plus"></i>
+                </button>
+              </div>
+              <div class="block-options">
+                <button type="button" class="btn-block-option" data-toggle="block-option" data-action="fullscreen_toggle"></button>
+              </div>
+            </div>
+            <div class="block-content block-content-full">
+              <div id="rowTOP" class="row table-responsive">
+                <table class="table table-bordered table-striped table-vcenter js-dataTable-responsive">
+                  <thead>
+                    <tr>
+                      <th class="text-center text-uppercase">#</th>
+                      <th id="nameThead" class="text-center text-uppercase">name</th>
+                      <th id="addressThead" class="text-center text-uppercase">address</th>
+                      <th id="contactPersonThead" class="text-center text-uppercase">contact_person</th>
+                      <th id="contactPhoneThead" class="text-center text-uppercase">contact_phone</th>
+                      <th id="statusThead" class="text-center text-uppercase">status</th>
+                      <th id="actionsThead" class="text-center text-uppercase">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="dataTable"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <!-- END Store Growth -->
+        </div>
+      </main>
+      <footer id="page-footer" class="bg-body-light"><%- include('../partials/footer'); %></footer>
+    </div>
+    <div class="modal" id="modalReceivingLocations" tabindex="-1" role="dialog" data-bs-backdrop="static" aria-labelledby="modalReceivingLocations" aria-hidden="true">
+      <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+          <div class="block block-rounded block-themed block-transparent mb-0">
+            <div class="block-header bg-primary-dark">
+              <h3 id="titleModal" class="block-title text-uppercase">Add Menu</h3>
+              <div class="block-options">
+                <button type="button" class="btn-block-option text-gray" data-toggle="block-option" data-action="fullscreen_toggle"></button>
+              </div>
+            </div>
+            <form id="form1" class="js-validation">
+              <div class="block-content">
+                <div hidden class="col-sm-12 mb-2">
+                  <label id="codeLabel" class="form-label text-uppercase" for="code">Code </label>
+                  <input type="text" class="form-control fw-light text-uppercase" id="code" name="code" />
+                </div>
+              </div>
+              <div class="block-content">
+                <div class="col-sm-12 mb-2">
+                  <label id="nameLocationLabel" class="form-label text-uppercase" for="name_locations">Neme Location </label>
+                  <input type="text" class="form-control fw-light text-uppercase" id="name_locations" name="name_locations" />
+                </div>
+                <div class="col-sm-12 mb-2">
+                  <label id="addressLabel" class="form-label text-uppercase" for="address">address </label>
+                  <input type="text" class="form-control fw-light text-uppercase" id="address" name="address" />
+                </div>
+                <div class="col-sm-12 mb-2">
+                  <label id="contactPersonLabel" class="form-label text-uppercase" for="contact_person">contact_person </label>
+                  <input type="text" class="form-control fw-light text-uppercase" id="contact_person" name="contact_person" />
+                </div>
+                <div class="col-sm-12 mb-2">
+                  <label id="contactPhoneLabel" class="form-label text-uppercase" for="phone">contact_phone </label>
+                  <input type="number" class="form-control fw-light text-uppercase" id="phone" name="phone" />
+                </div>
+                <div class="col-sm-12 mb-2">
+                  <label id="statusLabel" class="form-label text-uppercase" for="status">Status</label>
+                  <select class="js-select2 form-select fw-light text-uppercase" name="status" id="status" style="width: 100%" data-container="#modalReceivingLocations"></select>
+                </div>
+              </div>
+              <div id="load" class="block-content block-content-full text-end bg-body"></div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Core Libraries (jQuery must load first) -->
+    <script src="assets/js/lib/jquery.min.js"></script>
+    <script src="assets/js/dashmix.app.min.js"></script>
+
+    <!-- Application Core -->
+    <script src="js/mainUrl.js"></script>
+    <script src="lib/loadingPage.js"></script>
+    <script src="lib/epps.js"></script>
+
+    <!-- Form Controls & Validation -->
+    <script src="assets/js/plugins/select2/js/select2.full.min.js"></script>
+    <script src="assets/js/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+    <script src="assets/js/plugins/jquery-validation/jquery.validate.min.js"></script>
+    <script src="assets/js/plugins/jquery-validation/additional-methods.js"></script>
+    <script src="assets/js/plugins/jquery.maskedinput/jquery.maskedinput.min.js"></script>
+
+    <!-- Date/Time Pickers -->
+    <script src="assets/js/plugins/flatpickr/flatpickr.min.js"></script>
+
+    <!-- Data Tables & Export -->
+    <script src="assets/js/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="assets/js/plugins/datatables-bs5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="assets/js/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="assets/js/plugins/datatables-responsive-bs5/js/responsive.bootstrap5.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons/dataTables.buttons.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons-bs5/js/buttons.bootstrap5.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons-jszip/jszip.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons-pdfmake/pdfmake.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons-pdfmake/vfs_fonts.js"></script>
+    <script src="assets/js/plugins/datatables-buttons/buttons.print.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons/buttons.html5.min.js"></script>
+
+    <!-- Visualization & Notifications -->
+    <script src="assets/js/plugins/chart.js/chart.umd.js"></script>
+    <script src="assets/js/plugins/bootstrap-notify/bootstrap-notify.min.js"></script>
+
+    <!-- Page Specific Scripts -->
+    <script src="assets/js/pages/be_pages_dashboard.min.js"></script>
+
+    <!-- Receiving Locations Modules -->
+    <script src="js/receiving_locations/selectReceivingLocations.js"></script>
+    <script src="js/receiving_locations/insertReceivingLocations.js"></script>
+    <script src="js/receiving_locations/updateReceivingLocations.js"></script>
+    <script src="js/receiving_locations/deleteReceivingLocations.js"></script>
+
+    <!-- Initialization -->
+    <script>
+      Dashmix.helpersOnLoad(["js-flatpickr", "jq-datepicker", "jq-maxlength", "jq-select2", "jq-rangeslider", "jq-masked-inputs", "jq-pw-strength", "jq-notify"]);
+    </script>
+  </body>
+</html>

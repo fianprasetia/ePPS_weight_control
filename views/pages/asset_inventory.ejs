@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('../partials/head'); %>
+  </head>
+
+  <body>
+    <div id="page-container" class="sidebar-o sidebar-dark enable-page-overlay side-scroll page-header-fixed page-footer-fixed sidebar-o side-trans-enabled">
+      <nav id="sidebar" aria-label="Main Navigation"><%- include('../partials/navigasi'); %></nav>
+      <!-- END Sidebar -->
+
+      <!-- Header -->
+      <header id="page-header">
+        <!-- Header Content -->
+        <%- include('../partials/header'); %>
+      </header>
+      <!-- END Header -->
+
+      <!-- Main Container -->
+      <main id="main-container">
+        <!-- Page Content -->
+        <div class="content">
+          <h4 id="titlePage" class="text-uppercase content-heading"></h4>
+          <div class="block block-rounded">
+            <div class="block-header">
+              <!-- <h3 class="block-title">add</h3> -->
+              <div class="block-title"></div>
+              <div class="block-options">
+                <button type="button" class="btn-block-option" data-toggle="block-option" data-action="fullscreen_toggle"></button>
+              </div>
+            </div>
+            <div class="block-content block-content-full">
+              <div class="row table-responsive">
+                <table class="table table-bordered table-striped table-vcenter js-dataTable-responsive">
+                  <thead>
+                    <tr>
+                      <th class="text-center text-uppercase">#</th>
+                      <th id="codeAssetHeader" class="text-center text-uppercase">code asset</th>
+                      <th id="worksiteHeader" class="text-center text-uppercase">Worksite</th>
+                      <th id="ALocationHeader" class="text-center text-uppercase">Asset Location</th>
+                      <th id="yearHeader" class="text-center text-uppercase">tahun perolehan</th>
+                      <th id="descriptionHeader" class="text-center text-uppercase">Descriptions</th>
+                      <th id="noteHeader" class="text-center text-uppercase">note</th>
+                      <th id="monthHeader" class="text-center text-uppercase">jumlah bulan penyusut</th>
+                      <th id="projectHeader" class="text-center text-uppercase">project</th>
+                      <th id="statusHeader" class="text-center text-uppercase">Status</th>
+                      <th id="actionsHeader" class="text-center text-uppercase">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="dataTable"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <!-- END Store Growth -->
+        </div>
+      </main>
+      <footer id="page-footer" class="bg-body-light"><%- include('../partials/footer'); %></footer>
+    </div>
+    <div class="modal" id="modalAssetInventory" tabindex="-1" role="dialog" style="overflow: hidden" data-bs-backdrop="static" aria-labelledby="modalAssetInventory" aria-hidden="true">
+      <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+          <div class="block block-rounded block-themed block-transparent mb-0">
+            <div class="block-header bg-primary-dark">
+              <h3 id="titleModal" class="block-title text-uppercase">Add Menu</h3>
+              <div class="block-options">
+                <button type="button" class="btn-block-option text-gray" data-toggle="block-option" data-action="fullscreen_toggle"></button>
+              </div>
+            </div>
+            <form id="form1" class="js-validation">
+              <div class="block-content">
+                <div class="row">
+                  <div hidden class="col-sm-6 mb-2">
+                    <label id="nameLabel" class="form-label text-uppercase" for="code">code asset</label>
+                    <input type="text" class="form-control fw-light text-uppercase" id="code" name="code" disabled />
+                  </div>
+                  <div class="col-sm-6 mb-2">
+                    <label id="assetTypeLabel" class="form-label text-uppercase" for="assetType">Asset Type </label>
+                    <select class="js-select2 form-select fw-light text-uppercase" name="assetType" id="assetType" onchange="selectAssetSubType(code,this.value)" style="width: 100%" data-container="#modalAssetInventory"></select>
+                  </div>
+                  <div class="col-sm-6 mb-2">
+                    <label id="assetSubTypeLabel" class="form-label text-uppercase" for="assetSubType">Asset Sub Type </label>
+                    <select class="js-select2 form-select fw-light text-uppercase" name="assetSubType" id="assetSubType" onchange="countDepreciation()" style="width: 100%" data-container="#modalAssetInventory" disabled></select>
+                  </div>
+                  <div class="col-sm-6 mb-2">
+                    <label id="nameLabel" class="form-label text-uppercase" for="name">Item Barang</label>
+                    <input type="text" class="form-control fw-light text-uppercase" id="name" name="name" disabled />
+                  </div>
+                  <div class="col-sm-6 mb-2">
+                    <label id="noteLabel" class="form-label text-uppercase" for="note">note</label>
+                    <input type="text" class="form-control fw-light text-uppercase" id="note" name="note" />
+                  </div>
+                  <div class="col-sm-6 mb-2">
+                    <label id="companyLabel" class="form-label text-uppercase" for="company">company</label>
+                    <input type="text" class="form-control fw-light text-uppercase" id="company" name="company" disabled />
+                  </div>
+                  <div class="col-sm-6 mb-2">
+                    <label id="worksiteLabel" class="form-label text-uppercase" for="worksite">Worksite</label>
+                    <input type="text" class="form-control fw-light text-uppercase" id="worksite" name="worksite" disabled />
+                  </div>
+                  <div class="col-sm-6 mb-2">
+                    <label id="historicalCostLabel" class="form-label text-uppercase" for="historicalCost">harga perolehan</label>
+                    <input type="text" class="form-control fw-light text-uppercase" id="historicalCost" name="historicalCost" disabled />
+                  </div>
+                  <div class="col-sm-6 mb-2">
+                    <label id="valueMonthlyLabel" class="form-label text-uppercase" for="valueMonthly">depreciation value monthly</label>
+                    <input type="text" class="form-control fw-light text-uppercase" id="valueMonthly" name="valueMonthly" disabled />
+                  </div>
+                  <div class="col-sm-6 mb-2">
+                    <label id="acquisitionYearLabel" class="form-label text-uppercase" for="acquisitionYear">Tahun perolehan</label>
+                    <input type="text" class="form-control fw-light text-uppercase" id="acquisitionYear" name="acquisitionYear" disabled />
+                  </div>
+                  <div class="col-sm-6 mb-2">
+                    <label id="depreciationStartMonthLabel" class="form-label text-uppercase" for="depreciationStartMonth">bulan awal penyusutan</label>
+                    <input type="text" class="form-control fw-light text-uppercase" id="depreciationStartMonth" name="depreciationStartMonth" disabled />
+                  </div>
+                  <div class="col-sm-6 mb-2">
+                    <label id="periodMonthsLabel" class="form-label text-uppercase" for="periodMonths">depreciation period months</label>
+                    <input type="text" class="form-control fw-light text-uppercase" id="periodMonths" name="periodMonths" disabled />
+                  </div>
+                  <div class="col-sm-6 mb-2">
+                    <label id="locationLabel" class="form-label text-uppercase" for="location">Asset Location</label>
+                    <select class="js-select2 form-select fw-light text-uppercase" name="location" id="location" style="width: 100%" data-container="#modalAssetInventory"></select>
+                  </div>
+                  <div class="col-sm-6 mb-2">
+                    <label id="paymentRefLabel" class="form-label text-uppercase" for="paymentRef">Payment Reference</label>
+                    <input type="text" class="form-control fw-light text-uppercase" id="paymentRef" name="paymentRef" />
+                  </div>
+                  <div class="col-sm-6 mb-2">
+                    <label id="procurementDocLabel" class="form-label text-uppercase" for="procurementDoc">no Pengadaaan </label>
+                    <input type="text" class="form-control fw-light text-uppercase" id="procurementDoc" name="procurementDoc" disabled />
+                  </div>
+                  <div class="col-sm-6 mb-2">
+                    <label id="leasingLabel" class="form-label text-uppercase" for="leasing">Leasing </label>
+                    <select class="js-select2 form-select fw-light text-uppercase" name="leasing" id="leasing" style="width: 100%" data-container="#modalAssetInventory"></select>
+                  </div>
+                  <div class="col-sm-6 mb-2">
+                    <label id="statusLabel" class="form-label text-uppercase" for="status">Status</label>
+                    <select class="js-select2 form-select fw-light text-uppercase" name="status" id="status" style="width: 100%" data-container="#modalAssetInventory" disabled></select>
+                  </div>
+                </div>
+              </div>
+              <div id="load" class="block-content block-content-full text-end bg-body"></div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal" id="modalNotice" tabindex="-1" role="dialog" aria-labelledby="modalNotice" style="overflow: hidden" data-bs-backdrop="static" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-top" role="document">
+        <div class="modal-content">
+          <div class="block block-rounded block-themed block-transparent mb-0">
+            <div class="block-header bg-primary-dark">
+              <h3 id="titleContent" class="block-title">Modal Title</h3>
+              <div class="block-options"></div>
+            </div>
+            <div id="contentNotice" class="block-content"></div>
+            <div id="loadNotice" class="block-content block-content-full text-end bg-body"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Core JS Libraries -->
+    <!-- Core Libraries -->
+    <script src="assets/js/lib/jquery.min.js"></script>
+    <script src="assets/js/dashmix.app.min.js"></script>
+
+    <!-- Application Scripts -->
+    <script src="js/mainUrl.js"></script>
+    <script src="lib/loadingPage.js"></script>
+    <script src="lib/epps.js"></script>
+
+    <!-- Plugins -->
+    <!-- Data Handling -->
+    <script src="assets/js/plugins/select2/js/select2.full.min.js"></script>
+    <script src="assets/js/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+    <script src="assets/js/plugins/jquery.maskedinput/jquery.maskedinput.min.js"></script>
+    <script src="assets/js/plugins/jquery-validation/jquery.validate.min.js"></script>
+    <script src="assets/js/plugins/jquery-validation/additional-methods.js"></script>
+
+    <!-- Date/Time Pickers -->
+    <script src="assets/js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+    <script src="assets/js/plugins/flatpickr/flatpickr.min.js"></script>
+
+    <!-- DataTables -->
+    <script src="assets/js/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="assets/js/plugins/datatables-bs5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="assets/js/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="assets/js/plugins/datatables-responsive-bs5/js/responsive.bootstrap5.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons/dataTables.buttons.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons-bs5/js/buttons.bootstrap5.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons-jszip/jszip.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons-pdfmake/pdfmake.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons-pdfmake/vfs_fonts.js"></script>
+    <script src="assets/js/plugins/datatables-buttons/buttons.print.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons/buttons.html5.min.js"></script>
+
+    <!-- Charts & Notifications -->
+    <script src="assets/js/plugins/chart.js/chart.umd.js"></script>
+    <script src="assets/js/plugins/bootstrap-notify/bootstrap-notify.min.js"></script>
+
+    <!-- Asset Inventory Modules -->
+    <script src="js/asset_inventory/selectAssetInventory.js"></script>
+    <script src="js/asset_inventory/insertAssetInventory.js"></script>
+    <script src="js/asset_inventory/updateAssetInventory.js"></script>
+    <script src="js/asset_inventory/deleteAssetInventory.js"></script>
+
+    <!-- Dashboard Pages -->
+    <script src="assets/js/pages/be_pages_dashboard.min.js"></script>
+
+    <!-- Initialization -->
+    <script>
+      Dashmix.helpersOnLoad(["js-flatpickr", "jq-datepicker", "jq-maxlength", "jq-select2", "jq-rangeslider", "jq-masked-inputs", "jq-pw-strength", "jq-notify"]);
+    </script>
+  </body>
+</html>

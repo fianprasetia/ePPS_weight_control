@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('../partials/head'); %>
+  </head>
+
+  <body>
+    <div id="page-container" class="sidebar-o sidebar-dark enable-page-overlay side-scroll page-header-fixed page-footer-fixed sidebar-o side-trans-enabled">
+      <nav id="sidebar" aria-label="Main Navigation"><%- include('../partials/navigasi'); %></nav>
+      <!-- END Sidebar -->
+
+      <!-- Header -->
+      <header id="page-header">
+        <!-- Header Content -->
+        <%- include('../partials/header'); %>
+      </header>
+      <!-- END Header -->
+
+      <!-- Main Container -->
+      <main id="main-container">
+        <!-- Page Content -->
+        <div class="content">
+          <h4 id="titlePage" class="content-heading text-uppercase"></h4>
+          <div class="block block-rounded">
+            <div class="block-header">
+              <span><span id="titlePeriod" class="text-uppercase">PERIOD</span>: <span id="startDateList" class="fw-bold"></span></span>
+              <!-- <h3 class="block-title">add</h3> -->
+              <div class="block-title">
+                <!-- <button title="Add" type="submit" onclick="showModalInsertUsers()"
+                                class="btn btn-outline-light">
+                                <i class="fa-solid fa-plus"></i>
+                            </button> -->
+              </div>
+              <div class="block-options">
+                <button type="button" class="btn-block-option" data-toggle="block-option" data-action="fullscreen_toggle"></button>
+              </div>
+            </div>
+            <div class="block-content block-content-full">
+              <div class="row">
+                <!-- <div class="col-sm-3 mb-2"><label id="searchDescriptionLabel" class="form-label text-uppercase"
+                    for="searchDescription">Company</label>
+                    <input type="text" class="form-control fw-light text-uppercase" id="searchDescription"
+                    name="searchDescription" required>
+                </div> -->
+                <div class="col-sm-3 mb-2">
+                  <select class="js-select2 form-select fw-light text-uppercase" name="warehouse" id="warehouse" style="width: 100%"></select>
+                </div>
+                <div class="col-sm-3 mb-2">
+                  <div id="loadsearch">
+                    <span onclick="searchWarehouse()" class="input-group-text fw-semibold btn btn-primary">
+                      <i class="fa-solid fa-magnifying-glass"></i>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="row table-responsive mb-2">
+                <table class="table table-striped table-vcenter">
+                  <thead>
+                    <tr>
+                      <th class="text-center text-uppercase">#</th>
+                      <th id="codeAssetHeader" class="text-center text-uppercase">code Item</th>
+                      <th id="descriptionHeader" class="text-center text-uppercase">Description</th>
+                      <th id="uomHeader" class="text-center text-uppercase">uom</th>
+                      <th id="locationHeader" class="text-center text-uppercase">Location Storage</th>
+                      <th id="beginningHeader" class="text-center text-uppercase">Qty awal</th>
+                      <th id="incomingHeader" class="text-center text-uppercase">qty masuk</th>
+                      <th id="outingHeader" class="text-center text-uppercase">qty keluar</th>
+                      <th id="endingHeader" class="text-center text-uppercase">qty akhir</th>
+                    </tr>
+                  </thead>
+                  <tbody id="dataTable">
+                    <!-- <tr>
+                      <td id="tableWait" colspan="12" class="text-center text-uppercase"></td>
+                    </tr> -->
+                  </tbody>
+                </table>
+              </div>
+              <div id="load"></div>
+            </div>
+          </div>
+          <!-- END Store Growth -->
+        </div>
+      </main>
+      <footer id="page-footer" class="bg-body-light"><%- include('../partials/footer'); %></footer>
+    </div>
+    <div class="modal" id="modalWareHouseReconciliation" tabindex="-1" role="dialog" data-bs-backdrop="static" aria-labelledby="modalWareHouseReconciliation" aria-hidden="true">
+      <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+          <div class="block block-rounded block-themed block-transparent mb-0">
+            <div class="block-header bg-primary-dark">
+              <h3 id="titleModal" class="block-title text-uppercase">Add Menu</h3>
+              <div class="block-options">
+                <button type="button" class="btn-block-option text-gray" data-toggle="block-option" data-action="fullscreen_toggle"></button>
+              </div>
+            </div>
+            <form id="form1" class="js-validation">
+              <div class="block-content">
+                <div id="dataTableWareHouseReconciliation" class="row table-responsive mb-2"></div>
+                <label id="WareHouseReconciliationLabel" class="text-uppercase">Note</label>
+                <div id="NoteWareHouseReconciliation" class="row mb-2"></div>
+              </div>
+              <div id="loadReconciliation" class="block-content block-content-full text-end bg-body"></div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal" id="modalNotice" tabindex="-1" role="dialog" aria-labelledby="modalNotice" data-bs-backdrop="static" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-top" role="document">
+        <div class="modal-content">
+          <div class="block block-rounded block-themed block-transparent mb-0">
+            <div class="block-header bg-primary-dark">
+              <h3 id="titleContent" class="block-title">Modal Title</h3>
+              <div class="block-options"></div>
+            </div>
+            <div id="contentNotice" class="block-content"></div>
+            <div id="loadNotice" class="block-content block-content-full text-end bg-body"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Core Libraries (jQuery must load first) -->
+    <script src="assets/js/lib/jquery.min.js"></script>
+    <script src="assets/js/dashmix.app.min.js"></script>
+
+    <!-- Application Core -->
+    <script src="js/mainUrl.js"></script>
+    <script src="lib/loadingPage.js"></script>
+    <script src="lib/epps.js"></script>
+
+    <!-- Form Controls & Validation -->
+    <script src="assets/js/plugins/select2/js/select2.full.min.js"></script>
+    <script src="assets/js/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+    <script src="assets/js/plugins/jquery-validation/jquery.validate.min.js"></script>
+    <script src="assets/js/plugins/jquery-validation/additional-methods.js"></script>
+    <script src="assets/js/plugins/jquery.maskedinput/jquery.maskedinput.min.js"></script>
+
+    <!-- Date/Time Pickers -->
+    <script src="assets/js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+    <script src="assets/js/plugins/flatpickr/flatpickr.min.js"></script>
+
+    <!-- Data Tables & Export -->
+    <script src="assets/js/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="assets/js/plugins/datatables-bs5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="assets/js/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="assets/js/plugins/datatables-responsive-bs5/js/responsive.bootstrap5.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons/dataTables.buttons.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons-bs5/js/buttons.bootstrap5.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons-jszip/jszip.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons-pdfmake/pdfmake.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons-pdfmake/vfs_fonts.js"></script>
+    <script src="assets/js/plugins/datatables-buttons/buttons.print.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons/buttons.html5.min.js"></script>
+
+    <!-- Visualization & Notifications -->
+    <script src="assets/js/plugins/chart.js/chart.umd.js"></script>
+    <script src="assets/js/plugins/bootstrap-notify/bootstrap-notify.min.js"></script>
+
+    <!-- Page Specific Scripts -->
+    <script src="assets/js/pages/be_pages_dashboard.min.js"></script>
+
+    <!-- Warehouse Close Modules -->
+    <script src="js/warehouse_close/selectWarehouseClose.js"></script>
+    <script src="js/warehouse_close/insertWarehouseClose.js"></script>
+    <script src="js/warehouse_close/updateWarehouseClose.js"></script>
+    <script src="js/warehouse_close/deleteWarehouseClose.js"></script>
+
+    <!-- Initialization -->
+    <script>
+      Dashmix.helpersOnLoad(["js-flatpickr", "jq-datepicker", "jq-maxlength", "jq-select2", "jq-rangeslider", "jq-masked-inputs", "jq-pw-strength", "jq-notify"]);
+    </script>
+  </body>
+</html>

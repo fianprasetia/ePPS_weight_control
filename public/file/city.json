@@ -1,0 +1,394 @@
+[
+    {
+        "id": "1",
+        "city": "Balikpapan"
+    },
+    {
+        "id": "2",
+        "city": "Banda Aceh"
+    },
+    {
+        "id": "3",
+        "city": "Bandar Lampung"
+    },
+    {
+        "id": "4",
+        "city": "Bandung"
+    },
+    {
+        "id": "5",
+        "city": "Banjar"
+    },
+    {
+        "id": "6",
+        "city": "Banjarbaru"
+    },
+    {
+        "id": "7",
+        "city": "Banjarmasin"
+    },
+    {
+        "id": "8",
+        "city": "Batam"
+    },
+    {
+        "id": "9",
+        "city": "Batu"
+    },
+    {
+        "id": "10",
+        "city": "Baubau"
+    },
+    {
+        "id": "11",
+        "city": "Bekasi"
+    },
+    {
+        "id": "12",
+        "city": "Bengkulu"
+    },
+    {
+        "id": "13",
+        "city": "Bima"
+    },
+    {
+        "id": "14",
+        "city": "Binjai"
+    },
+    {
+        "id": "15",
+        "city": "Bitung"
+    },
+    {
+        "id": "16",
+        "city": "Blitar"
+    },
+    {
+        "id": "17",
+        "city": "Bogor"
+    },
+    {
+        "id": "18",
+        "city": "Bontang"
+    },
+    {
+        "id": "19",
+        "city": "Bukittinggi"
+    },
+    {
+        "id": "20",
+        "city": "Cilegon"
+    },
+    {
+        "id": "21",
+        "city": "Cimahi"
+    },
+    {
+        "id": "22",
+        "city": "Cirebon"
+    },
+    {
+        "id": "23",
+        "city": "Denpasar"
+    },
+    {
+        "id": "24",
+        "city": "Depok"
+    },
+    {
+        "id": "25",
+        "city": "Dumai"
+    },
+    {
+        "id": "26",
+        "city": "Gorontalo"
+    },
+    {
+        "id": "27",
+        "city": "Gunungsitoli"
+    },
+    {
+        "id": "28",
+        "city": "Jambi"
+    },
+    {
+        "id": "29",
+        "city": "Jayapura"
+    },
+    {
+        "id": "30",
+        "city": "Kediri"
+    },
+    {
+        "id": "31",
+        "city": "Kendari"
+    },
+    {
+        "id": "32",
+        "city": "Kota Administrasi Jakarta Barat"
+    },
+    {
+        "id": "33",
+        "city": "Kota Administrasi Jakarta Pusat"
+    },
+    {
+        "id": "34",
+        "city": "Kota Administrasi Jakarta Selatan"
+    },
+    {
+        "id": "35",
+        "city": "Kota Administrasi Jakarta Timur"
+    },
+    {
+        "id": "36",
+        "city": "Kota Administrasi Jakarta Utara"
+    },
+    {
+        "id": "37",
+        "city": "Kotamobagu"
+    },
+    {
+        "id": "38",
+        "city": "Kupang"
+    },
+    {
+        "id": "39",
+        "city": "Langsa"
+    },
+    {
+        "id": "40",
+        "city": "Lhokseumawe"
+    },
+    {
+        "id": "41",
+        "city": "Lubuklinggau"
+    },
+    {
+        "id": "42",
+        "city": "Madiun"
+    },
+    {
+        "id": "43",
+        "city": "Magelang"
+    },
+    {
+        "id": "44",
+        "city": "Makassar"
+    },
+    {
+        "id": "45",
+        "city": "Malang"
+    },
+    {
+        "id": "46",
+        "city": "Manado"
+    },
+    {
+        "id": "47",
+        "city": "Mataram"
+    },
+    {
+        "id": "48",
+        "city": "Medan"
+    },
+    {
+        "id": "49",
+        "city": "Metro"
+    },
+    {
+        "id": "50",
+        "city": "Mojokerto"
+    },
+    {
+        "id": "51",
+        "city": "Nusantara"
+    },
+    {
+        "id": "52",
+        "city": "Padang"
+    },
+    {
+        "id": "53",
+        "city": "Padang Panjang"
+    },
+    {
+        "id": "54",
+        "city": "Padangsidimpuan"
+    },
+    {
+        "id": "55",
+        "city": "Pagar Alam"
+    },
+    {
+        "id": "56",
+        "city": "Palangka Raya"
+    },
+    {
+        "id": "57",
+        "city": "Palembang"
+    },
+    {
+        "id": "58",
+        "city": "Palopo"
+    },
+    {
+        "id": "59",
+        "city": "Palu"
+    },
+    {
+        "id": "60",
+        "city": "Pangkalpinang"
+    },
+    {
+        "id": "61",
+        "city": "Parepare"
+    },
+    {
+        "id": "62",
+        "city": "Pariaman"
+    },
+    {
+        "id": "63",
+        "city": "Pasuruan"
+    },
+    {
+        "id": "64",
+        "city": "Payakumbuh"
+    },
+    {
+        "id": "65",
+        "city": "Pekalongan"
+    },
+    {
+        "id": "66",
+        "city": "Pekanbaru"
+    },
+    {
+        "id": "67",
+        "city": "Pematangsiantar"
+    },
+    {
+        "id": "68",
+        "city": "Pontianak"
+    },
+    {
+        "id": "69",
+        "city": "Prabumulih"
+    },
+    {
+        "id": "70",
+        "city": "Probolinggo"
+    },
+    {
+        "id": "71",
+        "city": "Sabang"
+    },
+    {
+        "id": "72",
+        "city": "Salatiga"
+    },
+    {
+        "id": "73",
+        "city": "Samarinda"
+    },
+    {
+        "id": "74",
+        "city": "Sawahlunto"
+    },
+    {
+        "id": "75",
+        "city": "Semarang"
+    },
+    {
+        "id": "76",
+        "city": "Serang"
+    },
+    {
+        "id": "77",
+        "city": "Sibolga"
+    },
+    {
+        "id": "78",
+        "city": "Singkawang"
+    },
+    {
+        "id": "79",
+        "city": "Solok"
+    },
+    {
+        "id": "80",
+        "city": "Sorong"
+    },
+    {
+        "id": "81",
+        "city": "Subulussalam"
+    },
+    {
+        "id": "82",
+        "city": "Sukabumi"
+    },
+    {
+        "id": "83",
+        "city": "Sungai Penuh"
+    },
+    {
+        "id": "84",
+        "city": "Surabaya"
+    },
+    {
+        "id": "85",
+        "city": "Surakarta"
+    },
+    {
+        "id": "86",
+        "city": "Tangerang"
+    },
+    {
+        "id": "87",
+        "city": "Tangerang Selatan"
+    },
+    {
+        "id": "88",
+        "city": "Tanjungbalai"
+    },
+    {
+        "id": "89",
+        "city": "Tanjungpinang"
+    },
+    {
+        "id": "90",
+        "city": "Tarakan"
+    },
+    {
+        "id": "91",
+        "city": "Tasikmalaya"
+    },
+    {
+        "id": "92",
+        "city": "Tebing Tinggi"
+    },
+    {
+        "id": "93",
+        "city": "Tegal"
+    },
+    {
+        "id": "94",
+        "city": "Ternate"
+    },
+    {
+        "id": "95",
+        "city": "Tidore Kepulauan"
+    },
+    {
+        "id": "96",
+        "city": "Tomohon"
+    },
+    {
+        "id": "97",
+        "city": "Tual"
+    },
+    {
+        "id": "98",
+        "city": "Yogyakarta"
+    }
+]

@@ -1,0 +1,314 @@
+{
+  "uom": {
+    "%": {
+      "en": "Percent",
+      "zh": "百分比",
+      "id": "Persen"
+    },
+    "Ampule": {
+      "en": "Ampule",
+      "zh": "安瓿",
+      "id": "Ampul"
+    },
+    "Bag": {
+      "en": "Bag",
+      "zh": "袋",
+      "id": "Tas"
+    },
+    "Baris": {
+      "en": "Row",
+      "zh": "行",
+      "id": "Baris"
+    },
+    "Bibit": {
+      "en": "Seedling",
+      "zh": "苗",
+      "id": "Bibit"
+    },
+    "Biji": {
+      "en": "Seed",
+      "zh": "种子",
+      "id": "Biji"
+    },
+    "Bks": {
+      "en": "Pack",
+      "zh": "包",
+      "id": "Bungkus"
+    },
+    "Botol": {
+      "en": "Bottle",
+      "zh": "瓶",
+      "id": "Botol"
+    },
+    "Box": {
+      "en": "Box",
+      "zh": "盒",
+      "id": "Kotak"
+    },
+    "Brd": {
+      "en": "Board",
+      "zh": "板",
+      "id": "Papan"
+    },
+    "Btg": {
+      "en": "Stick",
+      "zh": "棒",
+      "id": "Batang"
+    },
+    "Btl": {
+      "en": "Bottle",
+      "zh": "瓶",
+      "id": "Botol"
+    },
+    "Btr": {
+      "en": "Piece",
+      "zh": "个",
+      "id": "Butir"
+    },
+    "Buah": {
+      "en": "Piece",
+      "zh": "件",
+      "id": "Buah"
+    },
+    "Buku": {
+      "en": "Book",
+      "zh": "书",
+      "id": "Buku"
+    },
+    "Bungkus": {
+      "en": "Pack",
+      "zh": "包",
+      "id": "Bungkus"
+    },
+    "Butir": {
+      "en": "Piece",
+      "zh": "粒",
+      "id": "Butir"
+    },
+    "Can": {
+      "en": "Can",
+      "zh": "罐",
+      "id": "Kaleng"
+    },
+    "Capsule": {
+      "en": "Capsule",
+      "zh": "胶囊",
+      "id": "Kapsul"
+    },
+    "Carton": {
+      "en": "Carton",
+      "zh": "箱",
+      "id": "Karton"
+    },
+    "CM": {
+      "en": "Centimeter",
+      "zh": "厘米",
+      "id": "Sentimeter"
+    },
+    "Dozen": {
+      "en": "Dozen",
+      "zh": "打",
+      "id": "Lusin"
+    },
+    "Drum": {
+      "en": "Drum",
+      "zh": "桶",
+      "id": "Drum"
+    },
+    "Dus": {
+      "en": "Carton",
+      "zh": "箱",
+      "id": "Dus"
+    },
+    "Each": {
+      "en": "Each",
+      "zh": "每一个",
+      "id": "Setiap"
+    },
+    "Ekor": {
+      "en": "Tail",
+      "zh": "尾",
+      "id": "Ekor"
+    },
+    "Fail": {
+      "en": "File",
+      "zh": "文件",
+      "id": "Berkas"
+    },
+    "Flacon": {
+      "en": "Flacon",
+      "zh": "小瓶",
+      "id": "Botol Kecil"
+    },
+    "Galon": {
+      "en": "Gallon",
+      "zh": "加仑",
+      "id": "Galon"
+    },
+    "Glg": {
+      "en": "Bundle",
+      "zh": "捆",
+      "id": "Gelung"
+    },
+    "Gram": {
+      "en": "Gram",
+      "zh": "克",
+      "id": "Gram"
+    },
+    "HA": {
+      "en": "Hectare",
+      "zh": "公顷",
+      "id": "Hektar"
+    },
+    "HK": {
+      "en": "Workday",
+      "zh": "工日",
+      "id": "Hari Kerja"
+    },
+    "HM": {
+      "en": "Hour Meter",
+      "zh": "小时表",
+      "id": "Jam Meter"
+    },
+    "Jjg": {
+      "en": "Bunch",
+      "zh": "串",
+      "id": "Janjang"
+    },
+    "JRG": {
+      "en": "Jaring",
+      "zh": "网",
+      "id": "Jaring"
+    },
+    "Kaplet": {
+      "en": "Caplet",
+      "zh": "片剂",
+      "id": "Kaplet"
+    },
+    "KG": {
+      "en": "Kilogram",
+      "zh": "千克",
+      "id": "Kilogram"
+    },
+    "Kit": {
+      "en": "Kit",
+      "zh": "工具包",
+      "id": "Kit"
+    },
+    "Klg": {
+      "en": "Pack",
+      "zh": "包",
+      "id": "Kemasan"
+    },
+    "KM": {
+      "en": "Kilometer",
+      "zh": "公里",
+      "id": "Kilometer"
+    },
+    "KM/KG/HM": {
+      "en": "KM/KG/HM",
+      "zh": "公里/千克/小时表",
+      "id": "KM/KG/HM"
+    },
+    "Kotak": {
+      "en": "Box",
+      "zh": "盒",
+      "id": "Kotak"
+    },
+    "Pcs": {
+      "en": "Piece",
+      "zh": "块",
+      "id": "Keping"
+    },
+    "Ktk": {
+      "en": "Packet",
+      "zh": "包",
+      "id": "Kantong"
+    },
+    "Lbr": {
+      "en": "Sheet",
+      "zh": "张",
+      "id": "Lembar"
+    },
+    "LBS": {
+      "en": "Pound",
+      "zh": "磅",
+      "id": "Pound"
+    },
+    "Lot": {
+      "en": "Lot",
+      "zh": "批",
+      "id": "Lot"
+    },
+    "Ltr": {
+      "en": "Liter",
+      "zh": "升",
+      "id": "Liter"
+    },
+    "Lusin": {
+      "en": "Dozen",
+      "zh": "打",
+      "id": "Lusin"
+    },
+    "M2": {
+      "en": "Square Meter",
+      "zh": "平方米",
+      "id": "Meter Persegi"
+    },
+    "M3": {
+      "en": "Cubic Meter",
+      "zh": "立方米",
+      "id": "Meter Kubik"
+    },
+    "ml": {
+      "en": "Milliliter",
+      "zh": "毫升",
+      "id": "Mililiter"
+    },
+    "Mtr": {
+      "en": "Meter",
+      "zh": "米",
+      "id": "Meter"
+    },
+    "Ons": {
+      "en": "Ounce",
+      "zh": "盎司",
+      "id": "Ons"
+    },
+    "Pack": {
+      "en": "Pack",
+      "zh": "包",
+      "id": "Paket"
+    },
+    "Tablet": {
+      "en": "Tablet",
+      "zh": "片",
+      "id": "Tablet"
+    },
+    "Ton": {
+      "en": "Ton",
+      "zh": "吨",
+      "id": "Ton"
+    },
+    "Unit": {
+      "en": "Unit",
+      "zh": "单位",
+      "id": "Unit"
+    },
+    "Zak": {
+      "en": "Sack",
+      "zh": "袋",
+      "id": "Karung"
+    },
+    "Rit": {
+      "en": "Trip",
+      "zh": "运输趟次",
+      "id": "Rit"
+    },
+    "Pkk": {
+      "en": "Tree",
+      "zh": "树",
+      "id": "Pokok"
+    }
+  }
+}

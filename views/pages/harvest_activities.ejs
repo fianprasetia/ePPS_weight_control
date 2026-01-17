@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('../partials/head'); %>
+  </head>
+
+  <body>
+    <div id="page-container" class="sidebar-o sidebar-dark enable-page-overlay side-scroll page-header-fixed page-footer-fixed sidebar-o side-trans-enabled">
+      <nav id="sidebar" aria-label="Main Navigation"><%- include('../partials/navigasi'); %></nav>
+      <!-- END Sidebar -->
+
+      <!-- Header -->
+      <header id="page-header">
+        <!-- Header Content -->
+        <%- include('../partials/header'); %>
+      </header>
+      <!-- END Header -->
+
+      <!-- Main Container -->
+      <main id="main-container">
+        <!-- Hero -->
+
+        <!-- <div class="content">
+          <div class="d-md-flex justify-content-md-between align-items-md-center pt-md-3 pb-md-0 text-center text-md-start content-heading">
+            <div>
+              <h4 id="titlePage" class="text-uppercase"></h4>
+            </div>
+          </div>
+        </div> -->
+        <!-- END Hero -->
+
+        <!-- Page Content -->
+        <div class="content">
+          <h4 id="titlePage" class="content-heading text-uppercase"></h4>
+          <div class="block block-rounded">
+            <div class="block-header">
+              <div id="mainNavigator" class="block-title">
+                <button title="Add" type="submit" onclick="showLayoutCreateData()" class="btn btn-primary">
+                  <i class="fa-solid fa-plus"></i>
+                </button>
+              </div>
+              <div class="block-options">
+                <button type="button" class="btn-block-option" data-toggle="block-option" data-action="fullscreen_toggle"></button>
+              </div>
+            </div>
+            <div class="block-content block-content-full">
+              <div id="createData" hidden>
+                <form id="formHarvestActivityHeader" class="js-validation-form">
+                  <div class="row border border-1 rounded p-2 mb-2">
+                    <div class="col-sm-4 mb-2">
+                      <label class="form-label text-uppercase" id="typeHeaderLabel" for="typeHeader">Type</label>
+                      <select class="js-select2 form-select fw-light text-uppercase" name="typeHeader" id="typeHeader" style="width: 100%" disabled></select>
+                    </div>
+                    <div class="col-sm-4 mb-2">
+                      <label class="form-label text-uppercase" id="createDateHeaderLabel" for="createDateHeader">tanggal</label>
+                      <input type="text" class="js-flatpickr form-control fw-light" onchange="checkDate()" id="createDateHeader" name="createDateHeader" data-date-format="d-m-Y" />
+                    </div>
+                    <div class="col-sm-4 mb-2">
+                      <label class="form-label text-uppercase" id="estateHeaderLabel" for="estateHeader">Estate</label>
+                      <select class="js-select2 form-select fw-light text-uppercase" onchange="selectBlock()" name="estateHeader" id="estateHeader" style="width: 100%" disabled></select>
+                    </div>
+                    <div class="col-sm-4 mb-2">
+                      <label class="form-label text-uppercase" id="mandorHeaderLabel" for="mandorHeader">Mandor</label>
+                      <select class="js-select2 form-select fw-light text-uppercase" name="mandorHeader" id="mandorHeader" style="width: 100%" disabled></select>
+                    </div>
+                    <div class="col-sm-4 mb-2">
+                      <label class="form-label text-uppercase" id="mandor1HeaderLabel" for="mandor1Header">Mandor 1</label>
+                      <select class="js-select2 form-select fw-light text-uppercase" name="mandor1Header" id="mandor1Header" style="width: 100%" disabled></select>
+                    </div>
+                    <div class="col-sm-4 mb-2">
+                      <label class="form-label text-uppercase" id="divisionClerkHeaderLabel" for="divisionClerkHeader">Mandor 1</label>
+                      <select class="js-select2 form-select fw-light text-uppercase" name="divisionClerkHeader" id="divisionClerkHeader" style="width: 100%" disabled></select>
+                    </div>
+                    <div class="col-sm-4 mb-2">
+                      <label class="form-label text-uppercase" id="transportClerkHeaderLabel" for="transportClerkHeader">Mandor 1</label>
+                      <select class="js-select2 form-select fw-light text-uppercase" name="transportClerkHeader" id="transportClerkHeader" style="width: 100%" disabled></select>
+                    </div>
+                  </div>
+                </form>
+                <form id="formHarvestActivityDetail" class="js-validation-form">
+                  <div id="penalty" class="row border border-1 rounded p-2 mb-2">
+                    <!-- <div class="col-sm-3 mb-2">
+                      <div class="mb-2">
+                        <label class="form-label text-uppercase" id="blockHeaderLabel" for="blockHeader">Block</label>
+                        <select class="js-select2 form-select fw-light text-uppercase" name="blockHeader" id="blockHeader" style="width: 100%"></select>
+                      </div>
+                      <div class="mb-2">
+                        <label class="form-label text-uppercase" id="employeeHeaderLabel" for="employeeHeader">Estate</label>
+                        <select class="js-select2 form-select fw-light text-uppercase" name="employeeHeader" id="employeeHeader" style="width: 100%"></select>
+                      </div>
+                      <div class="mb-2">
+                        <label class="form-label text-uppercase" id="workResultsHeaderLabel" for="workResultsHeader">work_results</label>
+                        <input type="text" class="form-control text-uppercase text-end" id="workResultsHeader" name="workResultsHeader" value="0" onkeyup="validateNumber(this);" onfocus="removeZero(this)"/>
+                      </div>
+                      <div class="mb-2">
+                        <label class="form-label text-uppercase" id="harvestAreaHeaderLabel" for="harvestAreaHeader">harvest_area</label>
+                        <input type="text" class="form-control text-uppercase text-end" id="harvestAreaHeader" name="harvestAreaHeader" value="0" onkeyup="validateDouble(this);" onfocus="removeZero(this)"/>
+                      </div>
+                      <div class="mb-2">
+                        <label class="form-label text-uppercase" id="brondolanHeaderLabel" for="brondolanHeader">harvest_area</label>
+                        <input type="text" class="form-control text-uppercase text-end" id="brondolanHeader" name="brondolanHeader" value="0" onkeyup="validateDouble(this);" onfocus="removeZero(this)"/>
+                      </div>
+                    </div> -->
+                  </div>
+                  <div class="row border border-1 rounded p-2 mb-2">
+                    <div id="loadData" class="col-sm-2">
+                      <!-- <button title="Add" type="submit" onclick="addHarvestData()" class="btn btn-primary">
+                        <i class="fa-solid fa-plus"></i>
+                      </button> -->
+                    </div>
+                  </div>
+                </form>
+                <!-- <div class="row">
+                  <div class="col-sm-3 offset-sm-9">
+                    <input type="text" class="text-end form-control text-uppercase" onfocus="removeZero(this)" onkeyup="syncNominal(this)" value="0" placeholder="ex:100.000" id="nominal" name="nominal" />
+                  </div>
+                </div> -->
+                <div class="row table-responsive mb-2">
+                  <table id="haverstActivityDataThead" class="table table-bordered table-striped table-vcenter">
+                    <thead>
+                      <tr>
+                        <th rowspan="2" class="text-center text-uppercase">#</th>
+                        <th rowspan="2" id="EmployeeThead" class="text-center text-uppercase">employee</th>
+                        <th rowspan="2" id="blockThead" class="text-center text-uppercase">Block</th>
+                        <th rowspan="2" id="plantingYearsThead" class="text-center text-uppercase">tahun taham</th>
+                        <th rowspan="2" id="basicFFBThead" class="text-center text-uppercase">basis JJG</th>
+                        <th rowspan="2" id="averageBunchThead" class="text-center text-uppercase">BJR</th>
+                        <th colspan="4" id="WorkResultThead" class="text-center text-uppercase">Hasil Kerja</th>
+                        <th rowspan="2" id="wageThead" class="text-center text-uppercase">Upah</th>
+                        <th colspan="3" id="premiThead" class="text-center text-uppercase">Premi</th>
+                        <th id="penaltyThead" class="text-center text-uppercase">penalty</th>
+                        <th rowspan="2" id="nominalPenaltyThead" class="text-center text-uppercase">Nominal Denda Upah</th>
+                        <th rowspan="2" id="totalIncomeThead" class="text-center text-uppercase">Pendapatan</th>
+                      </tr>
+                      <tr id="TRData">
+                        <!-- <th class="text-center text-uppercase" style="width: 10px">Ha</th>
+                        <th class="text-center text-uppercase" style="width: 10px">JJG</th>
+                        <th class="text-center text-uppercase" style="width: 10px">Brondol KG</th>
+                        <th class="text-center text-uppercase" style="width: 10px">Hasil Kerja (KG)</th>
+                        <th class="text-center text-uppercase" style="width: 10px">Basic</th>
+                        <th class="text-center text-uppercase" style="width: 10px">Lebih Basis</th>
+                        <th class="text-center text-uppercase" style="width: 10px">Brondol KG</th> -->
+                      </tr>
+                    </thead>
+                    <tbody id="haverstActivityDataTbody"></tbody>
+                  </table>
+                </div>
+                <div class="row mb-2">
+                  <div id="load" class="col-sm-2 mb-2"></div>
+                </div>
+              </div>
+              <div id="listData" hidden>
+                <div id="caritanggal" class="row">
+                  <div class="col-sm-6">
+                    <div class="mb-2">
+                      <div class="input-daterange input-group" data-date-format="dd-mm-yyyy" data-week-start="1" data-autoclose="true" data-today-highlight="true">
+                        <input type="text" class="form-control" id="startDate" name="startDate" placeholder="From" data-week-start="1" data-autoclose="true" data-today-highlight="true" />
+                        <span class="input-group-text fw-semibold"> <i class="fa fa-fw fa-arrow-right"></i> </span>
+                        <input type="text" class="form-control" id="endDate" name="endDate" placeholder="To" data-week-start="1" data-autoclose="true" data-today-highlight="true" />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-3 mb-2">
+                    <div id="loadsearch">
+                      <span onclick="selectEstateActivityByDate()" class="input-group-text fw-semibold btn btn-primary"><i class="fa-solid fa-magnifying-glass"></i> </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="row table-responsive">
+                  <table class="table table-bordered table-striped table-vcenter js-dataTable-responsive">
+                    <thead>
+                      <tr>
+                        <th class="text-center text-uppercase">#</th>
+                        <th id="transactionThead" class="text-center text-uppercase">No transaction</th>
+                        <th id="locationThead" class="text-center text-uppercase">location</th>
+                        <th id="dateThead" class="text-center text-uppercase">date</th>
+                        <th id="foremanThead" class="text-center text-uppercase">mandor</th>
+                        <th id="foreman1Thead" class="text-center text-uppercase">mandor1</th>
+                        <th id="divisionClerkThead" class="text-center text-uppercase">kerani divisi</th>
+                        <th id="transportClerkThead" class="text-center text-uppercase">kerani transportasi</th>
+                        <th id="createThead" class="text-center text-uppercase">Created</th>
+                        <th id="updateThead" class="text-center text-uppercase">UPdate</th>
+                        <th id="sourceThead" class="text-center text-uppercase">source</th>
+                        <th id="actionThead" class="text-center text-uppercase">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody id="dataTable"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- END Store Growth -->
+        </div>
+      </main>
+      <footer id="page-footer" class="bg-body-light"><%- include('../partials/footer'); %></footer>
+    </div>
+    <div class="modal" id="modalNotice" tabindex="-1" role="dialog" aria-labelledby="modalNotice" data-bs-backdrop="static" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-top" role="document">
+        <div class="modal-content">
+          <div class="block block-rounded block-themed block-transparent mb-0">
+            <div class="block-header bg-primary-dark">
+              <h3 id="titleContent" class="block-title text-uppercase">Modal Title</h3>
+              <div class="block-options"></div>
+            </div>
+            <div id="contentNotice" class="block-content"></div>
+            <div id="loadNotice" class="block-content block-content-full text-end bg-body"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- CORE LIBRARIES (jQuery MUST be first) -->
+    <script src="assets/js/lib/jquery.min.js"></script>
+
+    <!-- FRAMEWORK CORE (load early for plugin compatibility) -->
+    <script src="assets/js/dashmix.app.min.js"></script>
+
+    <!-- CUSTOM APPLICATION SCRIPTS -->
+    <script src="js/mainUrl.js"></script>
+    <script src="lib/loadingPage.js"></script>
+    <script src="lib/epps.js"></script>
+
+    <!-- FORM VALIDATION & INPUT ENHANCEMENTS -->
+    <script src="assets/js/plugins/jquery-validation/jquery.validate.min.js"></script>
+    <script src="assets/js/plugins/jquery-validation/additional-methods.js"></script>
+    <script src="assets/js/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+    <script src="assets/js/plugins/jquery.maskedinput/jquery.maskedinput.min.js"></script>
+    <script src="assets/js/plugins/select2/js/select2.full.min.js"></script>
+
+    <!-- DATE/TIME PICKERS -->
+    <script src="assets/js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+    <script src="assets/js/plugins/flatpickr/flatpickr.min.js"></script>
+
+    <!-- NOTIFICATION SYSTEM -->
+    <script src="assets/js/plugins/bootstrap-notify/bootstrap-notify.min.js"></script>
+
+    <!-- DATATABLES SUITE (with all dependencies) -->
+    <script src="assets/js/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="assets/js/plugins/datatables-bs5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="assets/js/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="assets/js/plugins/datatables-responsive-bs5/js/responsive.bootstrap5.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons/dataTables.buttons.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons-bs5/js/buttons.bootstrap5.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons-jszip/jszip.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons-pdfmake/pdfmake.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons-pdfmake/vfs_fonts.js"></script>
+    <script src="assets/js/plugins/datatables-buttons/buttons.print.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons/buttons.html5.min.js"></script>
+
+    <!-- DATA VISUALIZATION -->
+    <script src="assets/js/plugins/chart.js/chart.umd.js"></script>
+
+    <!-- PAGE-SPECIFIC SCRIPTS -->
+    <script src="assets/js/pages/be_pages_dashboard.min.js"></script>
+
+    <!-- CORE APPLICATION SCRIPTS -->
+    <script src="js/mainUrl.js"></script>
+
+    <!-- APPLICATION MODULES (CRUD operations) -->
+    <script src="js/harvest_activities/selectHarvestActivities.js"></script>
+    <script src="js/harvest_activities/insertHarvestActivities.js"></script>
+    <script src="js/harvest_activities/updateHarvestActivities.js"></script>
+    <script src="js/harvest_activities/deleteHarvestActivities.js"></script>
+
+    <!-- INITIALIZATION (Single optimized call) -->
+    <script>
+      Dashmix.helpersOnLoad(["js-flatpickr", "jq-datepicker", "jq-maxlength", "jq-select2", "jq-rangeslider", "jq-masked-inputs", "jq-pw-strength", "jq-notify"]);
+      // $("#periodDateHeader").datepicker({
+      //   format: "yyyy",
+      //   startView: "years",
+      //   minViewMode: "years",
+      //   autoclose: true
+      // });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('../partials/login_head'); %>
+  </head>
+
+  <body>
+    <div id="page-container">
+      <main id="main-container">
+        <div class="row g-0 justify-content-center bg-body-dark">
+          <div class="hero-static col-sm-10 col-md-8 col-xl-6 d-flex align-items-center p-2 px-sm-0">
+            <div class="block block-rounded block-transparent block-fx-pop w-100 mb-0 overflow-hidden bg-image" style="background-image: url('assets/media/photos/photo20@2x.jpg'); background-size: 480px 450px;">
+              <div class="row g-0">
+                <div class="col-md-6 order-md-0 bg-primary-dark-op d-flex align-items-center">
+                  <div class="container">
+                    <div class="row my-2">
+                      <div class="text-center">
+                        <!-- Empty div for potential avatar -->
+                      </div>
+                    </div>
+                    <div class="row my-2">
+                      <span id="tagLine" class="text-white fw-semibold text-center text-uppercase"> Solusi Strategis untuk Transformasi Digital Perkebunan...!!! </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6 order-md-1 bg-body-extra-light">
+                  <div class="d-flex bd-highlight">
+                    <div class="ms-auto m-1 bd-highlight">
+                      <div class="dropdown dropleft push">
+                        <button type="button" id="selectLanguage" class="btn dropdown-toggle fw-light my-auto border-0" id="dropdown-dropleft-dark" data-bs-toggle="dropdown" aria-haspopup="true" value="id" aria-expanded="false">
+                          <img class="border border-secondary rounded-circle" style="width: 15px" src="file/flag/earth.png" />
+                          Language / Bahasa
+                        </button>
+                        <div class="dropdown-menu text-end" aria-labelledby="dropdown-dropleft-dark">
+                          <a onclick="language(id)" id="en" class="dropdown-item text-end fw-light"><img class="border border-secondary rounded-circle" style="width: 15px" src="file/flag/usa.png" /> English</a>
+                          <a onclick="language(id)" id="id" class="dropdown-item text-end fw-light"><img class="border border-secondary rounded-circle" style="width: 15px" src="file/flag/indonesia.png" /> Indonesia</a>
+                          <a onclick="language(id)" id="zh" class="dropdown-item text-end fw-light"><img class="border border-secondary rounded-circle" style="width: 15px" src="file/flag/china.png" /> 汉语</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="block-content block-content-full px-lg-5 py-md-5 py-lg-5">
+                    <div class="mb-2 text-center">
+                      <a class="link-fx fw-bold fs-1">
+                        <span class="text-dark">ePPS</span>
+                      </a>
+                      <p id="loginHeader" class="text-uppercase fw-bold fs-sm text-muted">Electronic Palm Plantations System</p>
+                    </div>
+                    <form class="needs-validation" novalidate>
+                      <div class="mb-4">
+                        <input type="username" class="form-control fw-light" id="username" name="username" placeholder="Nama Pengguna" required />
+                      </div>
+                      <div class="input-group mb-4">
+                        <input type="password" class="form-control fw-light" id="password" name="password" placeholder="Kata Sandi" required />
+                        <span class="input-group-text bg-transparent" onclick="viewPassword('password', 'eyeIcon')">
+                          <i class="fa-solid fa-eye-slash" id="eyeIcon"></i>
+                        </span>
+                      </div>
+                      <div id="loadlogin" class="mb-4">
+                        <a onclick="login()" type="submit" class="btn w-100 btn-hero btn-primary shadow"><i class="fa fa-fw fa-sign-in-alt opacity-50 me-1"></i> <span id="loginButton">Log In</span></a>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Modal Section -->
+    <div class="modal" id="modal-block-vcenter" tabindex="-1" role="dialog" data-bs-backdrop="static" aria-labelledby="modal-block-vcenter" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="block block-rounded block-themed block-transparent mb-0">
+            <div class="block-header bg-primary-dark">
+              <h3 id="titleCreatePassword" class="block-title text-uppercase">Create Password</h3>
+              <div class="block-options">
+                <button type="button" class="btn-block-option text-gray" data-toggle="block-option" data-action="fullscreen_toggle"></button>
+              </div>
+            </div>
+            <form class="js-validation">
+              <div class="block-content">
+                <div hidden class="input-group mb-4">
+                  <input type="text" class="form-control shadow has-validation" id="usernamereset" placeholder="username" required />
+                </div>
+                <div class="col-sm-12 mb-2">
+                  <label id="passwordLabel1" class="form-label text-uppercase" for="password1">Password</label>
+                  <div class="input-group">
+                    <input type="password" class="form-control fw-light" id="password1" name="password1" />
+                    <span class="input-group-text bg-transparent" onclick="viewPassword('password1', 'eyeIcon1')">
+                      <i class="fa-solid fa-eye-slash" id="eyeIcon1"></i>
+                    </span>
+                  </div>
+                </div>
+                <div class="col-sm-12 mb-2">
+                  <label id="repasswordLabel2" class="form-label text-uppercase" for="password2">ReType Password</label>
+                  <div class="input-group">
+                    <input type="password" onkeyup="validatePassword()" class="form-control fw-light" id="password2" name="password2" />
+                    <span class="input-group-text bg-transparent" onclick="viewPassword('password2', 'eyeIcon2')">
+                      <i class="fa-solid fa-eye-slash" id="eyeIcon2"></i>
+                    </span>
+                  </div>
+                  <span id="salah" style="color: red; font-size: 12px; margin-left: 10px"></span>
+                </div>
+              </div>
+              <div id="loadResetLogin" class="block-content block-content-full text-end bg-body">
+                <button id="cancelBtn" onclick="closeModal()" class="btn btn-danger">Close</button>
+                <a id="doneBtn" type="submit" onclick="resetPassword()" class="btn btn-primary">Done</a>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="assets/js/lib/jquery.min.js"></script>
+    <script src="assets/js/plugins/bootstrap-notify/bootstrap-notify.min.js"></script>
+    <script src="assets/js/plugins/jquery-validation/jquery.validate.min.js"></script>
+    <script src="assets/js/plugins/jquery-validation/additional-methods.js"></script>
+    <script src="assets/js/dashmix.app.min.js"></script>
+    <script src="js/mainUrl.js"></script>
+    <script src="js/session.js"></script>
+    <script src="js/login.js"></script>
+    <script>
+      Dashmix.helpersOnLoad(["jq-notify"]);
+    </script>
+  </body>
+</html>
