@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('../partials/head'); %>
+  </head>
+
+  <body>
+    <div id="page-container" class="sidebar-o sidebar-dark enable-page-overlay side-scroll page-header-fixed page-footer-fixed sidebar-o side-trans-enabled">
+      <nav id="sidebar" aria-label="Main Navigation"><%- include('../partials/navigasi'); %></nav>
+      <!-- END Sidebar -->
+
+      <!-- Header -->
+      <header id="page-header">
+        <!-- Header Content -->
+        <%- include('../partials/header'); %>
+      </header>
+      <!-- END Header -->
+
+      <!-- Main Container -->
+      <main id="main-container">
+        <!-- Page Content -->
+        <div class="content">
+          <h4 id="employeePage" class="content-heading text-uppercase"></h4>
+          <div class="block block-rounded">
+            <div class="block-header">
+              <!-- <h3 class="block-title">add</h3> -->
+              <div class="block-title">
+                <button title="Add" type="submit" onclick="showModalInsertEmployee()" class="btn btn-primary">
+                  <i class="fa-solid fa-plus"></i>
+                </button>
+              </div>
+              <div class="block-options">
+                <button type="button" class="btn-block-option" data-toggle="block-option" data-action="fullscreen_toggle"></button>
+              </div>
+            </div>
+            <div class="block-content block-content-full">
+              <div id="rowEmployee" class="row table-responsive">
+                <table class="table table-bordered table-striped table-vcenter js-dataTable-responsive">
+                  <thead>
+                    <tr>
+                      <th id="id_employeeTable" class="text-center text-uppercase">employee_id</th>
+                      <th id="fullnameTable" class="text-center text-uppercase">Fullname</th>
+                      <th id="datebirthTable" class="text-center text-uppercase">Date of Birth</th>
+                      <th id="companyTable" class="text-center text-uppercase">Company</th>
+                      <th id="worksiteTable" class="text-center text-uppercase">Worksite</th>
+                      <th id="jobtitleTable" class="text-center text-uppercase">Job Title</th>
+                      <th id="datejoiningTable" class="text-center text-uppercase">Date of Joining</th>
+                      <th id="dateAppoimenTable" class="text-center text-uppercase">Date of Appointment</th>
+                      <th id="dateexitTable" class="text-center text-uppercase">Date of Exit</th>
+                      <th id="employeestatusTable" class="text-center text-uppercase">Employee Status</th>
+                      <th id="genderTable" class="text-center text-uppercase">Gender</th>
+                      <th id="actions" class="text-center text-uppercase">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="dataTable">
+                    <tr>
+                      <td id="tableWait" colspan="12" class="text-center text-uppercase"></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <!-- END Store Growth -->
+        </div>
+      </main>
+      <footer id="page-footer" class="bg-body-light"><%- include('../partials/footer'); %></footer>
+    </div>
+    <div class="modal" id="modalEmployee" tabindex="-1" style="overflow: hidden" role="dialog" data-bs-backdrop="static" aria-labelledby="modalEmployee" aria-hidden="true">
+      <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+          <div class="block block-rounded block-themed block-transparent mb-0">
+            <div class="block-header bg-primary-dark">
+              <h3 id="titleEmployee" class="block-title text-uppercase">Add Menu</h3>
+              <div class="block-options">
+                <button type="button" class="btn-block-option text-gray" data-toggle="block-option" data-action="fullscreen_toggle"></button>
+              </div>
+            </div>
+            <form class="js-validation" id="empoyeeForm" style="max-height: 90vh; overflow-y: auto" enctype="multipart/form-data">
+              <div class="block-content">
+                <div class="rounded border overflow-hidden push">
+                  <div class="bg-image pt-9" style="background-image: url('assets/media/photos/photo19@2x.jpg')"></div>
+                  <div class="px-4 py-3 bg-body-extra-light d-flex flex-column flex-md-row align-items-center">
+                    <a onclick="selectGetImage()" class="d-block img-link mt-n5">
+                      <img id="avatarPreview" class="img-avatar img-avatar128 img-avatar-thumb" alt="" />
+                    </a>
+                    <div class="ms-3 flex-grow-1 text-center text-md-start my-3 my-md-0">
+                      <h1 id="nameBanner" class="fs-4 fw-bold mb-1 text-uppercase"></h1>
+                      <h2 id="jobTitleBanner" class="fs-sm fw-medium text-muted mb-0 text-uppercase"></h2>
+                    </div>
+                  </div>
+                  <input type="file" id="avatarInput" accept="image/*" style="display: none" onchange="previewAvatar()" />
+                  <canvas id="canvas" style="display: none"></canvas>
+                </div>
+                <div class="row">
+                  <!-- Employee Information -->
+                  <div>
+                    <h2 id="employeeInfo" class="content-heading text-uppercase">Employee Information</h2>
+                  </div>
+                  <div class="col-sm-4 mb-2">
+                    <label id="employeeIDLabel" class="form-label text-uppercase" for="selectFullname">Employee ID</label>
+                    <input type="text" disabled class="form-control fw-light" id="employeeID" name="employeeID" />
+                  </div>
+                  <div class="col-sm-4 mb-2">
+                    <label id="IdentityNumberLabel" class="form-label text-uppercase" for="IdentityNumber">Identity Card Number</label>
+                    <input type="number" class="form-control fw-light" id="IdentityNumber" name="IdentityNumber" />
+                  </div>
+                  <div class="col-sm-4 mb-2">
+                    <label id="fullnameLabel" class="form-label text-uppercase" for="fullname">Fullname</label>
+                    <input type="text" class="form-control fw-light text-uppercase" id="fullname" name="fullname" />
+                  </div>
+                  <div class="col-sm-4 mb-2">
+                    <label id="genderLabel" class="form-label text-uppercase" for="gender">Gender </label>
+                    <select class="js-select2 form-select fw-light text-uppercase" name="gender" id="gender" style="width: 100%" data-container="#modalEmployee"></select>
+                  </div>
+                  <div class="col-sm-4 mb-2">
+                    <label id="dateBirthLabel" class="form-label text-uppercase" for="dateBirth">Date of Birth</label>
+                    <input type="text" class="js-flatpickr form-control" value="" id="dateBirth" name="dateBirth" data-date-format="d-m-Y" />
+                  </div>
+                  <div class="col-sm-4 mb-2">
+                    <label id="placeBirthLabel" class="form-label text-uppercase" for="placeBirth">Place of Birth</label>
+                    <input type="text" class="form-control fw-light text-uppercase" id="placeBirth" name="placeBirth" />
+                  </div>
+                  <div class="col-sm-4 mb-2">
+                    <label id="addressLabel" class="form-label text-uppercase" for="address">Address</label>
+                    <input type="text" class="form-control fw-light text-uppercase" id="address" name="address" />
+                  </div>
+                  <div class="col-sm-4 mb-2">
+                    <label id="cityLabel" class="form-label text-uppercase" for="city">city</label>
+                    <select class="js-select2 form-select fw-light text-uppercase" name="city" id="city" style="width: 100%" data-container="#modalEmployee"></select>
+                  </div>
+                  <div class="col-sm-4 mb-2">
+                    <label id="provinceLabel" class="form-label text-uppercase" for="province">province</label>
+                    <select class="js-select2 form-select fw-light text-uppercase" name="province" id="province" style="width: 100%" data-container="#modalEmployee"></select>
+                  </div>
+                  <div class="col-sm-4 mb-2">
+                    <label id="zipCodeLabel" class="form-label text-uppercase" for="zipCode">Zip Code</label>
+                    <input type="text" class="form-control fw-light" id="zipCode" name="zipCode" />
+                  </div>
+                  <div class="col-sm-4 mb-2">
+                    <label id="nationalityLabel" class="form-label text-uppercase" for="nationality">Nationality</label>
+                    <select class="js-select2 form-select fw-light text-uppercase" name="nationality" id="nationality" style="width: 100%" data-container="#modalEmployee"></select>
+                  </div>
+                  <!-- Employment Details -->
+                  <div>
+                    <h2 id="companyInfo" class="content-heading text-uppercase">Employment Details</h2>
+                  </div>
+                  <div class="col-sm-4 mb-2">
+                    <label id="departmentLabel" class="form-label text-uppercase" for="selectLocation">Department</label>
+                    <select class="js-select2 form-select fw-light text-uppercase" name="department" id="department" style="width: 100%" data-container="#modalEmployee"></select>
+                  </div>
+                  <div class="col-sm-4 mb-2">
+                    <label id="jobTitleLabel" class="form-label text-uppercase" for="jobTitle">Job Title</label>
+                    <select class="js-select2 form-select fw-light text-uppercase" name="jobTitle" id="jobTitle" style="width: 100%" data-container="#modalEmployee"></select>
+                  </div>
+                  <div class="col-sm-4 mb-2">
+                    <label id="companyLabel" class="form-label text-uppercase" for="company">Company</label>
+                    <select class="js-select2 form-select fw-light text-uppercase" name="company" id="company" style="width: 100%" data-container="#modalEmployee"></select>
+                  </div>
+                  <div class="col-sm-4 mb-2">
+                    <label id="employeeTypeLabel" class="form-label text-uppercase" for="employeeType">Employee Type</label>
+                    <select class="js-select2 form-select fw-light text-uppercase" name="employeeType" id="employeeType" style="width: 100%" data-container="#modalEmployee"></select>
+                  </div>
+                  <div class="col-sm-4 mb-2">
+                    <label id="employeeStatusLabel" class="form-label text-uppercase" for="employeeStatus">Employee Status</label>
+                    <select class="js-select2 form-select fw-light text-uppercase" name="employeeStatus" id="employeeStatus" style="width: 100%" data-container="#modalEmployee"></select>
+                  </div>
+                  <div class="col-sm-4 mb-2">
+                    <label id="gradeLabel" class="form-label text-uppercase" for="grade">Grade</label>
+                    <select class="js-select2 form-select fw-light text-uppercase" name="grade" id="grade" style="width: 100%" data-container="#modalEmployee"></select>
+                  </div>
+                  <div class="col-sm-4 mb-2">
+                    <label id="dateJoiningLabel" class="form-label text-uppercase" for="dateJoining">Date of Joining</label>
+                    <input type="text" class="js-flatpickr form-control" value="" id="dateJoining" name="dateJoining" data-date-format="d-m-Y" />
+                  </div>
+                  <div class="col-sm-4 mb-2">
+                    <label id="dateAppoimenLabel" class="form-label text-uppercase" for="dateAppoimen">Date of Appointment</label>
+                    <input type="text" class="js-flatpickr form-control" value="" id="dateAppoimen" name="dateAppoimen" data-date-format="d-m-Y" />
+                  </div>
+                  <div class="col-sm-4 mb-2">
+                    <label id="dateExitLabel" class="form-label text-uppercase" for="dateExit">Date of Exit</label>
+                    <input type="text" class="js-flatpickr form-control" value="" id="dateExit" name="dateExit" data-date-format="d-m-Y" />
+                  </div>
+                  <div class="col-sm-4 mb-2">
+                    <label id="worksiteLabel" class="form-label text-uppercase" for="worksiteLocation">worksite</label>
+                    <select class="js-select2 form-select fw-light text-uppercase" name="worksite" id="worksite" style="width: 100%" data-container="#modalEmployee"></select>
+                  </div>
+                  <div class="col-sm-4 mb-2">
+                    <label id="receptionLocationLabel" class="form-label text-uppercase" for="receptionLocation">reception_location</label>
+                    <select class="js-select2 form-select fw-light text-uppercase" name="receptionLocation" id="receptionLocation" style="width: 100%" data-container="#modalEmployee"></select>
+                  </div>
+                  <div class="col-sm-4 mb-2">
+                    <label id="rationLabel" class="form-label text-uppercase" for="ration">Ration</label>
+                    <select class="js-select2 form-select fw-light text-uppercase" name="ration" id="ration" style="width: 100%" data-container="#modalEmployee"></select>
+                  </div>
+                  <!-- Contact Information -->
+                  <div>
+                    <h2 id="contactInfo" class="content-heading text-uppercase">Contact Information</h2>
+                  </div>
+                  <div class="col-sm-4 mb-2">
+                    <label id="noTeleponLabel" class="form-label text-uppercase" for="noTelepon">no Phone</label>
+                    <input type="number" value="0" onfocus="removeZero(this)" class="form-control fw-light" id="noTelepon" name="noTelepon" />
+                  </div>
+                  <div class="col-sm-4 mb-2">
+                    <label id="noHandphoneLabel" class="form-label text-uppercase" for="noHandphone">No Handphoe</label>
+                    <input type="number" value="0" onfocus="removeZero(this)" class="form-control fw-light" id="noHandphone" name="noHandphone" />
+                  </div>
+                  <div class="col-sm-4 mb-2">
+                    <label id="personalEmailLabel" class="form-label text-uppercase" for="personalEmail">personal_email</label>
+                    <input type="email" class="form-control fw-light" id="personalEmail" name="personalEmail" />
+                  </div>
+                  <div class="col-sm-4 mb-2">
+                    <label id="businessEmailLabel" class="form-label text-uppercase" for="businessEmail">business_email</label>
+                    <input type="email" class="form-control fw-light" id="businessEmail" name="businessEmail" />
+                  </div>
+                  <div class="col-sm-4 mb-2">
+                    <label id="emergencyNumberLabel" class="form-label text-uppercase" for="emergencyNumber">Emergency Contact Number</label>
+                    <input type="number" value="0" onfocus="removeZero(this)" class="form-control fw-light" id="emergencyNumber" name="emergencyNumber" />
+                  </div>
+                  <!-- Financial Information -->
+                  <div>
+                    <h2 id="financialInfo" class="content-heading text-uppercase">Financial Information</h2>
+                  </div>
+                  <div class="col-sm-4 mb-2">
+                    <label id="taxStatusLabel" class="form-label text-uppercase" for="taxStatus">TAX Status</label>
+                    <select class="js-select2 form-select fw-light text-uppercase" name="taxStatus" id="taxStatus" style="width: 100%" data-container="#modalEmployee"></select>
+                  </div>
+                  <div class="col-sm-4 mb-2">
+                    <label id="bankNumberLabel" class="form-label text-uppercase" for="bankNumber">Bank Account Number</label>
+                    <input type="number" value="0" onfocus="removeZero(this)" class="form-control fw-light text-uppercase" id="bankNumber" name="bankNumber" />
+                  </div>
+                  <div class="col-sm-4 mb-2">
+                    <label id="bankLabel" class="form-label text-uppercase" for="bank">Bank</label>
+                    <input type="text" class="form-control fw-light text-uppercase" id="bank" name="bank" />
+                  </div>
+                  <div class="col-sm-4 mb-2">
+                    <label id="salarySystemLabel" class="form-label text-uppercase" for="salarySystem">Salary System</label>
+                    <select class="js-select2 form-select fw-light text-uppercase" name="salarySystem" id="salarySystem" style="width: 100%" data-container="#modalEmployee"></select>
+                  </div>
+                  <!-- Family and Social Information -->
+                  <div>
+                    <h2 id="familyInfo" class="content-heading text-uppercase">Family and Social Information</h2>
+                  </div>
+                  <div class="col-sm-4 mb-2">
+                    <label id="maritalLabel" class="form-label text-uppercase" for="marital">Marital Status</label>
+                    <select class="js-select2 form-select fw-light text-uppercase" name="marital" id="marital" style="width: 100%" data-container="#modalEmployee"></select>
+                  </div>
+                  <div class="col-sm-4 mb-2">
+                    <label id="weddingDateLabel" class="form-label text-uppercase" for="weddingDate">Wedding Date</label>
+                    <input type="text" class="js-flatpickr form-control" value="" id="weddingDate" name="weddingDate" data-date-format="d-m-Y" />
+                  </div>
+                  <div class="col-sm-4 mb-2">
+                    <label id="childrenNumberLabel" class="form-label text-uppercase" for="childrenNumber">Number of Children</label>
+                    <input type="number" value="0" onfocus="removeZero(this)" class="form-control fw-light" id="childrenNumber" name="childrenNumber" />
+                  </div>
+                  <div class="col-sm-4 mb-2">
+                    <label id="dependentsNumberLabel" class="form-label text-uppercase" for="dependentsNumber">Number of Dependents</label>
+                    <input type="number" value="0" class="form-control fw-light" id="dependentsNumber" name="dependentsNumber" />
+                  </div>
+                  <div class="col-sm-4 mb-2">
+                    <label id="familyNumberLabel" class="form-label text-uppercase" for="familyNumber">Family Card Number</label>
+                    <input type="number" value="0" onfocus="removeZero(this)" class="form-control fw-light" id="familyNumber" name="familyNumber" />
+                  </div>
+                  <!-- Government and Insurance Information: -->
+                  <div>
+                    <h2 id="governmentInfo" class="content-heading text-uppercase">Government and Insurance Information</h2>
+                  </div>
+                  <div class="col-sm-4 mb-2">
+                    <label id="taxLabel" class="form-label text-uppercase" for="tax">Tax Identification Number</label>
+                    <input type="number" value="0" onfocus="removeZero(this)" class="form-control fw-light" id="tax" name="tax" />
+                  </div>
+                  <div class="col-sm-4 mb-2">
+                    <label id="noPassportLabel" class="form-label text-uppercase" for="noPassport">Passport Number</label>
+                    <input type="number" value="0" onfocus="removeZero(this)" class="form-control fw-light" id="noPassport" name="noPassport" />
+                  </div>
+                  <div class="col-sm-4 mb-2">
+                    <label id="healthInsuranceNumberLabel" class="form-label text-uppercase" for="healthInsuranceNumber">Health Insurance Number</label>
+                    <input type="number" value="0" onfocus="removeZero(this)" class="form-control fw-light" id="healthInsuranceNumber" name="healthInsuranceNumber" />
+                  </div>
+                  <div class="col-sm-4 mb-2">
+                    <label id="employmentInsurancePurposesLabel" class="form-label text-uppercase" for="employmentInsurancePurposes">Employment Insurance Purposes</label>
+                    <input type="number" value="0" onfocus="removeZero(this)" class="form-control fw-light" id="employmentInsurancePurposes" name="employmentInsurancePurposes" />
+                  </div>
+                  <div class="col-sm-4 mb-2">
+                    <label id="driversLicenseNumberLabel" class="form-label text-uppercase" for="driversLicenseNumber">drivers_license_number </label>
+                    <input type="number" value="0" onfocus="removeZero(this)" class="form-control fw-light" id="driversLicenseNumber" name="driversLicenseNumber" />
+                  </div>
+                  <!-- Other Details -->
+                  <div>
+                    <h2 id="otherInfo" class="content-heading text-uppercase">Other Information</h2>
+                  </div>
+                  <div class="col-sm-4 mb-2">
+                    <label id="religionLabel" class="form-label text-uppercase" for="religion">Religion</label>
+                    <select class="js-select2 form-select fw-light text-uppercase" name="religion" id="religion" style="width: 100%" data-container="#modalEmployee"></select>
+                  </div>
+                  <div class="col-sm-4 mb-2">
+                    <label id="bloodTypeLabel" class="form-label text-uppercase" for="bloodType">Blood Type</label>
+                    <select class="js-select2 form-select fw-light text-uppercase" name="bloodType" id="bloodType" style="width: 100%" data-container="#modalEmployee"></select>
+                  </div>
+                  <div class="col-sm-4 mb-2">
+                    <label id="educationLabel" class="form-label text-uppercase" for="education">Education</label>
+                    <select class="js-select2 form-select fw-light text-uppercase" name="education" id="education" style="width: 100%" data-container="#modalEmployee"></select>
+                  </div>
+                </div>
+              </div>
+              <div id="load" class="block-content block-content-full text-end bg-body"></div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal" id="modalCamera" tabindex="-1" style="overflow: hidden" role="dialog" data-bs-backdrop="static" aria-labelledby="modalCamera" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content"></div>
+      </div>
+    </div>
+    <!-- <div class="modal fade" id="loadingModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-transparent border-0 shadow-none text-center">
+          <div class="modal-body">
+            <div class="spinner-border text-primary" role="status" style="width: 4rem; height: 4rem">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-3 text-white">Loading, please wait...</p>
+          </div>
+        </div>
+      </div>
+    </div> -->
+    <!-- 1. CORE LIBRARIES -->
+    <script src="assets/js/lib/jquery.min.js"></script>
+    <!-- jQuery MUST come first -->
+    <script src="assets/js/dashmix.app.min.js"></script>
+    <!-- Framework core -->
+
+    <!-- 2. UTILITY/HELPER SCRIPTS -->
+    <script src="js/mainUrl.js"></script>
+    <script src="lib/loadingPage.js"></script>
+    <script src="lib/epps.js"></script>
+
+    <!-- 3. FORM PLUGINS & VALIDATION -->
+    <script src="assets/js/plugins/jquery-validation/jquery.validate.min.js"></script>
+    <script src="assets/js/plugins/jquery-validation/additional-methods.js"></script>
+    <script src="assets/js/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+    <script src="assets/js/plugins/jquery.maskedinput/jquery.maskedinput.min.js"></script>
+    <script src="assets/js/plugins/select2/js/select2.full.min.js"></script>
+
+    <!-- 4. DATETIME PICKERS -->
+    <script src="assets/js/plugins/flatpickr/flatpickr.min.js"></script>
+    <script src="assets/js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+
+    <!-- 5. DATATABLES SUITE -->
+    <script src="assets/js/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="assets/js/plugins/datatables-bs5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="assets/js/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="assets/js/plugins/datatables-responsive-bs5/js/responsive.bootstrap5.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons/dataTables.buttons.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons-bs5/js/buttons.bootstrap5.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons-jszip/jszip.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons-pdfmake/pdfmake.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons-pdfmake/vfs_fonts.js"></script>
+    <script src="assets/js/plugins/datatables-buttons/buttons.print.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons/buttons.html5.min.js"></script>
+
+    <!-- 6. VISUALIZATION & NOTIFICATION -->
+    <script src="assets/js/plugins/chart.js/chart.umd.js"></script>
+    <script src="assets/js/plugins/bootstrap-notify/bootstrap-notify.min.js"></script>
+
+    <!-- 7. APPLICATION MODULES -->
+    <script src="js/employee_data/selectEmployeeData.js"></script>
+    <script src="js/employee_data/insertEmployeeData.js"></script>
+    <script src="js/employee_data/updateEmployeeData.js"></script>
+    <script src="js/employee_data/deleteEmployeeData.js"></script>
+
+    <!-- 8. PAGE SPECIFIC -->
+    <script src="assets/js/pages/be_pages_dashboard.min.js"></script>
+
+    <!-- 9. INITIALIZATION -->
+    <script>
+      Dashmix.helpersOnLoad(["js-flatpickr", "jq-datepicker", "jq-maxlength", "jq-select2", "jq-rangeslider", "jq-masked-inputs", "jq-pw-strength", "jq-notify"]);
+    </script>
+    <script>
+      // $(function () {
+      //     // Hide all child elements initially
+      //     $(".tree li.parent_li").hide("fast");
+      //     // Set event listener to toggle branches
+      //     $(".tree li:has(ul)")
+      //         .addClass("parent_li")
+      //         .find(" > span")
+      //         .attr("title", "Expand this branch");
+      //     $(".tree li.parent_li > span").on("click", function (e) {
+      //         var children = $(this).parent("li.parent_li").find(" > ul > li");
+      //         if (children.is(":visible")) {
+      //             children.hide("fast");
+      //             $(this)
+      //                 .attr("title", "Expand this branch")
+      //                 .find(" > i")
+      //                 .addClass("fa-plus-square")
+      //                 .removeClass("fa-minus-square");
+      //         } else {
+      //             children.show("fast");
+      //             $(this)
+      //                 .attr("title", "Collapse this branch")
+      //                 .find(" > i")
+      //                 .addClass("fa-minus-square")
+      //                 .removeClass("fa-plus-square");
+      //         }
+      //         e.stopPropagation();
+      //     });
+      //     setTimeout(function () {
+      //         document.getElementById("treeMenu").hidden = false
+      //     }, 1000);
+      // });
+    </script>
+  </body>
+</html>

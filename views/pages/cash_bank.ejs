@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('../partials/head'); %>
+  </head>
+
+  <body>
+    <div id="page-container" class="sidebar-o sidebar-dark enable-page-overlay side-scroll page-header-fixed page-footer-fixed sidebar-o side-trans-enabled">
+      <nav id="sidebar" aria-label="Main Navigation"><%- include('../partials/navigasi'); %></nav>
+      <!-- END Sidebar -->
+
+      <!-- Header -->
+      <header id="page-header">
+        <!-- Header Content -->
+        <%- include('../partials/header'); %>
+      </header>
+      <!-- END Header -->
+
+      <!-- Main Container -->
+      <main id="main-container">
+        <!-- Page Content -->
+        <div class="content">
+          <h4 id="titlePage" class="content-heading text-uppercase">Cash Bank</h4>
+          <div class="block block-rounded">
+            <div class="block-header">
+              <div id="mainNavigator" class="block-title">
+                <button title="Add" type="submit" onclick="showLayoutCreateData()" class="btn btn-primary">
+                  <i class="fa-solid fa-plus"></i>
+                </button>
+              </div>
+              <div class="block-options">
+                <button type="button" class="btn-block-option" data-toggle="block-option" data-action="fullscreen_toggle"></button>
+              </div>
+            </div>
+            <div class="block-content block-content-full">
+              <div id="createData" hidden>
+                <form id="formHeader">
+                  <div class="row border border-1 rounded p-2 mb-2">
+                    <div class="col-sm-6">
+                      <div class="row mb-2">
+                        <label class="col-sm-4 col-form-label text-uppercase" id="companyHeaderLabel" for="companyHeader">Company</label>
+                        <div class="col-sm-8">
+                          <select class="js-select2 form-select fw-light text-uppercase" name="companyHeader" id="companyHeader" style="width: 100%"></select>
+                        </div>
+                      </div>
+                      <div class="row mb-2">
+                        <label class="col-sm-4 col-form-label text-uppercase" id="worksiteHeaderLabel" for="worksiteHeader">Worksite</label>
+                        <div class="col-sm-8">
+                          <select class="js-select2 form-select fw-light text-uppercase" name="worksiteHeader" id="worksiteHeader" style="width: 100%"></select>
+                        </div>
+                      </div>
+                      <div class="row mb-2">
+                        <label class="col-sm-4 col-form-label text-uppercase" id="codecoaHeaderLabel" for="codecoaHeader">Code COa</label>
+                        <div class="col-sm-8">
+                          <select class="js-select2 form-select fw-light text-uppercase" onchange="selectBankAccount()" name="codecoaHeader" id="codecoaHeader" style="width: 100%"></select>
+                        </div>
+                      </div>
+                      <div class="row mb-2">
+                        <label class="col-sm-4 col-form-label text-uppercase" id="sourceOfFundsLabel" for="sourceOfFundsHeader">Source of Funds</label>
+                        <div class="col-sm-8">
+                          <select class="js-select2 form-select fw-light text-uppercase" name="sourceOfFundsHeader" id="sourceOfFundsHeader" style="width: 100%"></select>
+                        </div>
+                      </div>
+                      <div class="row mb-2">
+                        <label class="col-sm-4 col-form-label text-uppercase" id="createDateHeaderLabel" for="createDateHeader">Create Date</label>
+                        <div class="col-sm-8">
+                          <input type="text" class="js-flatpickr form-control fw-light" onchange="checkDate()" id="createDateHeader" name="createDateHeader" data-date-format="d-m-Y" />
+                        </div>
+                      </div>
+                      <div class="row mb-2">
+                        <label class="col-sm-4 col-form-label text-uppercase" id="tipeHeaderLabel" for="typeHeader">tipe transaksi</label>
+                        <div class="col-sm-8">
+                          <select class="js-select2 form-select fw-light text-uppercase" name="typeHeader" id="typeHeader" style="width: 100%"></select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <div class="row mb-2">
+                        <label class="col-sm-4 col-form-label text-uppercase" id="paidToHeaderLabel" for="paidToHeader">Paid To</label>
+                        <div class="col-sm-8">
+                          <input type="text" class="form-control text-uppercase" id="paidToHeader" name="paidToHeader" />
+                        </div>
+                      </div>
+                      <div class="row mb-2">
+                        <label class="col-sm-4 col-form-label text-uppercase" id="currencyHeaderLabel" for="currencyHeader">currency</label>
+                        <div class="col-sm-8">
+                          <select class="js-select2 form-select fw-light text-uppercase" name="currencyHeader" id="currencyHeader" style="width: 100%"></select>
+                        </div>
+                      </div>
+                      <div class="row mb-2">
+                        <label class="col-sm-4 col-form-label text-uppercase" id="currencyRateHeaderLabel" for="currencyRateHeader">exchange rate</label>
+                        <div class="col-sm-8">
+                          <input type="text" class="form-control text-uppercase" value="1" id="currencyRateHeader" name="currencyRateHeader" />
+                        </div>
+                      </div>
+                      <div class="row mb-2">
+                        <label class="col-sm-4 col-form-label text-uppercase" id="paymentHeaderLabel" for="paymentHeader">Payment Method</label>
+                        <div class="col-sm-8">
+                          <select class="js-select2 form-select fw-light text-uppercase" name="paymentHeader" id="paymentHeader" style="width: 100%"></select>
+                        </div>
+                      </div>
+                      <div class="row mb-2">
+                        <label class="col-sm-4 col-form-label text-uppercase" id="invoiceAmountHeaderLabel" for="invoiceAmountHeader">nilai invoice</label>
+                        <div class="col-sm-8">
+                          <input type="text" class="form-control text-uppercase text-end" value="0" onkeyup="typeformatRupiah(this);" onfocus="removeZero(this)" id="invoiceAmountHeader" name="invoiceAmountHeader" />
+                        </div>
+                      </div>
+                      <div class="row mb-2">
+                        <label class="col-sm-4 col-form-label text-uppercase" id="noteHeaderLabel" for="noteHeader">note</label>
+                        <div class="col-sm-8">
+                          <input type="text" class="form-control text-uppercase" id="noteHeader" name="noteHeader" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+                <form id="formDetail">
+                  <div class="row border border-1 rounded p-2 mb-2">
+                    <div class="space-x-1">
+                      <a id="doneBtn" type="submit" onclick="showModalPaymentVoucher(this)" pph="0" class="btn btn-primary text-uppercase">Add Payment Voucher</a>
+                      <a id="doneBtn" type="submit" onclick="showModalPaymentVoucher(this)" pph="2" class="btn btn-primary text-uppercase">Add Down Payment Voucher</a>
+                      <a id="doneBtn" type="submit" onclick="showModalPaymentVoucher(this)" pph="1" class="btn btn-primary text-uppercase">Add PPH Payment Voucher</a>
+                    </div>
+                  </div>
+                  <div class="row border border-1 rounded p-2 mb-2">
+                    <div class="col-sm-6">
+                      <div class="row mb-2">
+                        <label class="col-sm-4 col-form-label text-uppercase" id="noTransactionDetailLabel" for="noTransactionDetail">No Transaction</label>
+                        <div class="col-sm-8">
+                          <input type="text" class="form-control text-uppercase" id="noTransactionDetail" name="noTransactionDetail" />
+                        </div>
+                      </div>
+                      <div class="row mb-2">
+                        <label class="col-sm-4 col-form-label text-uppercase" id="codecoaDetailLabel" for="codecoaDetail">Code COa</label>
+                        <div class="col-sm-8">
+                          <select class="js-select2 form-select fw-light text-uppercase" name="codecoaDetail" id="codecoaDetail" style="width: 100%"></select>
+                        </div>
+                      </div>
+                      <div class="row mb-2">
+                        <label class="col-sm-4 col-form-label text-uppercase" id="partnerDetailLabel" for="partnerDetail">Partner</label>
+                        <div class="col-sm-8">
+                          <select class="js-select2 form-select fw-light text-uppercase" name="partnerDetail" id="partnerDetail" style="width: 100%"></select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <div class="row mb-2">
+                        <label class="col-sm-4 col-form-label text-uppercase" id="employeeDetailLabel" for="employeeDetail">Employee</label>
+                        <div class="col-sm-8">
+                          <select class="js-select2 form-select fw-light text-uppercase" name="employeeDetail" id="employeeDetail" style="width: 100%"></select>
+                        </div>
+                      </div>
+                      <div class="row mb-2">
+                        <label class="col-sm-4 col-form-label text-uppercase" id="noteDetailLabel" for="noteDetail">note</label>
+                        <div class="col-sm-8">
+                          <input type="text" class="form-control text-uppercase" id="noteDetail" name="noteDetail" />
+                        </div>
+                      </div>
+                      <div hidden class="row mb-2">
+                        <label class="col-sm-4 col-form-label text-uppercase" id="pphDetailLabel" for="pphDetail">pph</label>
+                        <div class="col-sm-8">
+                          <input type="text" class="form-control text-uppercase" id="pphDetail" name="pphDetail" />
+                        </div>
+                      </div>
+                      <div class="row mb-2">
+                        <label class="col-sm-4 col-form-label text-uppercase" id="invoiceAmountDetailLabel" for="invoiceAmountDetail">nilai invoice</label>
+                        <div class="col-sm-8">
+                          <input type="text" class="form-control text-uppercase text-end" value="0" onkeyup="typeformatRupiah(this);" onfocus="removeZero(this)" id="invoiceAmountDetail" name="invoiceAmountDetail" />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="table-responsive mb-2">
+                      <table id="dynamicTable"  class="table table-striped table-vcenter" style="width: 110%">
+                        <thead>
+                          <tr>
+                            <th id="actionsOrder" class="text-center text-uppercase" style="width: 50px">
+                              <span onclick="selectItemTransactions()" class="fw-semibold btn btn-primary"><i class="fa-solid fa-plus"></i></span>
+                            </th>
+                            <th id="notransactionThead" class="text-center text-uppercase" style="width: 400px">No Transaction</th>
+                            <th id="codeCoaThead" class="text-center text-uppercase" style="width: 400px">code coa</th>
+                            <th id="partnerThead" class="text-center text-uppercase" style="width: 250px">Partner</th>
+                            <th id="employeeThead" class="text-center text-uppercase" style="width: 400px">Employee</th>
+                            <th id="noteThead" class="text-center text-uppercase" style="width: 400px">Note</th>
+                            <th id="nominalThead" class="text-center text-uppercase" style="width: 400px">nominal</th>
+                          </tr>
+                        </thead>
+                        <tbody id="dataTableItem"></tbody>
+                        <tfoot>
+                          <tr>
+                            <td id="subtotalFoot" class="text-end text-uppercase" colspan="6">SubTotal</td>
+                            <td id="subTotalFootSum" class="text-end text-uppercase"></td>
+                          </tr>
+                        </tfoot>
+                      </table>
+                    </div>
+                    <div id="load" class="mb-2 space-x-1"></div>
+                  </div>
+                </form>
+              </div>
+              <div id="listData" hidden>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="mb-2">
+                      <div class="input-daterange input-group" data-date-format="dd-mm-yyyy" data-week-start="1" data-autoclose="true" data-today-highlight="true">
+                        <input type="text" class="form-control" id="startDate" name="startDate" placeholder="From" data-week-start="1" data-autoclose="true" data-today-highlight="true" />
+                        <span class="input-group-text fw-semibold"> <i class="fa fa-fw fa-arrow-right"></i> </span>
+                        <input type="text" class="form-control" id="endDate" name="endDate" placeholder="To" data-week-start="1" data-autoclose="true" data-today-highlight="true" />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-3 mb-2">
+                    <div id="loadsearch">
+                      <span onclick="selectCashBankByDate()" class="input-group-text fw-semibold btn btn-primary"><i class="fa-solid fa-magnifying-glass"></i> </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="row table-responsive">
+                  <table id="dataTableGRHead" class="table table-bordered table-striped table-vcenter js-dataTable-responsive">
+                    <thead>
+                      <tr>
+                        <th class="text-center text-uppercase">#</th>
+                        <th id="cashBankTable" class="text-center text-uppercase" style="width: 400px">Cash Bank</th>
+                        <th id="worksiteTable" class="text-center text-uppercase" style="width: 400px">Worksite</th>
+                        <th id="dateCreateTable" class="text-center text-uppercase" style="width: 250px">date create</th>
+                        <th id="typeTable" class="text-center text-uppercase" style="width: 400px">type</th>
+                        <th id="nominalTable" class="text-center text-uppercase" style="width: 400px">nominal</th>
+                        <th id="paymentMethodTable" class="text-center text-uppercase" style="width: 400px">Payment Method</th>
+                        <th id="createByTable" class="text-center text-uppercase" style="width: 400px">Create By</th>
+                        <th id="updateByTable" class="text-center text-uppercase" style="width: 400px">update By</th>
+                        <th id="statusTable" class="text-center text-uppercase" style="width: 400px">Status</th>
+                        <th id="actionTable" class="text-center text-uppercase" style="width: 400px">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody id="dataTable"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- END Store Growth -->
+        </div>
+      </main>
+      <footer id="page-footer" class="bg-body-light"><%- include('../partials/footer'); %></footer>
+    </div>
+    <div class="modal" id="modalNotice" tabindex="-1" role="dialog" aria-labelledby="modalNotice" data-bs-backdrop="static" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-top" role="document">
+        <div class="modal-content">
+          <div class="block block-rounded block-themed block-transparent mb-0">
+            <div class="block-header bg-primary-dark">
+              <h3 id="titleContent" class="block-title text-uppercase">Modal Title</h3>
+              <div class="block-options"></div>
+            </div>
+            <div id="contentNotice" class="block-content"></div>
+            <div id="loadNotice" class="block-content block-content-full text-end bg-body"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal" id="modalCashBank" tabindex="-1" role="dialog" data-bs-backdrop="static" aria-labelledby="modalCashBank" aria-hidden="true">
+      <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+          <div class="block block-rounded block-themed block-transparent mb-0">
+            <div class="block-header bg-primary-dark">
+              <h3 id="titleModal" class="block-title text-uppercase">Add Menu</h3>
+              <div class="block-options">
+                <button type="button" class="btn-block-option text-gray" data-toggle="block-option" data-action="fullscreen_toggle"></button>
+              </div>
+            </div>
+            <form id="formPaymentVoucher" class="js-validation formSearch">
+              <div class="block-content">
+                <div id="dataTablePaymentVoucher" class="table-responsive mb-2"></div>
+              </div>
+              <div id="loadModalCashBank" class="block-content block-content-full text-end bg-body"></div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CORE LIBRARIES (jQuery MUST be first) -->
+    <script src="assets/js/lib/jquery.min.js"></script>
+    <script src="assets/js/dashmix.app.min.js"></script>
+
+    <!-- APPLICATION CORE -->
+    <script src="js/mainUrl.js"></script>
+    <script src="lib/loadingPage.js"></script>
+    <script src="lib/epps.js"></script>
+
+    <!-- FORM VALIDATION & INPUT HANDLING -->
+    <script src="assets/js/plugins/jquery-validation/jquery.validate.min.js"></script>
+    <script src="assets/js/plugins/jquery-validation/additional-methods.js"></script>
+    <script src="assets/js/plugins/jquery.maskedinput/jquery.maskedinput.min.js"></script>
+    <script src="assets/js/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+
+    <!-- UI COMPONENTS -->
+    <script src="assets/js/plugins/select2/js/select2.full.min.js"></script>
+    <script src="assets/js/plugins/flatpickr/flatpickr.min.js"></script>
+    <script src="assets/js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+    <script src="assets/js/plugins/bootstrap-notify/bootstrap-notify.min.js"></script>
+
+    <!-- DATATABLES SUITE -->
+    <script src="assets/js/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="assets/js/plugins/datatables-bs5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="assets/js/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="assets/js/plugins/datatables-responsive-bs5/js/responsive.bootstrap5.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons/dataTables.buttons.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons-bs5/js/buttons.bootstrap5.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons-jszip/jszip.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons-pdfmake/pdfmake.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons-pdfmake/vfs_fonts.js"></script>
+    <script src="assets/js/plugins/datatables-buttons/buttons.print.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons/buttons.html5.min.js"></script>
+
+    <!-- DATA VISUALIZATION -->
+    <script src="assets/js/plugins/chart.js/chart.umd.js"></script>
+
+    <!-- PAGE SPECIFIC SCRIPTS -->
+    <script src="assets/js/pages/be_pages_dashboard.min.js"></script>
+
+    <!-- CASH BANK MODULE -->
+    <script src="js/cash_bank/selectCashBank.js"></script>
+    <script src="js/cash_bank/insertCashBank.js"></script>
+    <script src="js/cash_bank/updateCashBank.js"></script>
+    <script src="js/cash_bank/deleteCashBank.js"></script>
+
+    <!-- INITIALIZATION (Single combined call) -->
+    <script>
+      Dashmix.helpersOnLoad(["js-flatpickr", "jq-datepicker", "jq-maxlength", "jq-select2", "jq-rangeslider", "jq-masked-inputs", "jq-pw-strength", "jq-notify"]);
+    </script>
+  </body>
+</html>

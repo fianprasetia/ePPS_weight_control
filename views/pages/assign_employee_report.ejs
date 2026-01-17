@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('../partials/head'); %>
+  </head>
+
+  <body>
+    <div id="page-container" class="sidebar-o sidebar-dark enable-page-overlay side-scroll page-header-fixed page-footer-fixed sidebar-o side-trans-enabled">
+      <nav id="sidebar" aria-label="Main Navigation"><%- include('../partials/navigasi'); %></nav>
+      <!-- END Sidebar -->
+
+      <!-- Header -->
+      <header id="page-header">
+        <!-- Header Content -->
+        <%- include('../partials/header'); %>
+      </header>
+      <!-- END Header -->
+
+      <!-- Main Container -->
+      <main id="main-container">
+        <!-- Hero -->
+
+        <div class="content">
+          <div class="d-md-flex justify-content-md-between align-items-md-center pt-md-3 pb-md-0 text-center text-md-start content-heading">
+            <div>
+              <h4 id="assingEmployeeReportPage" class="text-uppercase"></h4>
+            </div>
+
+            <!-- <div class="mt-4 mt-md-0">
+                        <div class="dropdown d-inline-block">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="#">Product</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">Category</li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div> -->
+          </div>
+        </div>
+        <!-- END Hero -->
+
+        <!-- Page Content -->
+        <div class="content">
+          <div class="block block-rounded">
+            <div class="block-header bg-default">
+              <!-- <h3 class="block-title">add</h3> -->
+              <div class="block-title">
+                <!-- <button title="Add" type="submit" onclick="showModalInsertAssignEmployee()"
+                                class="btn btn-outline-light">
+                                <i class="fa-solid fa-plus"></i>
+                            </button> -->
+              </div>
+              <div class="block-options">
+                <button type="button" class="btn-block-option text-gray" data-toggle="block-option" data-action="fullscreen_toggle"></button>
+              </div>
+            </div>
+            <div class="block-content block-content-full">
+              <form class="js-validation" id="form2">
+                <div id="caritanggal" class="row content-heading">
+                  <div class="col-sm-3 mb-2">
+                    <select onchange="selectEmployee()" class="js-select2 form-select fw-light text-uppercase" name="worksite" id="worksite" style="width: 100%"></select>
+                  </div>
+                  <div class="col-sm-3 mb-2">
+                    <select class="js-select2 form-select fw-light text-uppercase" name="name" id="name" style="width: 100%"></select>
+                  </div>
+                  <div class="col-sm-3">
+                    <div class="mb-2">
+                      <div class="input-daterange input-group" data-date-format="dd-mm-yyyy" data-week-start="1" data-autoclose="true" data-today-highlight="true">
+                        <input type="text" class="form-control" id="startDate" name="startDate" placeholder="From" data-week-start="1" data-autoclose="true" data-today-highlight="true" />
+                        <span class="input-group-text fw-semibold">
+                          <i class="fa fa-fw fa-arrow-right"></i>
+                        </span>
+                        <input type="text" class="form-control" id="endDate" name="endDate" placeholder="To" data-week-start="1" data-autoclose="true" data-today-highlight="true" />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-3 mb-2">
+                    <div id="loadsearch">
+                      <span onclick="selectDataAttendance()" class="input-group-text fw-semibold btn btn-primary">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </form>
+              <div id="rowUsers" class="row table-responsive">
+                <div id="doc" hidden class="mb-2">
+                  <a onclick="pdf()" href="#"><img class="" style="width: 35px" src="file/icon/pdf.png" /></a>
+                </div>
+                <table class="table table-bordered table-striped table-vcenter js-dataTable-responsive">
+                  <thead>
+                    <tr>
+                      <th id="nameTabel" class="text-center text-uppercase">Name</th>
+                      <th id="assignEmployeeTable" class="text-center text-uppercase">Assign Employee</th>
+                      <th id="dateTable" class="text-center text-uppercase">Date</th>
+                      <th id="onDutyTable" class="text-center text-uppercase">On Duty</th>
+                      <th id="offDutyTable" class="text-center text-uppercase">Off Duty</th>
+                      <th id="checkInTable" class="text-center text-uppercase">Check In</th>
+                      <th id="checkOutTable" class="text-center text-uppercase">Check Out</th>
+                      <th id="lateTable" class="text-center text-uppercase">Late</th>
+                      <th id="EarlyTable" class="text-center text-uppercase">Early</th>
+                      <th id="overTable" class="text-center text-uppercase">OT</th>
+                    </tr>
+                  </thead>
+                  <tbody id="dataTable"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <!-- END Store Growth -->
+        </div>
+      </main>
+      <footer id="page-footer" class="bg-body-light"><%- include('../partials/footer'); %></footer>
+    </div>
+
+    <!-- 1. CORE LIBRARIES (jQuery MUST be first) -->
+    <script src="assets/js/lib/jquery.min.js"></script>
+    <script src="assets/js/dashmix.app.min.js"></script>
+
+    <!-- 2. UTILITY/HELPER SCRIPTS -->
+    <script src="js/mainUrl.js"></script>
+    <script src="lib/loadingPage.js"></script>
+    <script src="lib/epps.js"></script>
+
+    <!-- 3. FORM VALIDATION & INPUT HANDLING -->
+    <script src="assets/js/plugins/jquery-validation/jquery.validate.min.js"></script>
+    <script src="assets/js/plugins/jquery-validation/additional-methods.js"></script>
+    <script src="assets/js/plugins/jquery.maskedinput/jquery.maskedinput.min.js"></script>
+    <script src="assets/js/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+
+    <!-- 4. UI COMPONENTS -->
+    <script src="assets/js/plugins/select2/js/select2.full.min.js"></script>
+    <script src="assets/js/plugins/flatpickr/flatpickr.min.js"></script>
+    <script src="assets/js/plugins/bootstrap-notify/bootstrap-notify.min.js"></script>
+    <script src="assets/js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+
+    <!-- 5. DATATABLES SUITE -->
+    <script src="assets/js/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="assets/js/plugins/datatables-bs5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="assets/js/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="assets/js/plugins/datatables-responsive-bs5/js/responsive.bootstrap5.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons/dataTables.buttons.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons-bs5/js/buttons.bootstrap5.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons-jszip/jszip.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons-pdfmake/pdfmake.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons-pdfmake/vfs_fonts.js"></script>
+    <script src="assets/js/plugins/datatables-buttons/buttons.print.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons/buttons.html5.min.js"></script>
+
+    <!-- 6. DATA VISUALIZATION -->
+    <script src="assets/js/plugins/chart.js/chart.umd.js"></script>
+
+    <!-- 7. PAGE SPECIFIC SCRIPTS -->
+    <script src="assets/js/pages/be_pages_dashboard.min.js"></script>
+
+    <!-- 8. ASSIGN EMPLOYEE REPORT MODULE -->
+    <script src="js/assign_employee_report/selectAssignEmployeeReport.js"></script>
+    <script src="js/assign_employee_report/insertAssignEmployeeReport.js"></script>
+    <script src="js/assign_employee_report/updateAssignEmployeeReport.js"></script>
+    <script src="js/assign_employee_report/deleteAssignEmployeeReport.js"></script>
+
+    <!-- 9. INITIALIZATION (Combined into single call) -->
+    <script>
+      Dashmix.helpersOnLoad(["js-flatpickr", "jq-datepicker", "jq-maxlength", "jq-select2", "jq-rangeslider", "jq-masked-inputs", "jq-pw-strength", "jq-notify"]);
+    </script>
+  </body>
+</html>

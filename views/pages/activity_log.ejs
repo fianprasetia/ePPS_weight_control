@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('../partials/head'); %>
+  </head>
+
+  <body>
+    <div id="page-container" class="sidebar-o sidebar-dark enable-page-overlay side-scroll page-header-fixed page-footer-fixed sidebar-o side-trans-enabled">
+      <nav id="sidebar" aria-label="Main Navigation"><%- include('../partials/navigasi'); %></nav>
+      <!-- END Sidebar -->
+
+      <!-- Header -->
+      <header id="page-header">
+        <!-- Header Content -->
+        <%- include('../partials/header'); %>
+      </header>
+      <!-- END Header -->
+
+      <!-- Main Container -->
+      <main id="main-container">
+        <!-- Page Content -->
+        <div class="content">
+          <h4 id="titlePage" class="text-uppercase content-heading"></h4>
+          <div class="block block-rounded">
+            <div class="block-header">
+              <!-- <h3 class="block-title">add</h3> -->
+              <div class="block-title">
+                <!-- <button title="Add" type="submit" onclick="showModalInsertActivity()" class="btn btn-primary">
+                  <i class="fa-solid fa-plus"></i>
+                </button> -->
+              </div>
+              <div class="block-options">
+                <button type="button" class="btn-block-option" data-toggle="block-option" data-action="fullscreen_toggle"></button>
+              </div>
+            </div>
+            <div class="block-content block-content-full responsive">
+              <code id="logContainer" class="html text-dark"></code>
+            </div>
+          </div>
+          <!-- END Store Growth -->
+        </div>
+      </main>
+      <footer id="page-footer" class="bg-body-light"><%- include('../partials/footer'); %></footer>
+    </div>
+    <!-- CORE LIBRARIES (jQuery FIRST) -->
+    <script src="assets/js/lib/jquery.min.js"></script>
+
+    <!-- UI FRAMEWORK CORE -->
+    <script src="assets/js/dashmix.app.min.js"></script>
+
+    <!-- CUSTOM APPLICATION SCRIPTS -->
+    <script src="js/mainUrl.js"></script>
+    <script src="lib/loadingPage.js"></script>
+    <script src="lib/epps.js"></script>
+
+    <!-- JQUERY PLUGINS -->
+    <script src="assets/js/plugins/select2/js/select2.full.min.js"></script>
+    <script src="assets/js/plugins/jquery-validation/jquery.validate.min.js"></script>
+    <script src="assets/js/plugins/jquery-validation/additional-methods.js"></script>
+    <script src="assets/js/plugins/jquery.maskedinput/jquery.maskedinput.min.js"></script>
+    <script src="assets/js/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+
+    <!-- Date/Time Pickers -->
+    <script src="assets/js/plugins/flatpickr/flatpickr.min.js"></script>
+
+    <!-- Notifications -->
+    <script src="assets/js/plugins/bootstrap-notify/bootstrap-notify.min.js"></script>
+
+    <!-- DATATABLES SUITE (with all extensions) -->
+    <script src="assets/js/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="assets/js/plugins/datatables-bs5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="assets/js/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="assets/js/plugins/datatables-responsive-bs5/js/responsive.bootstrap5.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons/dataTables.buttons.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons-bs5/js/buttons.bootstrap5.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons-jszip/jszip.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons-pdfmake/pdfmake.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons-pdfmake/vfs_fonts.js"></script>
+    <script src="assets/js/plugins/datatables-buttons/buttons.print.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons/buttons.html5.min.js"></script>
+
+    <!-- VISUALIZATION & UTILITIES -->
+    <script src="assets/js/plugins/chart.js/chart.umd.js"></script>
+    <script src="assets/js/plugins/highlightjs/highlight.pack.min.js"></script>
+
+    <!-- PAGE-SPECIFIC SCRIPTS -->
+    <script src="assets/js/pages/be_pages_dashboard.min.js"></script>
+
+    <!-- APPLICATION MODULES -->
+    <script src="js/activity_log/selectActivityLog.js"></script>
+    <script src="js/activity_log/insertActivityLog.js"></script>
+    <script src="js/activity_log/updateActivityLog.js"></script>
+    <script src="js/activity_log/deleteActivityLog.js"></script>
+
+    <!-- INITIALIZATION (Single Combined Call) -->
+    <script>
+      Dashmix.helpersOnLoad(["js-flatpickr", "jq-datepicker", "jq-maxlength", "jq-select2", "jq-rangeslider", "jq-masked-inputs", "js-highlightjs", "jq-pw-strength", "jq-notify"]);
+    </script>
+  </body>
+</html>

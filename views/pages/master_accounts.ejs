@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('../partials/head'); %>
+  </head>
+
+  <body>
+    <div id="page-container" class="sidebar-o sidebar-dark enable-page-overlay side-scroll page-header-fixed page-footer-fixed sidebar-o side-trans-enabled">
+      <nav id="sidebar" aria-label="Main Navigation"><%- include('../partials/navigasi'); %></nav>
+      <!-- END Sidebar -->
+
+      <!-- Header -->
+      <header id="page-header">
+        <!-- Header Content -->
+        <%- include('../partials/header'); %>
+      </header>
+      <!-- END Header -->
+
+      <!-- Main Container -->
+      <main id="main-container">
+        <!-- Page Content -->
+        <div class="content">
+          <h4 id="masterAccountsPage" class="content-heading text-uppercase"></h4>
+          <div class="block block-rounded">
+            <div class="block-header">
+              <!-- <h3 class="block-title">add</h3> -->
+              <div class="block-title"></div>
+              <div class="block-options">
+                <button type="button" class="btn-block-option" data-toggle="block-option" data-action="fullscreen_toggle"></button>
+              </div>
+            </div>
+            <div class="block-content block-content-full">
+              <div id="rowMenu" class="row" hidden>
+                <div id="treeMenu" class="tree">
+                  <!-- <ul>
+                                    <li>
+                                        <a><span class="fw-light">CEMPAKA MAS ABADI GROUP</span></a>
+                                        <ul>
+                                            <li>
+                                                <span><i class="fa fa-plus-square"></i></span><a href="#" onclick="tes()"><span class="fw-light text-dark">PT Gading Cempaka Graha</span></a>
+                                                <ul>
+                                                    <li class="parent_li"><span>SMAM</span></li>
+                                                    <li class="parent_li"><span><i class="fa fa-plus-square"></i></span><a onclick="tes()"><span>ldldld</span></a>
+                                                        <ul>
+                                                            <li class="parent_li"><span><i class="fa fa-plus-square"></i></span><a><span onclick="tes()">fasf</span></a>
+                                                                <ul>
+                                                                    <li class="parent_li"><span>tesss</span></li>
+                                                                    <li class="parent_li"><span>Менюшка</span></li>
+                                                                </ul>
+                                                            </li>
+                                                            <li class="parent_li"><span>Менюшка</span></li>
+                                                            <li class="parent_li"><span>Менюшка</span></li>
+                                                        </ul>
+                                                    </li>
+                                                    <li class="parent_li"><span>Менюшка</span></li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <span class="fw-light text-black">Add</span>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul> -->
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- END Store Growth -->
+        </div>
+      </main>
+      <footer id="page-footer" class="bg-body-light"><%- include('../partials/footer'); %></footer>
+    </div>
+    <div class="modal" id="modalMasterAccounts" tabindex="-1" role="dialog" data-bs-backdrop="static" aria-labelledby="modalMasterAccounts" aria-hidden="true">
+      <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+          <div class="block block-rounded block-themed block-transparent mb-0">
+            <div class="block-header bg-primary-dark">
+              <h3 id="masterAccountsTitle" class="block-title text-uppercase">Add Menu</h3>
+              <div class="block-options">
+                <button type="button" class="btn-block-option text-gray" data-toggle="block-option" data-action="fullscreen_toggle"></button>
+              </div>
+            </div>
+            <form class="js-validation" id="form2">
+              <div class="block-content">
+                <div hidden class="col-sm-12 mb-2">
+                  <label class="form-label text-uppercase" for="code">Code</label>
+                  <input type="text" class="form-control fw-light text-uppercase" id="code" name="code" />
+                </div>
+                <div hidden class="col-sm-12 mb-2">
+                  <label class="form-label text-uppercase" for="level">Level</label>
+                  <input type="text" class="form-control fw-light text-uppercase" id="level" name="level" />
+                </div>
+                <div hidden class="col-sm-12 mb-2">
+                  <label id="parentLabel" class="form-label text-uppercase" for="parent">Parent<span class="text-danger">*</span></label>
+                  <input type="text" class="form-control fw-light text-uppercase" id="parent" name="parent" required />
+                </div>
+                <div hidden class="col-sm-12 mb-2">
+                  <label id="typeLabel" class="form-label text-uppercase" for="type">type</label>
+                  <input type="text" class="form-control fw-light" id="type" name="type" />
+                </div>
+                <div id="language"></div>
+                <div class="col-sm-12 mb-2">
+                  <label id="entityLabel" class="form-label text-uppercase" for="entity">entity</label>
+                  <select class="js-select2 form-select fw-light text-uppercase" name="entity" id="entity" style="width: 100%" data-container="#modalMasterAccounts"></select>
+                </div>
+                <div class="col-sm-12 mb-2">
+                  <label id="statusLabel" class="form-label text-uppercase" for="status">Status</label>
+                  <select class="js-select2 form-select fw-light text-uppercase" name="status" id="status" style="width: 100%" data-container="#modalMasterAccounts"></select>
+                </div>
+              </div>
+              <div id="load" class="block-content block-content-full text-end bg-body">
+                <!-- <button id="cancelBtn" onclick="closeModal()" class="btn  btn-danger">Close</button>
+                            <button id="doneBtn" type="submit" onclick="insertuserlogin()"
+                                class="btn  btn-primary">Done</button> -->
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 1. CORE LIBRARIES (jQuery MUST be first) -->
+    <script src="assets/js/lib/jquery.min.js"></script>
+    <script src="assets/js/dashmix.app.min.js"></script>
+
+    <!-- 2. UTILITY/HELPER SCRIPTS -->
+    <script src="js/mainUrl.js"></script>
+    <script src="lib/loadingPage.js"></script>
+    <script src="lib/epps.js"></script>
+
+    <!-- 3. FORM VALIDATION & INPUT HANDLING -->
+    <script src="assets/js/plugins/jquery-validation/jquery.validate.min.js"></script>
+    <script src="assets/js/plugins/jquery-validation/additional-methods.js"></script>
+    <script src="assets/js/plugins/jquery.maskedinput/jquery.maskedinput.min.js"></script>
+    <script src="assets/js/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+
+    <!-- 4. UI COMPONENTS -->
+    <script src="assets/js/plugins/select2/js/select2.full.min.js"></script>
+    <script src="assets/js/plugins/flatpickr/flatpickr.min.js"></script>
+    <script src="assets/js/plugins/bootstrap-notify/bootstrap-notify.min.js"></script>
+
+    <!-- 5. DATATABLES SUITE -->
+    <script src="assets/js/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="assets/js/plugins/datatables-bs5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="assets/js/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="assets/js/plugins/datatables-responsive-bs5/js/responsive.bootstrap5.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons/dataTables.buttons.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons-bs5/js/buttons.bootstrap5.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons-jszip/jszip.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons-pdfmake/pdfmake.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons-pdfmake/vfs_fonts.js"></script>
+    <script src="assets/js/plugins/datatables-buttons/buttons.print.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons/buttons.html5.min.js"></script>
+
+    <!-- 6. DATA VISUALIZATION -->
+    <script src="assets/js/plugins/chart.js/chart.umd.js"></script>
+
+    <!-- 7. PAGE SPECIFIC SCRIPTS -->
+    <script src="assets/js/pages/be_pages_dashboard.min.js"></script>
+
+    <!-- 8. MASTER ACCOUNTS MODULE -->
+    <script src="js/master_accounts/selectMasterAccounts.js"></script>
+    <script src="js/master_accounts/insertMasterAccounts.js"></script>
+    <script src="js/master_accounts/updateMasterAccounts.js"></script>
+    <script src="js/master_accounts/deleteMasterAccounts.js"></script>
+
+    <!-- 9. INITIALIZATION (Single combined call) -->
+    <script>
+      Dashmix.helpersOnLoad(["js-flatpickr", "jq-datepicker", "jq-maxlength", "jq-select2", "jq-rangeslider", "jq-masked-inputs", "jq-pw-strength", "jq-notify"]);
+    </script>
+  </body>
+</html>

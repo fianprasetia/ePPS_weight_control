@@ -1,0 +1,440 @@
+[
+    {
+        "name_bank": "BANK MANDIRI"
+    },
+    {
+        "name_bank": "BNI"
+    },
+    {
+        "name_bank": "MAYBANK"
+    },
+    {
+        "name_bank": "BRI AGRONIAGA"
+    },
+    {
+        "name_bank": "UOB"
+    },
+    {
+        "name_bank": "BJB"
+    },
+    {
+        "name_bank": "BRI"
+    },
+    {
+        "name_bank": "BPD JAMBI"
+    },
+    {
+        "name_bank": "BANGKOK BANK"
+    },
+    {
+        "name_bank": "BANK DANAMON UUS"
+    },
+    {
+        "name_bank": "BANK 9 JAMBI"
+    },
+    {
+        "name_bank": "BI"
+    },
+    {
+        "name_bank": "BCA"
+    },
+    {
+        "name_bank": "BANK PERMATA UUS"
+    },
+    {
+        "name_bank": "BANK MAYBANK UUS"
+    },
+    {
+        "name_bank": "BANK CIMB NIAGA UUS"
+    },
+    {
+        "name_bank": "BRI SYARIAH"
+    },
+    {
+        "name_bank": "BUKOPIN"
+    },
+    {
+        "name_bank": "CIMB NIAGA"
+    },
+    {
+        "name_bank": "CITIBANK"
+    },
+    {
+        "name_bank": "DANAMON"
+    },
+    {
+        "name_bank": "BANK OCBC NISP - UUS"
+    },
+    {
+        "name_bank": "JPMORGAN BANK"
+    },
+    {
+        "name_bank": "HSBC"
+    },
+    {
+        "name_bank": "JABAR"
+    },
+    {
+        "name_bank": "JAMBI"
+    },
+    {
+        "name_bank": "BOA"
+    },
+    {
+        "name_bank": "MEGA"
+    },
+    {
+        "name_bank": "MESTIKA"
+    },
+    {
+        "name_bank": "BTMU"
+    },
+    {
+        "name_bank": "OCBC NISP"
+    },
+    {
+        "name_bank": "PANIN"
+    },
+    {
+        "name_bank": "SUMITOMO"
+    },
+    {
+        "name_bank": "PERMATA"
+    },
+    {
+        "name_bank": "QNB"
+    },
+    {
+        "name_bank": "SINAR MAS"
+    },
+    {
+        "name_bank": "BANK RESONA"
+    },
+    {
+        "name_bank": "BTN"
+    },
+    {
+        "name_bank": "VICTORIA"
+    },
+    {
+        "name_bank": "DBS"
+    },
+    {
+        "name_bank": "BUMI ARTHA"
+    },
+    {
+        "name_bank": "KEB HANA"
+    },
+    {
+        "name_bank": "BANK WINDU KENTJANA"
+    },
+    {
+        "name_bank": "BANK EKONOMI"
+    },
+    {
+        "name_bank": "MAYAPADA"
+    },
+    {
+        "name_bank": "BANK ARTHA GRAHA INTERNASIONAL"
+    },
+    {
+        "name_bank": "SYARIAH MANDIRI"
+    },
+    {
+        "name_bank": "BANK MIZUHO"
+    },
+    {
+        "name_bank": "STANDCHARD"
+    },
+    {
+        "name_bank": "RBS"
+    },
+    {
+        "name_bank": "BANK CAPITAL"
+    },
+    {
+        "name_bank": "BNP PARIBAS"
+    },
+    {
+        "name_bank": "ANZ INDONESIA"
+    },
+    {
+        "name_bank": "DEUTSCHE BANK"
+    },
+    {
+        "name_bank": "BOC"
+    },
+    {
+        "name_bank": "BBA"
+    },
+    {
+        "name_bank": "BANK ANTAR DAERAH"
+    },
+    {
+        "name_bank": "RABOBANK"
+    },
+    {
+        "name_bank": "BANK JTRUST"
+    },
+    {
+        "name_bank": "BANK DKI"
+    },
+    {
+        "name_bank": "BANK DKI UUS"
+    },
+    {
+        "name_bank": "BANK BPD DIY"
+    },
+    {
+        "name_bank": "BANK BPD DIY UUS"
+    },
+    {
+        "name_bank": "BANK JATENG"
+    },
+    {
+        "name_bank": "BANK JATENG UUS"
+    },
+    {
+        "name_bank": "BANK JATIM"
+    },
+    {
+        "name_bank": "BANK JATIM - UUS"
+    },
+    {
+        "name_bank": "BANK ACEH"
+    },
+    {
+        "name_bank": "BANK ACEH UUS"
+    },
+    {
+        "name_bank": "BANK SUMUT"
+    },
+    {
+        "name_bank": "BPD SUMUT UUS"
+    },
+    {
+        "name_bank": "BANK NAGARI"
+    },
+    {
+        "name_bank": "BANK NAGARI - UUS"
+    },
+    {
+        "name_bank": "BANK RIAU"
+    },
+    {
+        "name_bank": "BPD SUMSEL BABEL"
+    },
+    {
+        "name_bank": "BPD SUMSEL BABEL UUS"
+    },
+    {
+        "name_bank": "BANK LAMPUNG"
+    },
+    {
+        "name_bank": "BPD KALSEL"
+    },
+    {
+        "name_bank": "BPD KALSEL UUS"
+    },
+    {
+        "name_bank": "BPD KALBAR"
+    },
+    {
+        "name_bank": "BPD KALBAR UUS"
+    },
+    {
+        "name_bank": "BPD KALTIM"
+    },
+    {
+        "name_bank": "BPD KALTIM UUS"
+    },
+    {
+        "name_bank": "BPD KALTENG"
+    },
+    {
+        "name_bank": "BANK SULSELBAR"
+    },
+    {
+        "name_bank": "BANK SULSELBAR UUS"
+    },
+    {
+        "name_bank": "BPD SULUT"
+    },
+    {
+        "name_bank": "BANK NTB"
+    },
+    {
+        "name_bank": "PT. BPD BALI"
+    },
+    {
+        "name_bank": "BPD NTT"
+    },
+    {
+        "name_bank": "BANK MALUKU"
+    },
+    {
+        "name_bank": "BPD PAPUA"
+    },
+    {
+        "name_bank": "BANK BENGKULU"
+    },
+    {
+        "name_bank": "BPD SULTENG"
+    },
+    {
+        "name_bank": "BPD SULTRA"
+    },
+    {
+        "name_bank": "BN PARAHYANGAN"
+    },
+    {
+        "name_bank": "BANK OF INDIA IND"
+    },
+    {
+        "name_bank": "BANK MUAMALAT"
+    },
+    {
+        "name_bank": "BANK SHINHAN IND"
+    },
+    {
+        "name_bank": "BANK SINARMAS UUS"
+    },
+    {
+        "name_bank": "BANK MASPION"
+    },
+    {
+        "name_bank": "BANK GANESHA"
+    },
+    {
+        "name_bank": "BANK ICBC"
+    },
+    {
+        "name_bank": "BTN UUS"
+    },
+    {
+        "name_bank": "BANK WOORI SAUDARA"
+    },
+    {
+        "name_bank": "BTPN"
+    },
+    {
+        "name_bank": "BANK VICTORIASYARIAH"
+    },
+    {
+        "name_bank": "BANK JABAR SYARIAH"
+    },
+    {
+        "name_bank": "BNI SYARIAH"
+    },
+    {
+        "name_bank": "BSM"
+    },
+    {
+        "name_bank": "BANK BISNIS"
+    },
+    {
+        "name_bank": "BANK ANDARA"
+    },
+    {
+        "name_bank": "BANK JASA JAKARTA"
+    },
+    {
+        "name_bank": "MNC BANK"
+    },
+    {
+        "name_bank": "BANK YUDHA BHAKTI"
+    },
+    {
+        "name_bank": "BANK MITRANIAGA"
+    },
+    {
+        "name_bank": "AGRONIAGA"
+    },
+    {
+        "name_bank": "BANK SBI"
+    },
+    {
+        "name_bank": "BANK ROYAL"
+    },
+    {
+        "name_bank": "BANK NATIONALNOBU"
+    },
+    {
+        "name_bank": "BANK MEGA SYARIAH"
+    },
+    {
+        "name_bank": "BANK INA"
+    },
+    {
+        "name_bank": "BANK PANIN SYARIAH"
+    },
+    {
+        "name_bank": "PRIMA MASTER"
+    },
+    {
+        "name_bank": "BANK SYARIAH BUKOPIN"
+    },
+    {
+        "name_bank": "BANK SAMPOERNA"
+    },
+    {
+        "name_bank": "BANK DINAR"
+    },
+    {
+        "name_bank": "BANK AMAR"
+    },
+    {
+        "name_bank": "BANK KESEJAHTERAAN"
+    },
+    {
+        "name_bank": "BANK BCA SYARIAH"
+    },
+    {
+        "name_bank": "BANK ARTOS"
+    },
+    {
+        "name_bank": "BANK BTPN SYARIAH"
+    },
+    {
+        "name_bank": "BANK MAS"
+    },
+    {
+        "name_bank": "BANK MAYORA"
+    },
+    {
+        "name_bank": "BANK INDEX"
+    },
+    {
+        "name_bank": "BANK PUNDI"
+    },
+    {
+        "name_bank": "BANK CNB"
+    },
+    {
+        "name_bank": "BANK FAMA"
+    },
+    {
+        "name_bank": "BANK MANDIRI TASPEN POS"
+    },
+    {
+        "name_bank": "BANK HARDA"
+    },
+    {
+        "name_bank": "BANK AGRIS"
+    },
+    {
+        "name_bank": "MAYBANK SYARIAH"
+    },
+    {
+        "name_bank": "CTBC INDONESIA"
+    },
+    {
+        "name_bank": "BANK COMMONWEALTH"
+    },
+    {
+        "name_bank": "BPR"
+    },
+    {
+        "name_bank": "BJJ"
+    }
+]
