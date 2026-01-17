@@ -250,7 +250,7 @@ function language(id) {
   if (id == "id") {
     document.getElementById("password").placeholder = "Kata Sandi";
     document.getElementById("username").placeholder = "Nama Pengguna";
-    document.getElementById("tagLine").innerHTML = "Solusi Strategis untuk Transformasi Digital Perkebunan...!!!";
+    // document.getElementById("tagLine").innerHTML = "Solusi Strategis untuk Transformasi Digital Perkebunan...!!!";
     // document.getElementById("loginHeader").innerHTML = "Log In";
     document.getElementById("loginButton").innerHTML = "Log In";
     document.getElementById("titleCreatePassword").innerHTML = "Buat Kata Sandi";
@@ -262,7 +262,7 @@ function language(id) {
     document.getElementById("password").placeholder = "Password";
     document.getElementById("password").placeholder = "Password";
     document.getElementById("username").placeholder = "Username";
-    document.getElementById("tagLine").innerHTML = "Strategic Solutions for Plantation Digital Transformation...!!!";
+    // document.getElementById("tagLine").innerHTML = "Strategic Solutions for Plantation Digital Transformation...!!!";
     // document.getElementById("loginHeader").innerHTML = "Log In";
     document.getElementById("loginButton").innerHTML = "Log In";
     document.getElementById("titleCreatePassword").innerHTML = "Create Password";
@@ -273,7 +273,7 @@ function language(id) {
   } else if (id == "zh") {
     document.getElementById("password").placeholder = "密码";
     document.getElementById("username").placeholder = "用户名";
-    document.getElementById("tagLine").innerHTML = "种植园数字化转型的战略解决方案...!!!";
+    // document.getElementById("tagLine").innerHTML = "种植园数字化转型的战略解决方案...!!!";
     // document.getElementById("loginHeader").innerHTML = "登录";
     document.getElementById("loginButton").innerHTML = "登录";
     document.getElementById("titleCreatePassword").innerHTML = "创建密码";
