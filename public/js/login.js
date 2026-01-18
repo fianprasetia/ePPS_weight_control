@@ -138,8 +138,8 @@ async function resetPassword() {
   const jsonData = await datalang.json(); // parsing JSON
 
   var filterLanguage = jsonData.filter((filtercontent) => filtercontent.language == language);
-      required = filterLanguage[0]["content"]["required"]
-      overload = filterLanguage[0]["content"]["overload"]
+  required = filterLanguage[0]["content"]["required"]
+  overload = filterLanguage[0]["content"]["overload"]
   !(function () {
     class e {
       static initValidation() {
@@ -149,7 +149,7 @@ async function resetPassword() {
             rules: {
               "password1": { required: !0 },
               "password2": { required: !0 },
-           
+
             },
             messages: {
               "password1": required,

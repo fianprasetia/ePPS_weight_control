@@ -37,13 +37,13 @@ if (cluster.isMaster) {
     app.use(cors(corsOptions));
     app.options('*', cors(corsOptions));
 
-    const limiter = rateLimit({
-        windowMs: 5 * 60 * 1000, // 5 minutes
-        max: 100,
-        message: "Too many requests from this IP, please try again later.",
-    });
+    // const limiter = rateLimit({
+    //     windowMs: 5 * 60 * 1000, // 5 minutes
+    //     max: 100,
+    //     message: "Too many requests from this IP, please try again later.",
+    // });
     app.use(bodyParser.json());
-    app.use(limiter);
+    // app.use(limiter);
 
     app.use(logger('dev'));
 
@@ -77,10 +77,19 @@ if (cluster.isMaster) {
     app.get('/login', function (req, res) {
         res.render('pages/login');
     });
+    app.get('/login', function (req, res) {
+        res.render('pages/login');
+    });
+    app.get('/menu_directory', function (req, res) {
+        res.render('pages/menu_directory');
+    });
 
     const routes = [
         ['/', require('./routes/index')],
         ['/menu', require('./routes/menu')],
+        ['/login', require('./routes/login')],
+        ['/language', require('./routes/language')],
+        ['/translate', require('./routes/translate')],
         ['/download-test-file.bin', require('./routes/download')],
         ['/protected-route', validateToken, (req, res) => res.json({ message: 'Access granted', user: req.user })]
 

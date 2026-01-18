@@ -29,69 +29,19 @@ controller.selectLogin = async function (req, res) {
             return sendFailedResponse(messages[language]?.userAccess);
         }
         const selectMenuData = await selectMenu(selectAuthenticationData)
-        if (selectMenuData["selectMenuData"].length === 0) {
+        if (selectMenuData.length === 0) {
             await transaction.rollback();
             return sendFailedResponse(messages[language]?.userAccess);
-        }
-        const selectCompanyData = await selectCompany(selectMenuData)
-        if (selectCompanyData["selectCompanyData"].length === 0) {
-            await transaction.rollback();
-            return sendFailedResponse(messages[language]?.userAccess);
-        }
-        const selectAccountingPeriodsData = await selectAccountingPeriods(selectCompanyData)
-        if (selectAccountingPeriodsData["selectAccountingPeriodsData"].length === 0) {
-            const dataResult = selectAccountingPeriodsData["data"]
-            codeCompany = dataResult["dataLogin"][0]["code_company"]
-            await transaction.rollback();
-            return sendFailedResponse(messages[language]?.periodNotAccess.replace("{{Location}}", `${codeCompany}`));
-        }
-        const selectTokenData = await selectToken(selectAccountingPeriodsData)
-        if (selectTokenData["selectTokenData"].length === 0) {
-            const insertTokenData = await insertToken(selectTokenData)
-            var result = {
-                data: insertTokenData.data,  // langsung ambil dataLogin
-                token: insertTokenData.access_token
-            };
-            if (!insertTokenData) {
-                await transaction.rollback();
-                return sendFailedResponse(messages[language]?.userAccess);
-            }
-        } else if (new Date() < selectTokenData["selectTokenData"][0]["expired_at"]) {
-            await transaction.rollback();
-            return sendFailedResponse(messages[language]?.userAlready);
-            // res.json({
-            //     access: "failed",
-            //     message: messages[language]?.userAlready,
-            //     time: new Date(),
-            //     timeout: selectTokenData["selectTokenData"][0]["expired_at"]
-            // });
-        } else {
-            const deleteTokenData = await deleteToken(selectTokenData)
-            if (deleteTokenData) {
-                const insertTokenData = await insertToken(selectTokenData)
-                var result = {
-                    data: insertTokenData.data,  // langsung ambil dataLogin
-                    token: insertTokenData.access_token
-                };
-                if (!insertTokenData) {
-                    await transaction.rollback();
-                    return sendFailedResponse(messages[language]?.userAccess);
-                }
-            }
         }
         await transaction.commit();
-        sendSuccessResponse(messages[language]?.accessSuccess, result);
+        sendSuccessResponse(messages[language]?.accessSuccess, selectMenuData);
         logAction('success');
 
         async function selectLogin() {
             return await model.adm_user_login.findAll({
                 include: [
                     {
-                        model: model.adm_company,
-                        attributes: ["name", "code_company_type", "code_company",],
-                    },
-                    {
-                        model: model.hrd_employee,
+                        model: model.adm_employee,
                     },
                 ],
                 where: {
@@ -104,28 +54,11 @@ controller.selectLogin = async function (req, res) {
             });
         }
         async function selectAuthentication(selectLoginData) {
-            statusUser = selectLoginData[0]["status"]
-            access_web = selectLoginData[0]["access_web"]
             change_password = selectLoginData[0]["change_password"]
-            if (statusUser == 0) {
-                res.status(200).json({
-                    access: "failed",
-                    message: messages[language]?.userStatus,
-                });
-                return false
-            }
             if (change_password == 0) {
                 res.status(200).json({
                     access: "change",
                     message: messages[language]?.resetPassword,
-                    data: username
-                });
-                return false
-            }
-            if (access_web == 0) {
-                res.status(200).json({
-                    access: "failed",
-                    message: messages[language]?.userStatus,
                     data: username
                 });
                 return false
@@ -172,111 +105,7 @@ controller.selectLogin = async function (req, res) {
                 dataLogin: dataResult["dataLogin"],
                 dataMenu: selectMenuData
             }
-            return { selectMenuData, data }
-        }
-        async function selectCompany(selectMenuData) {
-            const dataResult = selectMenuData["data"]
-            codeCompany = dataResult["dataLogin"][0]["adm_company"]["code_company"]
-            let selectCompanyData = await model.adm_company.findAll({
-                where: {
-                    code_company: codeCompany
-                },
-                transaction: transaction
-            });
-            var data = {
-                dataLogin: dataResult["dataLogin"],
-                dataCompany: selectCompanyData,
-                dataMenu: dataResult["dataMenu"],
-            }
-            return { selectCompanyData, data }
-        }
-        async function selectAccountingPeriods(selectCompanyData) {
-            const dataResult = selectCompanyData["data"]
-            codeCompany = dataResult["dataLogin"][0]["code_company"]
-            let selectAccountingPeriodsData = await model.fat_accounting_periods.findAll({
-                where: {
-                    code_company: codeCompany
-                },
-                transaction: transaction
-            });
-            var data = {
-                dataLogin: dataResult["dataLogin"],
-                dataCompany: dataResult["dataCompany"],
-                dataMenu: dataResult["dataMenu"],
-                dataAccountingPeriods: selectAccountingPeriodsData
-            }
-            return { selectAccountingPeriodsData, data }
-        }
-        async function selectToken(selectAccountingPeriodsData) {
-            const dataResult = selectAccountingPeriodsData["data"]
-            let selectTokenData = await model.adm_user_token.findAll({
-                where: {
-                    username: username
-                },
-                transaction
-            });
-            var data = {
-                dataLogin: dataResult["dataLogin"],
-                dataCompany: dataResult["dataCompany"],
-                dataMenu: dataResult["dataMenu"],
-                dataAccountingPeriods: dataResult["dataAccountingPeriods"]
-            }
-
-            return { selectTokenData, data }
-            // if (selectTokenData == "") {
-            //     insertToken(data)
-            // } else if (new Date() < selectTokenData[0]["expired_at"]) {
-            //     await transaction.rollback();
-            //     res.json({
-            //         access: "failed",
-            //         message: messages[language]?.userAlready,
-            //         time: new Date(),
-            //         timeout: selectTokenData[0]["expired_at"]
-            //     });
-            // } else {
-            //     deleteToken(data)
-            // }
-        }
-        async function insertToken(selectTokenData) {
-            const dataResult = selectTokenData["data"]
-            const refresh_token = jwt.sign(
-                { username: username },
-                process.env.REFRESH_TOKEN_SECRET,
-                { expiresIn: '8h' }
-            );
-            var access_token = jwt.sign(
-                { username: username },
-                process.env.ACCESS_TOKEN_SECRET,
-                { expiresIn: '15m' }
-            );
-            let insertTokenData = await model.adm_user_token.create({
-                username: username,
-                token: refresh_token,
-                access_type: "web",
-                expired_at: new Date(Date.now() + 8 * 60 * 60 * 1000)
-            }, {
-                transaction
-            });
-            var data = {
-                dataLogin: dataResult["dataLogin"],
-                dataCompany: dataResult["dataCompany"],
-                dataMenu: dataResult["dataMenu"],
-                dataAccountingPeriods: dataResult["dataAccountingPeriods"]
-            }
-            // res.json(access_token)
-            return { insertTokenData, data, access_token }
-        }
-        async function deleteToken() {
-            return await model.adm_user_token.destroy(
-                {
-                    where: {
-                        username: username,
-                    }
-                },
-                {
-                    transaction: transaction
-                }
-            );
+            return data
         }
         function sendSuccessResponse(message, data = null) {
             if (res.headersSent) return;
@@ -316,7 +145,6 @@ controller.selectLogin = async function (req, res) {
         }
     }
 }
-
 controller.updatePasswordLoginUser = async function (req, res) {
     const transaction = await koneksi.transaction()
     try {

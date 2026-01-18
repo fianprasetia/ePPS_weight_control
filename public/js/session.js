@@ -2,12 +2,13 @@ async function session(responseLogin, language) {
   await clearCookies()
   sessionStorage.clear()
   localStorage.clear()
-  const username = await responseLogin["data"]["dataLogin"][0]["username"]
-  const codeCompany = await responseLogin["data"]["dataLogin"][0]["code_company"]
-  const idEmployee = await responseLogin["data"]["dataLogin"][0]["employee_id"]
+  const username = await responseLogin["dataLogin"][0]["username"]
+  console.log(username)
+  // const codeCompany = await responseLogin["data"]["dataLogin"][0]["code_company"]
+  const idEmployee = await responseLogin["dataLogin"][0]["employee_id"]
   const dataLogin = {
     username: username,
-    codeCompany: codeCompany,
+    // codeCompany: codeCompany,
     idEmployee: idEmployee
   };
   const dataLoginString = JSON.stringify(dataLogin);
@@ -20,7 +21,7 @@ async function sessionLanguage(responseLogin, language, username) {
   await sessionMenu(responseLogin, language, username)
 }
 async function sessionMenu(responseLogin, language, username) {
-  const dataMenu = await responseLogin["data"]["dataMenu"]
+  const dataMenu = await responseLogin["dataMenu"]
   if (sessionStorage.epps_session_menu) {
     epps_session_menu = JSON.parse(sessionStorage.getItem("epps_session_menu"));
   } else {
@@ -34,40 +35,40 @@ async function sessionMenu(responseLogin, language, username) {
   // await insertSessionMenu(username, dataMenu)
 }
 async function sessionEmployee(responseLogin, language) {
-  const dataEmployee = await responseLogin["data"]["dataLogin"][0]["hrd_employee"]
+  const dataEmployee = await responseLogin["dataLogin"][0]["adm_employee"]
   const dataEmployeeString = JSON.stringify(dataEmployee);
   setCookie('dataEmployee', dataEmployeeString, 8);
-  sessionCompany(responseLogin, language)
+  // sessionCompany(responseLogin, language)
 }
-async function sessionCompany(responseLogin, language) {
-  dataCompany = await responseLogin["data"]["dataCompany"]
-  const dataCompanyString = JSON.stringify(dataCompany);
-  setCookie('dataCompany', dataCompanyString, 8);
-  sessionToken(responseLogin, language)
-}
-async function sessionToken(responseLogin, language) {
-  dataToken = await responseLogin["token"]
-  const dataTokenString = JSON.stringify(dataToken);
-  setCookieToken('dataToken', dataTokenString, 15);
-  sessionPeriodeFAT(responseLogin, language)
-}
-async function sessionPeriodeFAT(responseLogin, language) {
-  dataPeriods = await responseLogin["data"]["dataAccountingPeriods"]
-  const dataPeriodsString = JSON.stringify(dataPeriods);
-  setCookie('dataPeriods', dataPeriodsString, 8);
-}
+// async function sessionCompany(responseLogin, language) {
+//   dataCompany = await responseLogin["data"]["dataCompany"]
+//   const dataCompanyString = JSON.stringify(dataCompany);
+//   setCookie('dataCompany', dataCompanyString, 8);
+//   sessionToken(responseLogin, language)
+// }
+// async function sessionToken(responseLogin, language) {
+//   dataToken = await responseLogin["token"]
+//   const dataTokenString = JSON.stringify(dataToken);
+//   setCookieToken('dataToken', dataTokenString, 15);
+//   sessionPeriodeFAT(responseLogin, language)
+// }
+// async function sessionPeriodeFAT(responseLogin, language) {
+//   dataPeriods = await responseLogin["data"]["dataAccountingPeriods"]
+//   const dataPeriodsString = JSON.stringify(dataPeriods);
+//   setCookie('dataPeriods', dataPeriodsString, 8);
+// }
 function setCookie(name, value, hours) {
   const date = new Date();
   date.setTime(date.getTime() + (hours * 60 * 60 * 1000)); // Mengatur waktu kadaluarsa
   const expires = "expires=" + date.toUTCString();
   document.cookie = name + "=" + value + ";" + expires + ";path=/";
 }
-function setCookieToken(name, value, minutes) {
-  const date = new Date();
-  date.setTime(date.getTime() + (minutes * 60 * 1000)); // Mengatur waktu kadaluarsa
-  const expires = "expires=" + date.toUTCString();
-  document.cookie = name + "=" + value + ";" + expires + ";path=/";
-}
+// function setCookieToken(name, value, minutes) {
+//   const date = new Date();
+//   date.setTime(date.getTime() + (minutes * 60 * 1000)); // Mengatur waktu kadaluarsa
+//   const expires = "expires=" + date.toUTCString();
+//   document.cookie = name + "=" + value + ";" + expires + ";path=/";
+// }
 function clearCookies() {
   const cookies = document.cookie.split(";");
   for (let i = 0; i < cookies.length; i++) {

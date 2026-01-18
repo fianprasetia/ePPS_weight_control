@@ -1,5 +1,6 @@
 var koneksi = require("../config/database");
 const Sequelize = require("sequelize");
+const adm_employee = require("./adm_employee");
 const adm_user_login = koneksi.define(
     "adm_user_login",
     {
@@ -39,4 +40,5 @@ const adm_user_login = koneksi.define(
         freezeTableName: true,
     }
 );
+adm_user_login.belongsTo(adm_employee, { foreignKey: "employee_id" });
 module.exports = adm_user_login;

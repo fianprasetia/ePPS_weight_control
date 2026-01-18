@@ -135,52 +135,52 @@ function getCookie(name) {
   }
   return null;
 }
-async function getAccessToken() {
-  return new Promise((resolve, reject) => {
-    const sessionLogin = JSON.parse(getCookie("dataLogin"));
-    const language = JSON.parse(getCookie("language"));
-    const username = sessionLogin["username"];
+// async function getAccessToken() {
+//   return new Promise((resolve, reject) => {
+//     const sessionLogin = JSON.parse(getCookie("dataLogin"));
+//     const language = JSON.parse(getCookie("language"));
+//     const username = sessionLogin["username"];
 
-    const xhr = new XMLHttpRequest();
-    const url = mainUrl + "token";
-    const data = JSON.stringify({
-      username_POST: username,
-      language_POST: language
-    });
+//     const xhr = new XMLHttpRequest();
+//     const url = mainUrl + "token";
+//     const data = JSON.stringify({
+//       username_POST: username,
+//       language_POST: language
+//     });
 
-    xhr.onloadend = function () {
-      if (this.readyState === 4 && this.status === 200) {
-        const responseLogin = JSON.parse(xhr.response);
-        if (responseLogin["access"] === "success") {
-          const accessToken = responseLogin["data"];
-          setCookieToken("dataToken", JSON.stringify(accessToken), 15);
-          resolve(accessToken); // ✅ token baru dikembalikan
-        } else {
-          const message = responseLogin["message"];
-          Dashmix.helpers("jq-notify", {
-            z_index: 2000,
-            type: "danger",
-            icon: "fa fa-times me-1",
-            message: message
-          });
-          clearCookies();
-          setTimeout(() => {
-            window.location.href = "/login";
-          }, 3000);
-          reject(new Error(message));
-        }
-      } else if (this.status !== 200) {
-        reject(new Error("Failed to fetch token"));
-      }
-    };
+//     xhr.onloadend = function () {
+//       if (this.readyState === 4 && this.status === 200) {
+//         const responseLogin = JSON.parse(xhr.response);
+//         if (responseLogin["access"] === "success") {
+//           const accessToken = responseLogin["data"];
+//           setCookieToken("dataToken", JSON.stringify(accessToken), 15);
+//           resolve(accessToken); // ✅ token baru dikembalikan
+//         } else {
+//           const message = responseLogin["message"];
+//           Dashmix.helpers("jq-notify", {
+//             z_index: 2000,
+//             type: "danger",
+//             icon: "fa fa-times me-1",
+//             message: message
+//           });
+//           clearCookies();
+//           setTimeout(() => {
+//             window.location.href = "/login";
+//           }, 3000);
+//           reject(new Error(message));
+//         }
+//       } else if (this.status !== 200) {
+//         reject(new Error("Failed to fetch token"));
+//       }
+//     };
 
-    xhr.onerror = () => reject(new Error("Network error"));
+//     xhr.onerror = () => reject(new Error("Network error"));
 
-    xhr.open("POST", url, true);
-    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.send(data);
-  });
-}
+//     xhr.open("POST", url, true);
+//     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+//     xhr.send(data);
+//   });
+// }
 
 // async function getAccessToken() {
 //   var sessionLogin = await JSON.parse(getCookie("dataLogin"));
@@ -558,16 +558,14 @@ async function content() {
     notice_return = await filterLanguage[0]["content"]["notice_return"];
     document.getElementById("mainMenuNav").innerHTML = await filterLanguage[0]["content"]["main_menu"];
     document.getElementById("homeNav").innerHTML = await filterLanguage[0]["content"]["home"];;
-    document.getElementById("signoutindex").innerHTML = await filterLanguage[0]["content"]["signout"];;
+    // document.getElementById("signoutindex").innerHTML = await filterLanguage[0]["content"]["signout"];;
     // document.getElementById("accountIndex").innerHTML = await filterLanguage[0]["content"]["account"];;
     document.getElementById("pleaseWait").innerHTML = await filterLanguage[0]["content"]["please_wait"];;
   }
-  await approvalTransaction();
+  // await approvalTransaction();
 }
 // let loadingModalInstance;
 async function keluar() {
-  // showSpinner();
-  // if (!loadingModalInstance) {
   const modalEl = document.getElementById("loadingModal");
   loadingModalInstance = new bootstrap.Modal(modalEl, {
     keyboard: false,
@@ -575,53 +573,16 @@ async function keluar() {
   });
   // }
   loadingModalInstance.show();
-  sessionUsername = await JSON.parse(getCookie("dataLogin"));
-  username = sessionUsername["username"];
-  var xhr = new XMLHttpRequest();
-  var url = mainUrl + "token/delete";
-  var data = JSON.stringify({
-    username_POST: username
-  });
-  xhr.onloadend = async function () {
-    if (this.readyState == 4 && this.status == 200) {
-      var selectData = await JSON.parse(xhr.response);
-      if (selectData["access"] == "success") {
-        setTimeout(() => {
-          if (loadingModalInstance) {
-            loadingModalInstance.hide();
-          }
-        }, 1000);
-        Dashmix.helpers("jq-notify", { type: "danger", message: alertLogout });
-        setTimeout(function () {
-          window.location.href = "/login";
-        }, 3000);
-        clearCookies();
-      }
+  setTimeout(() => {
+    if (loadingModalInstance) {
+      loadingModalInstance.hide();
     }
-    if (this.status == 404) {
-      message = "Data failed";
-      Dashmix.helpers("jq-notify", { type: "danger", z_index: 2000, message: status_404 });
-      setTimeout(function () {
-        window.location.href = "/";
-      }, 3000);
-    }
-    if (this.status == 401) {
-      Dashmix.helpers("jq-notify", { type: "danger", z_index: 2000, message: status_401 });
-      setTimeout(function () {
-        window.location.href = "/";
-      }, 3000);
-    }
-    if (this.status == 500) {
-      Dashmix.helpers("jq-notify", { type: "danger", z_index: 2000, message: status_500 });
-      setTimeout(function () {
-        window.location.href = "/";
-      }, 3000);
-    }
-  };
-  xhr.open("POST", url, true);
-  xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-  xhr.send(data);
-  return false;
+  }, 1000);
+  Dashmix.helpers("jq-notify", { type: "danger", message: alertLogout });
+  setTimeout(function () {
+    window.location.href = "/login";
+  }, 3000);
+  clearCookies();
 }
 getePPSSessionMenu();
 async function getePPSSessionMenu() {
@@ -755,16 +716,16 @@ async function getePPSSessionNameEmplyee() {
   fullName = sessionFullName["fullname"];
   photo = sessionFullName["photo"];
   const urlPhoto = mainUrl + "img/employee/" + photo;
-  document.getElementById("photonavproflie").src = urlPhoto;
-  document.getElementById("fullnamenav").innerHTML = fullName + " ||";
-  document.getElementById("fullnamenavprofile").innerHTML = fullName;
+  // document.getElementById("photonavproflie").src = urlPhoto;
+  document.getElementById("fullnamenav").innerHTML = "OPERATOR: " + fullName;
+  // document.getElementById("fullnamenavprofile").innerHTML = fullName;
 }
-getePPSSessionUserLogin();
-async function getePPSSessionUserLogin() {
-  var sessionLogin = await JSON.parse(getCookie("dataLogin"));
-  codeCompany = sessionLogin["codeCompany"];
-  document.getElementById("lokasinav").innerHTML = codeCompany;
-}
+// getePPSSessionUserLogin();
+// async function getePPSSessionUserLogin() {
+//   var sessionLogin = await JSON.parse(getCookie("dataLogin"));
+//   codeCompany = sessionLogin["codeCompany"];
+//   document.getElementById("lokasinav").innerHTML = codeCompany;
+// }
 function ddmmyyyy(tanggal) {
   var bagianTanggal = tanggal.split("-");
   var tanggalBaru = bagianTanggal[2] + "-" + bagianTanggal[1] + "-" + bagianTanggal[0];
@@ -790,15 +751,6 @@ async function selectLanguage() {
   return new Promise(async (resolve, reject) => {
     try {
       let language = JSON.parse(getCookie("language"));
-      let token = JSON.parse(getCookie("dataToken"));
-      if (!token) {
-        await getAccessToken();
-        token = JSON.parse(getCookie("dataToken"));
-        if (!token) {
-          reject("Failed to retrieve access token");
-          return;
-        }
-      }
 
       var xhr = new XMLHttpRequest();
       var url = mainUrl + "language";
@@ -891,7 +843,6 @@ async function selectLanguage() {
 
       xhr.open("GET", url, true);
       xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-      xhr.setRequestHeader("Authorization", "Bearer " + token);
       xhr.send(data);
     } catch (error) {
       reject(error.message || "An unexpected error occurred");
@@ -901,7 +852,7 @@ async function selectLanguage() {
 async function autoTranslate(param) {
   const text = document.getElementById('translate').value;
   var xhr = new XMLHttpRequest();
-  var url = secondUrl + "translate";
+  var url = mainUrl + "translate";
   xhr.onloadstart = function () {
     document.getElementById("loadTranslate").innerHTML =
       "<a class='btn btn-hero btn-primary shadow' type='submit' disabled>\n\
@@ -972,7 +923,6 @@ async function autoTranslate(param) {
   };
   xhr.open("POST", url, true);
   xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-  xhr.setRequestHeader("Authorization", "Bearer " + token);
   xhr.send(data);
 }
 async function dictionary(param) {
@@ -1112,125 +1062,125 @@ function convertToMinutes(time) {
   const [hours, minutes, seconds] = time.split(":").map(Number); // Pisahkan jam, menit, dan detik
   return hours * 60 + minutes + Math.floor(seconds / 60); // Hitung total menit
 }
-async function approvalTransaction() {
-  const dataLogin = await JSON.parse(getCookie("dataLogin"));
-  const employeeID = dataLogin["idEmployee"];
-  const language = await JSON.parse(getCookie("language"));
-  var token = await JSON.parse(getCookie("dataToken"));
-  if (!token) {
-    token = await getAccessToken(); // ✅ sekarang beneran tunggu token
-  }
-  var xhr = new XMLHttpRequest();
-  var url = mainUrl + "approvaltransactions";
-  xhr.onerror = function () {
-    Dashmix.helpers("jq-notify", {
-      type: "danger",
-      z_index: 2000,
-      icon: "fa fa-exclamation me-1",
-      message: "overload"
-    });
-    setTimeout(async function () {
-      await keluar();
-    }, 3000);
-  };
-  var data = JSON.stringify({
-    language_POST: language,
-    employeeID_POST: employeeID
-  });
-  xhr.onloadend = async function () {
-    if (this.readyState == 4 && this.status == 200) {
-      var response = JSON.parse(xhr.response);
-      if (response["access"] == "success") {
-        var responseData = response["data"];
-        jmldataPurchaseRequest = responseData["dataPurchaseRequest"].length;
-        jmldataGoodsReceipt = responseData["dataGoodsReceipt"].length;
-        jmldataGoodsIssue = responseData["dataGoodsIssue"].length;
-        jmldataNotice = parseFloat(jmldataPurchaseRequest) + parseFloat(jmldataGoodsReceipt) + parseFloat(jmldataGoodsIssue);
-        if (jmldataPurchaseRequest == "") {
-          noticePurchaseRequest = "";
-        } else {
-          noticePurchaseRequest = `
-            <li>
-              <a class="d-flex text-dark py-2" href="/purchase_request_approval">
-                <div class="flex-shrink-0 mx-3">
-                  <i class="fa fa-fw fa-check-circle text-success"></i>
-                </div>
-                <div class="flex-grow-1 fs-sm pe-2">
-                  <div class="fw-semibold">${purchase_request}</div>
-                  <div class="text-muted">${jmldataPurchaseRequest} ${approval}</div>
-                </div>
-              </a>
-            </li>`;
-        }
-        if (jmldataGoodsReceipt == "") {
-          noticeGoodsreceipt = "";
-        } else {
-          noticeGoodsreceipt = `
-            <li>
-              <a class="d-flex text-dark py-2" href="/goods_receipt_approval">
-                <div class="flex-shrink-0 mx-3">
-                  <i class="fa fa-fw fa-check-circle text-success"></i>
-                </div>
-                <div class="flex-grow-1 fs-sm pe-2">
-                  <div class="fw-semibold">${goods_receipt}</div>
-                  <div class="text-muted">${jmldataGoodsReceipt} ${approval}</div>
-                </div>
-              </a>
-            </li>`;
-        }
-        if (jmldataGoodsIssue == "") {
-          noticeGoodsIssue = "";
-        } else {
-          noticeGoodsIssue = `
-            <li>
-              <a class="d-flex text-dark py-2" href="/goods_issue_approval">
-                <div class="flex-shrink-0 mx-3">
-                  <i class="fa fa-fw fa-check-circle text-success"></i>
-                </div>
-                <div class="flex-grow-1 fs-sm pe-2">
-                  <div class="fw-semibold">${goods_issue}</div>
-                  <div class="text-muted">${jmldataGoodsIssue} ${approval}</div>
-                </div>
-              </a>
-            </li>`;
-        }
-        document.getElementById("allApproval").innerHTML = jmldataNotice === 0 ? "" : jmldataNotice;;
-        document.getElementById("noticeApproval").innerHTML = noticePurchaseRequest + noticeGoodsreceipt + noticeGoodsIssue;
-      } else if (response["access"] == "failed") {
-        message = response["message"];
-        Dashmix.helpers("jq-notify", { type: "danger", z_index: 2000, message: message });
-        setTimeout(function () {
-          window.location.href = "/";
-        }, 3000);
-      }
-    }
-    if (this.status == 404) {
-      message = "Data failed";
-      Dashmix.helpers("jq-notify", { type: "danger", z_index: 2000, message: status_404 });
-      setTimeout(async function () {
-        window.location.href = "/";
-      }, 3000);
-    }
-    if (this.status == 401) {
-      message = "data failed to load";
-      Dashmix.helpers("jq-notify", { type: "danger", z_index: 2000, message: status_401 });
-      setTimeout(async function () {
-        window.location.href = "/";
-      }, 3000);
-    }
-    if (this.status == 500) {
-      Dashmix.helpers("jq-notify", { type: "danger", z_index: 2000, message: status_500 });
-      setTimeout(function () {
-        window.location.href = "/";
-      }, 3000);
-    }
-  };
-  xhr.open("POST", url, true);
-  xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-  xhr.setRequestHeader("Authorization", "Bearer " + token);
-  xhr.send(data);
-  return false;
-}
+// async function approvalTransaction() {
+//   const dataLogin = await JSON.parse(getCookie("dataLogin"));
+//   const employeeID = dataLogin["idEmployee"];
+//   const language = await JSON.parse(getCookie("language"));
+//   var token = await JSON.parse(getCookie("dataToken"));
+//   if (!token) {
+//     token = await getAccessToken(); // ✅ sekarang beneran tunggu token
+//   }
+//   var xhr = new XMLHttpRequest();
+//   var url = mainUrl + "approvaltransactions";
+//   xhr.onerror = function () {
+//     Dashmix.helpers("jq-notify", {
+//       type: "danger",
+//       z_index: 2000,
+//       icon: "fa fa-exclamation me-1",
+//       message: "overload"
+//     });
+//     setTimeout(async function () {
+//       await keluar();
+//     }, 3000);
+//   };
+//   var data = JSON.stringify({
+//     language_POST: language,
+//     employeeID_POST: employeeID
+//   });
+//   xhr.onloadend = async function () {
+//     if (this.readyState == 4 && this.status == 200) {
+//       var response = JSON.parse(xhr.response);
+//       if (response["access"] == "success") {
+//         var responseData = response["data"];
+//         jmldataPurchaseRequest = responseData["dataPurchaseRequest"].length;
+//         jmldataGoodsReceipt = responseData["dataGoodsReceipt"].length;
+//         jmldataGoodsIssue = responseData["dataGoodsIssue"].length;
+//         jmldataNotice = parseFloat(jmldataPurchaseRequest) + parseFloat(jmldataGoodsReceipt) + parseFloat(jmldataGoodsIssue);
+//         if (jmldataPurchaseRequest == "") {
+//           noticePurchaseRequest = "";
+//         } else {
+//           noticePurchaseRequest = `
+//             <li>
+//               <a class="d-flex text-dark py-2" href="/purchase_request_approval">
+//                 <div class="flex-shrink-0 mx-3">
+//                   <i class="fa fa-fw fa-check-circle text-success"></i>
+//                 </div>
+//                 <div class="flex-grow-1 fs-sm pe-2">
+//                   <div class="fw-semibold">${purchase_request}</div>
+//                   <div class="text-muted">${jmldataPurchaseRequest} ${approval}</div>
+//                 </div>
+//               </a>
+//             </li>`;
+//         }
+//         if (jmldataGoodsReceipt == "") {
+//           noticeGoodsreceipt = "";
+//         } else {
+//           noticeGoodsreceipt = `
+//             <li>
+//               <a class="d-flex text-dark py-2" href="/goods_receipt_approval">
+//                 <div class="flex-shrink-0 mx-3">
+//                   <i class="fa fa-fw fa-check-circle text-success"></i>
+//                 </div>
+//                 <div class="flex-grow-1 fs-sm pe-2">
+//                   <div class="fw-semibold">${goods_receipt}</div>
+//                   <div class="text-muted">${jmldataGoodsReceipt} ${approval}</div>
+//                 </div>
+//               </a>
+//             </li>`;
+//         }
+//         if (jmldataGoodsIssue == "") {
+//           noticeGoodsIssue = "";
+//         } else {
+//           noticeGoodsIssue = `
+//             <li>
+//               <a class="d-flex text-dark py-2" href="/goods_issue_approval">
+//                 <div class="flex-shrink-0 mx-3">
+//                   <i class="fa fa-fw fa-check-circle text-success"></i>
+//                 </div>
+//                 <div class="flex-grow-1 fs-sm pe-2">
+//                   <div class="fw-semibold">${goods_issue}</div>
+//                   <div class="text-muted">${jmldataGoodsIssue} ${approval}</div>
+//                 </div>
+//               </a>
+//             </li>`;
+//         }
+//         document.getElementById("allApproval").innerHTML = jmldataNotice === 0 ? "" : jmldataNotice;;
+//         document.getElementById("noticeApproval").innerHTML = noticePurchaseRequest + noticeGoodsreceipt + noticeGoodsIssue;
+//       } else if (response["access"] == "failed") {
+//         message = response["message"];
+//         Dashmix.helpers("jq-notify", { type: "danger", z_index: 2000, message: message });
+//         setTimeout(function () {
+//           window.location.href = "/";
+//         }, 3000);
+//       }
+//     }
+//     if (this.status == 404) {
+//       message = "Data failed";
+//       Dashmix.helpers("jq-notify", { type: "danger", z_index: 2000, message: status_404 });
+//       setTimeout(async function () {
+//         window.location.href = "/";
+//       }, 3000);
+//     }
+//     if (this.status == 401) {
+//       message = "data failed to load";
+//       Dashmix.helpers("jq-notify", { type: "danger", z_index: 2000, message: status_401 });
+//       setTimeout(async function () {
+//         window.location.href = "/";
+//       }, 3000);
+//     }
+//     if (this.status == 500) {
+//       Dashmix.helpers("jq-notify", { type: "danger", z_index: 2000, message: status_500 });
+//       setTimeout(function () {
+//         window.location.href = "/";
+//       }, 3000);
+//     }
+//   };
+//   xhr.open("POST", url, true);
+//   xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+//   xhr.setRequestHeader("Authorization", "Bearer " + token);
+//   xhr.send(data);
+//   return false;
+// }
 function formatRupiah(money) {
   return new Intl.NumberFormat("id-ID", { minimumFractionDigits: 0 }).format(money);
 }
