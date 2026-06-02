@@ -80,7 +80,7 @@ async function showModalUpdateCompany(id) {
   };
   xhr.open("POST", url, true);
   xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-  xhr.setRequestHeader("Authorization", "Bearer " + token);
+ 
   xhr.send(data);
   return false;
 }
@@ -220,7 +220,7 @@ async function updateCompany() {
   };
   xhr.open("PUT", url, true);
   xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-  xhr.setRequestHeader("Authorization", "Bearer " + token);
+ 
   xhr.send(data);
   return false;
 }

@@ -23,6 +23,10 @@ controller.selectLogin = async function (req, res) {
             await transaction.rollback();
             return sendFailedResponse(messages[language]?.accessFailed);
         }
+        if (selectLoginData[0]["status"] === 0) {
+            await transaction.rollback();
+            return sendFailedResponse(messages[language]?.userStatus);
+        }
         const selectAuthenticationData = await selectAuthentication(selectLoginData)
         if (selectAuthenticationData["selectAuthenticationData"].length === 0) {
             await transaction.rollback();
@@ -56,6 +60,7 @@ controller.selectLogin = async function (req, res) {
         async function selectAuthentication(selectLoginData) {
             change_password = selectLoginData[0]["change_password"]
             if (change_password == 0) {
+                await transaction.rollback();
                 res.status(200).json({
                     access: "change",
                     message: messages[language]?.resetPassword,
@@ -122,24 +127,10 @@ controller.selectLogin = async function (req, res) {
                 message: message
             });
         }
-        function logAction(status) {
-            logger.info(`Login`, {
-                "1.username": username,
-                "2.module": "selectLogin",
-                "3.status": status,
-                "4.action": ""
-            });
-        }
     } catch (error) {
-        await transaction.rollback();
-        if (error.name === 'SequelizeUniqueConstraintError') {
-            res.status(200).json({
-                access: "failed",
-                message: messages[language]?.failedData,
-                data: []
-            });
-        } else {
-            res.status(404).json({
+        if (!res.headersSent) {
+            await transaction.rollback();
+            res.status(500).json({
                 message: error.message
             });
         }
@@ -184,12 +175,6 @@ controller.updatePasswordLoginUser = async function (req, res) {
                     access: "success",
                     message: messages[language]?.resetPasswordSuccess,
                     data: UpdatePasswordData
-                });
-                logger.info('Update Password Login', {
-                    '1.username': `${username}`,
-                    '2.module': 'updatePasswordLoginUser',
-                    '3.status': 'success',
-                    '4.action': ''
                 });
             } else {
                 await transaction.rollback();
@@ -243,6 +228,7 @@ controller.selectLoginMobile = async function (req, res) {
             access_mobile = selectLoginData[0]["access_mobile"]
             change_password = selectLoginData[0]["change_password"]
             if (statusUser == 0) {
+                await transaction.rollback();
                 res.status(200).json({
                     access: "failed",
                     message: messages[language]?.userStatus,
@@ -250,6 +236,7 @@ controller.selectLoginMobile = async function (req, res) {
                 return false
             }
             if (change_password == 0) {
+                await transaction.rollback();
                 res.status(200).json({
                     access: "change",
                     message: messages[language]?.resetPassword,

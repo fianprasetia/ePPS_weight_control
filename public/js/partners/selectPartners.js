@@ -1,9 +1,6 @@
 selectContent()
 async function selectContent() {
-    token = await JSON.parse(getCookie("dataToken"));
-   if (!token) {
-        token = await getAccessToken(); 
-    }
+   
     let language = await JSON.parse(getCookie("language"));
     const data = await "file/language.json";
     const response = await fetch(data);
@@ -48,10 +45,7 @@ async function selectContent() {
 }
 async function selectPartners() {
     const language = await JSON.parse(getCookie("language"));
-    var token = await JSON.parse(getCookie("dataToken"));
-   if (!token) {
-        token = await getAccessToken(); 
-    }
+    var
     var xhr = new XMLHttpRequest();
     var url = mainUrl + "partners"
     xhr.onerror = function () {
@@ -120,16 +114,13 @@ async function selectPartners() {
     };
     xhr.open("GET", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
+   
     xhr.send();
     return false;
 }
 async function selectPartnersType(code) {
     const language = await JSON.parse(getCookie("language"));
-    var token = await JSON.parse(getCookie("dataToken"));
-   if (!token) {
-        token = await getAccessToken(); 
-    }
+    var
     var xhr = new XMLHttpRequest();
     var url = mainUrl + "partnerstype"
     xhr.onerror = function () {
@@ -197,7 +188,7 @@ async function selectPartnersType(code) {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
+   
     xhr.send(data);
     return false;
 }

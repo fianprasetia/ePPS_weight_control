@@ -22,22 +22,22 @@ async function sessionLanguage(responseLogin, language, username) {
 }
 async function sessionMenu(responseLogin, language, username) {
   const dataMenu = await responseLogin["dataMenu"]
-  if (sessionStorage.epps_session_menu) {
-    epps_session_menu = JSON.parse(sessionStorage.getItem("epps_session_menu"));
+  if (sessionStorage.epps_session_menu_wb) {
+    epps_session_menu_wb = JSON.parse(sessionStorage.getItem("epps_session_menu_wb"));
   } else {
-    epps_session_menu = [];
+    epps_session_menu_wb = [];
   }
-  epps_session_menu.push({
+  epps_session_menu_wb.push({
     dataMenu: dataMenu,
   });
-  sessionStorage.setItem("epps_session_menu", JSON.stringify(epps_session_menu));
+  sessionStorage.setItem("epps_session_menu_wb", JSON.stringify(epps_session_menu_wb));
   await sessionEmployee(responseLogin, language)
   // await insertSessionMenu(username, dataMenu)
 }
 async function sessionEmployee(responseLogin, language) {
   const dataEmployee = await responseLogin["dataLogin"][0]["adm_employee"]
   const dataEmployeeString = JSON.stringify(dataEmployee);
-  setCookie('dataEmployee', dataEmployeeString, 8);
+  setCookie('dataEmployeeWB', dataEmployeeString, 8);
   // sessionCompany(responseLogin, language)
 }
 // async function sessionCompany(responseLogin, language) {
@@ -128,6 +128,6 @@ function clearCookies() {
 //   // };
 //   xhr.open("POST", url, true);
 //   xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-//   xhr.setRequestHeader("Authorization", "Bearer " + token);
+//  
 //   xhr.send(data);
 // }

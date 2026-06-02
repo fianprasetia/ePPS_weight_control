@@ -92,8 +92,6 @@ async function insertMenu() {
   };
 
   var data = JSON.stringify(dataMenu);
-  console.log(data)
-  return false
   xhr.onloadend = function () {
     if (this.readyState == 4 && this.status == 200) {
       var responseLogin = JSON.parse(xhr.response);

@@ -1,8 +1,5 @@
 async function selectContent() {
-    token = await JSON.parse(getCookie("dataToken"));
-   if (!token) {
-        token = await getAccessToken(); 
-    }
+   
 
     let language = await JSON.parse(getCookie("language"));
     const data = "file/language.json";
@@ -45,10 +42,7 @@ async function selectItemMaster() {
     const language = await JSON.parse(getCookie("language"));
     const searchDescription = document.getElementById("searchDescription").value
     const searchCategory = document.getElementById("searchCategory").value
-    var token = await JSON.parse(getCookie("dataToken"));
-   if (!token) {
-        token = await getAccessToken(); 
-    }
+    var
     var xhr = new XMLHttpRequest();
     var url = mainUrl + "itemmaster"
     xhr.onloadstart = function () {
@@ -126,7 +120,7 @@ async function selectItemMaster() {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
+   
     xhr.send(data);
     return false;
 }
@@ -162,10 +156,7 @@ async function selectUOM(uomCode) {
 }
 async function selectItemCategory(codeCategory) {
     const language = await JSON.parse(getCookie("language"));
-    var token = await JSON.parse(getCookie("dataToken"));
-   if (!token) {
-        token = await getAccessToken(); 
-    }
+    var
     var xhr = new XMLHttpRequest();
     var url = mainUrl + "itemcategory"
     xhr.onerror = function () {
@@ -231,16 +222,13 @@ async function selectItemCategory(codeCategory) {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
+   
     xhr.send(data);
     return false;
 }
 async function selectSearchItemCategory(codeCategory) {
     const language = await JSON.parse(getCookie("language"));
-    var token = await JSON.parse(getCookie("dataToken"));
-   if (!token) {
-        token = await getAccessToken(); 
-    }
+    var
     var xhr = new XMLHttpRequest();
     var url = mainUrl + "itemcategory"
     xhr.onerror = function () {
@@ -301,7 +289,7 @@ async function selectSearchItemCategory(codeCategory) {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
+   
     xhr.send(data);
     return false;
 }

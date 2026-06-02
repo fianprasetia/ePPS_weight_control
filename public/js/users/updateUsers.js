@@ -1,16 +1,6 @@
 async function showModalUpdateUsers(id) {
-  let token = await JSON.parse(getCookie("dataToken"));
-  if (token == null) {
-    await getAccessToken()
-    if (token == null) {
-      return;
-    }
-    var myModal = new bootstrap.Modal(document.getElementById("modalUsers"), { keyboard: false });
-    myModal.toggle();
-  } else {
-    var myModal = new bootstrap.Modal(document.getElementById("modalUsers"), { keyboard: false });
-    myModal.toggle();
-  }
+  var myModal = new bootstrap.Modal(document.getElementById("modalUsers"), { keyboard: false });
+  myModal.toggle();
   let language = await JSON.parse(getCookie("language"));
   document.getElementById("selectFullname").disabled = true
   document.getElementById("passwordhide").hidden = true
@@ -37,19 +27,19 @@ async function showModalUpdateUsers(id) {
       var response = await JSON.parse(xhr.response);
       if (response["access"] == "success") {
         var responseData = response["data"]
-        const companyCode = responseData[0]["code_company"]
-        await selectCompany(companyCode)
-        const accessWeb = responseData[0]["access_web"]
+        // const companyCode = responseData[0]["code_company"]
+        // await selectCompany(companyCode)
+        // const accessWeb = responseData[0]["access_web"]
         const status = responseData[0]["status"]
-        const accessMobile = responseData[0]["access_mobile"]
+        // const accessMobile = responseData[0]["access_mobile"]
         document.getElementById("selectUsername").value = responseData[0]["username"]
-        document.getElementById("selectFullname").innerHTML = "<option class='fw-light text-uppercase' selected value='" + responseData[0]["employee_id"] + "'>" + kapital(responseData[0]["hrd_employee"]["fullname"]) + "</option> "
-        mainOptionWeb = "<option  class='fw-light text-uppercase' value=" + accessWeb + ">" + (accessWeb == "0" ? kapital(nonactive) : kapital(active)) + "</option>";
-        optionWeb = "<option  class='fw-light text-uppercase' value=" + (accessWeb != "0" ? "0" : "1") + ">" + (accessWeb != "0" ? kapital(nonactive) : kapital(active)) + "</option>";
-        document.getElementById("selectAccess_web").innerHTML = "" + mainOptionWeb + "" + optionWeb + "";
-        mainOptionMobile = "<option  class='fw-light text-uppercase' value=" + accessMobile + ">" + (accessMobile == "0" ? kapital(nonactive) : kapital(active)) + "</option>";
-        optionMobile = "<option  class='fw-light text-uppercase' value=" + (accessMobile != "0" ? "0" : "1") + ">" + (accessMobile != "0" ? kapital(nonactive) : kapital(active)) + "</option>";
-        document.getElementById("selectAccess_mobile").innerHTML = "" + mainOptionMobile + "" + optionMobile + "";
+        document.getElementById("selectFullname").innerHTML = "<option class='fw-light text-uppercase' selected value='" + responseData[0]["employee_id"] + "'>" + kapital(responseData[0]["adm_employee"]["fullname"]) + "</option> "
+        // mainOptionWeb = "<option  class='fw-light text-uppercase' value=" + accessWeb + ">" + (accessWeb == "0" ? kapital(nonactive) : kapital(active)) + "</option>";
+        // optionWeb = "<option  class='fw-light text-uppercase' value=" + (accessWeb != "0" ? "0" : "1") + ">" + (accessWeb != "0" ? kapital(nonactive) : kapital(active)) + "</option>";
+        // document.getElementById("selectAccess_web").innerHTML = "" + mainOptionWeb + "" + optionWeb + "";
+        // mainOptionMobile = "<option  class='fw-light text-uppercase' value=" + accessMobile + ">" + (accessMobile == "0" ? kapital(nonactive) : kapital(active)) + "</option>";
+        // optionMobile = "<option  class='fw-light text-uppercase' value=" + (accessMobile != "0" ? "0" : "1") + ">" + (accessMobile != "0" ? kapital(nonactive) : kapital(active)) + "</option>";
+        // document.getElementById("selectAccess_mobile").innerHTML = "" + mainOptionMobile + "" + optionMobile + "";
         mainOptionStatus = "<option  class='fw-light text-uppercase' value=" + status + ">" + (status == "0" ? kapital(nonactive) : kapital(active)) + "</option>";
         optionStatus = "<option  class='fw-light text-uppercase' value=" + (status != "0" ? "0" : "1") + ">" + (status != "0" ? kapital(nonactive) : kapital(active)) + "</option>";
         document.getElementById("selectStatusActive").innerHTML = "" + mainOptionStatus + "" + optionStatus + "";
@@ -81,7 +71,7 @@ async function showModalUpdateUsers(id) {
   };
   xhr.open("POST", url, true);
   xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-  xhr.setRequestHeader("Authorization", "Bearer " + token);
+
   xhr.send(data);
   return false;
 }
@@ -89,18 +79,8 @@ async function updateUsers() {
   const language = await JSON.parse(getCookie("language"));
   const dataLogin = await JSON.parse(getCookie("dataLogin"));
   const usernameLogin = dataLogin["username"];
-  var token = await JSON.parse(getCookie("dataToken"));
-  if (token == null) {
-    await getAccessToken()
-    if (token == null) {
-      return;
-    }
-  }
   const fullname = document.getElementById("selectFullname").value
   const username = document.getElementById("selectUsername").value
-  const location = document.getElementById("selectLocation").value
-  const access_web = document.getElementById("selectAccess_web").value
-  const access_mobile = document.getElementById("selectAccess_mobile").value
   const status = document.getElementById("selectStatusActive").value
   !(function () {
     class e {
@@ -111,9 +91,6 @@ async function updateUsers() {
             rules: {
               "selectUsername": { required: !0, minlength: 4 },
               "selectFullname": { required: !0 },
-              "selectLocation": { required: !0 },
-              "selectAccess_web": { required: !0 },
-              "selectAccess_mobile": { required: !0 },
               "selectStatusActive": { required: !0 },
             },
             messages: {
@@ -122,9 +99,6 @@ async function updateUsers() {
                 minlength: minlength,
               },
               "selectFullname": required,
-              "selectLocation": required,
-              "selectAccess_web": required,
-              "selectAccess_mobile": required,
               "selectStatusActive": required,
             },
           }),
@@ -141,7 +115,7 @@ async function updateUsers() {
     }
     Dashmix.onLoad(() => e.init());
   })();
-  if (fullname == "" || username == "" || location == "" || access_web == "" || access_mobile == "" || status == "") {
+  if (fullname == "" || username == "" || status == "") {
     return false
   }
   var xhr = new XMLHttpRequest();
@@ -169,9 +143,6 @@ async function updateUsers() {
     {
       language_POST: language,
       employeeID_POST: fullname,
-      location_POST: location,
-      accessWeb_POST: access_web,
-      accessMobile_POST: access_mobile,
       status_POST: status,
       username_POST: usernameLogin
     }
@@ -222,24 +193,13 @@ async function updateUsers() {
   };
   xhr.open("PUT", url, true);
   xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-  xhr.setRequestHeader("Authorization", "Bearer " + token);
   xhr.send(data);
   return false;
 }
 async function showModalUpdatePassword(id) {
-  let token = await JSON.parse(getCookie("dataToken"));
-  if (token == null) {
-    await getAccessToken()
-    if (token == null) {
-      return;
-    }
-    var myModal = new bootstrap.Modal(document.getElementById("modalUsersPassword"), { keyboard: false });
-    myModal.toggle();
-  } else {
-    var myModal = new bootstrap.Modal(document.getElementById("modalUsersPassword"), { keyboard: false });
-    myModal.toggle();
-  }
-  document.getElementById("loadpassword").innerHTML = "<a id='cancelBtn' onclick='closeModal()' class='btn btn-danger'>" + kapital(cancel) + "</a> <button type='submit' onclick='updatePassword()' class='btn btn-primary'>" + kapital(done) + "</button>"
+  var myModal = new bootstrap.Modal(document.getElementById("modalUsersPassword"), { keyboard: false });
+  myModal.toggle();
+  document.getElementById("loadpassword").innerHTML = "<a id='cancelBtn' onclick='closeModal()' class='btn btn-danger'>" + kapital(cancel) + "</a> <a type='submit' onclick='updatePassword()' class='btn btn-primary'>" + kapital(done) + "</a>"
   document.getElementById("selectUsernamePassword").value = id;
   document.getElementById("selectUsernamePassword").disabled = true;
 }
@@ -247,10 +207,6 @@ async function updatePassword() {
   const language = await JSON.parse(getCookie("language"));
   const dataLogin = await JSON.parse(getCookie("dataLogin"));
   const usernameLogin = dataLogin["username"];
-  var token = await JSON.parse(getCookie("dataToken"));
-  if (!token) {
-        token = await getAccessToken(); 
-    }
   const username = document.getElementById("selectUsernamePassword").value
   const password = document.getElementById("password1").value
   const retypepassword = document.getElementById("password2").value
@@ -313,7 +269,6 @@ async function updatePassword() {
     {
       language_POST: language,
       password_POST: password,
-      username_POST: usernameLogin
     }
   );
   xhr.onloadend = function () {
@@ -362,23 +317,12 @@ async function updatePassword() {
   };
   xhr.open("PUT", url, true);
   xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-  xhr.setRequestHeader("Authorization", "Bearer " + token);
   xhr.send(data);
   return false;
 }
 async function showModalUpdateAccess(id) {
-  let token = await JSON.parse(getCookie("dataToken"));
-  if (token == null) {
-    await getAccessToken()
-    if (token == null) {
-      return;
-    }
-    var myModal = new bootstrap.Modal(document.getElementById("modalUsersAccess"), { keyboard: false });
-    myModal.toggle();
-  } else {
-    var myModal = new bootstrap.Modal(document.getElementById("modalUsersAccess"), { keyboard: false });
-    myModal.toggle();
-  }
+  var myModal = new bootstrap.Modal(document.getElementById("modalUsersAccess"), { keyboard: false });
+  myModal.toggle();
   document.getElementById("titleUsersAccess").innerHTML = webmenuaccess
   document.getElementById("tabList").innerHTML = ""
   document.getElementById("tabList").innerHTML = `  <ul class="nav nav-tabs nav-tabs-alt"  role="tablist">
@@ -605,7 +549,6 @@ async function showModalUpdateAccess(id) {
   };
   xhr.open("POST", url, true);
   xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-  xhr.setRequestHeader("Authorization", "Bearer " + token);
   xhr.send(data);
   return false;
 }
@@ -655,10 +598,6 @@ async function updateAccess() {
   const language = await JSON.parse(getCookie("language"));
   const dataLogin = await JSON.parse(getCookie("dataLogin"));
   const usernameLogin = dataLogin["username"];
-  var token = await JSON.parse(getCookie("dataToken"));
-  if (!token) {
-        token = await getAccessToken(); 
-    }
   var userAccess = [];
   $("input:checkbox[name=menuAccesss]:checked").each(function () {
     userAccess.push($(this).val());
@@ -748,7 +687,6 @@ async function updateAccess() {
   };
   xhr.open("POST", url, true);
   xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-  xhr.setRequestHeader("Authorization", "Bearer " + token);
   xhr.send(data);
   return false;
 }
@@ -769,8 +707,8 @@ async function updateCopyAccess() {
   const username = dataLogin["username"];
   var token = await JSON.parse(getCookie("dataToken"));
   if (!token) {
-        token = await getAccessToken(); 
-    }
+    token = await getAccessToken();
+  }
   const target = document.getElementById("selectUsernameAccess").value
   const source = document.getElementById("selectUsernameCopy").value
   !(function () {
@@ -877,7 +815,7 @@ async function updateCopyAccess() {
   };
   xhr.open("POST", url, true);
   xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-  xhr.setRequestHeader("Authorization", "Bearer " + token);
+
   xhr.send(data);
   return false;
 }
@@ -1120,7 +1058,7 @@ async function showModalUpdateMobileAccess(id) {
   };
   xhr.open("POST", url, true);
   xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-  xhr.setRequestHeader("Authorization", "Bearer " + token);
+
   xhr.send(data);
   return false;
 }
@@ -1131,8 +1069,8 @@ async function updateAccessMobile() {
   const usernameLogin = dataLogin["username"];
   var token = await JSON.parse(getCookie("dataToken"));
   if (!token) {
-        token = await getAccessToken(); 
-    }
+    token = await getAccessToken();
+  }
   var userAccess = [];
   $("input:checkbox[name=menuAccesss]:checked").each(function () {
     userAccess.push($(this).val());
@@ -1222,7 +1160,7 @@ async function updateAccessMobile() {
   };
   xhr.open("POST", url, true);
   xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-  xhr.setRequestHeader("Authorization", "Bearer " + token);
+
   xhr.send(data);
   return false;
 }
@@ -1242,8 +1180,8 @@ async function updateCopyAccessMobile() {
   const username = dataLogin["username"];
   var token = await JSON.parse(getCookie("dataToken"));
   if (!token) {
-        token = await getAccessToken(); 
-    }
+    token = await getAccessToken();
+  }
   const target = document.getElementById("selectUsernameAccess").value
   const source = document.getElementById("selectUsernameCopy").value
   !(function () {
@@ -1350,7 +1288,7 @@ async function updateCopyAccessMobile() {
   };
   xhr.open("POST", url, true);
   xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-  xhr.setRequestHeader("Authorization", "Bearer " + token);
+
   xhr.send(data);
   return false;
 }

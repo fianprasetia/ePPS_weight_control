@@ -78,7 +78,7 @@ async function showModalUpdatePartners(id) {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
+   
     xhr.send(data);
     return false;
 }
@@ -86,10 +86,7 @@ async function updatePartners() {
     const language = await JSON.parse(getCookie("language"));
     const dataLogin = await JSON.parse(getCookie("dataLogin"));
     const username = dataLogin["username"];
-    var token = await JSON.parse(getCookie("dataToken"));
-   if (!token) {
-        token = await getAccessToken(); 
-    }
+    var
     const code = document.getElementById("code").value
     const partnersType = document.getElementById("partnersType").value
     const name = document.getElementById("name").value
@@ -224,7 +221,7 @@ async function updatePartners() {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
+   
     xhr.send(data);
     return false;
 }

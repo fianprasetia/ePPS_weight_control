@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('../partials/head'); %>
+  </head>
+
+  <body>
+    <div id="page-container" class="sidebar-dark enable-page-overlay side-scroll page-header-fixed page-footer-fixed side-trans-enabled">
+      <nav id="sidebar" aria-label="Main Navigation"><%- include('../partials/navigasi'); %></nav>
+      <!-- END Sidebar -->
+
+      <!-- Header -->
+      <header id="page-header">
+        <!-- Header Content -->
+        <%- include('../partials/header'); %>
+      </header>
+      <!-- END Header -->
+
+      <!-- Main Container -->
+      <main id="main-container">
+        <!-- Page Content -->
+        <div class="">
+          <div class="block block-rounded">
+            <div class="content-heading block-content block-content-full">
+              <div class="row">
+                <div class="col-md-8 border-end">
+                  <label id="sourceLabel" class="form-label text-uppercase display-6 fw-bold" for="source">TBS INTI </label>
+                </div>
+                <div class="col-md-4">
+                  <label id="indicatorLabel" class="form-label text-uppercase display-6 fw-bold" for="indicator">INDICATOR </label>
+                  <div class="p-2 fw-bold text-uppercase text-end display-1 bg-xinspire text-white">12560<span class="text-muted ms-1 fs-5 text-white">kg</span></div>
+                  <div class="mt-3">
+                    <span id="stable" class="badge-stable text-uppercase text-primary">
+                      <i class="fa fa-circle-check"></i>
+                      STABIL
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="content-heading block-content block-content-full">
+              <div class="row mb-4">
+                <div class="d-flex align-items-center gap-2">
+                  <i class="fa-regular fa-rectangle-list fa-2x text-primary"></i>
+                  <h4 id="titleInfo" class="text-uppercase my-auto">INFORMASI INPUT</h4>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-4 mb-2">
+                  <div class="col-sm-12 mb-2">
+                    <label id="ticketLabel" class="form-label text-uppercase" for="ticket">Tiket</label>
+                    <input type="text" class="form-control text-uppercase" id="ticket" name="ticket" disabled />
+                  </div>
+                  <div class="col-sm-12 mb-2">
+                    <label id="estateLabel" class="form-label text-uppercase" for="estate">estate</label>
+                    <select class="js-select2 form-control fw-light text-uppercase" name="estate" id="estate" style="width: 100%"></select>
+                  </div>
+
+                  <div class="d-flex gap-3 mb-2">
+                    <div class="flex-fill">
+                      <label id="divisionLabel" class="form-label text-uppercase" for="division"> Divisi </label>
+                      <select class="js-select2 form-control fw-light text-uppercase" name="division" id="division" style="width: 100%"></select>
+                    </div>
+                    <div class="flex-fill">
+                      <label id="blockLabel" class="form-label text-uppercase" for="block"> Blok </label>
+                      <select class="js-select2 form-control fw-light text-uppercase" name="block" id="block" style="width: 100%"></select>
+                    </div>
+                  </div>
+                  <div class="d-flex gap-3 mb-2">
+                    <div class="flex-fill">
+                      <label id="driverLabel" class="form-label text-uppercase" for="driver">Supir</label>
+                      <input type="text" class="form-control text-uppercase" id="driver" name="driver" />
+                    </div>
+                    <div class="flex-fill">
+                      <label id="noVehicleLabel" class="form-label text-uppercase" for="noVehicle">No Polisi</label>
+                      <select class="js-select2 form-control fw-light text-uppercase" name="noVehicle" id="noVehicle" style="width: 100%"></select>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-4 mb-2 border-end">
+                  <div class="col-sm-12 mb-2">
+                    <label id="deliveryLabel" class="form-label text-uppercase" for="delivery">SPB</label>
+                    <input type="text" class="form-control fw-light text-uppercase" id="delivery" name="delivery" />
+                  </div>
+                  <div class="d-flex gap-3 mb-2">
+                    <div class="flex-fill">
+                      <label id="totalBunchesLabel" class="form-label text-uppercase" for="totalBunches">Jumlah Janjang</label>
+                      <input type="text" class="form-control fw-light text-uppercase text-end" onkeyup="validateDouble(this)" value="0" onfocus="removeZero(this)" id="totalBunches" name="totalBunches" />
+                    </div>
+                    <div class="flex-fill">
+                      <label id="looseFruitLabel" class="form-label text-uppercase" for="looseFruit">BRONDOLAN</label>
+                      <input type="text" class="form-control fw-light text-uppercase text-end" onkeyup="validateDouble(this)" value="0" onfocus="removeZero(this)" id="looseFruit" name="looseFruit" />
+                    </div>
+                    <div class="flex-fill">
+                      <label id="plantingYearLabel" class="form-label text-uppercase" for="plantingYear">tahun tanam</label>
+                      <input type="text" class="form-control fw-light text-uppercase text-center" id="plantingYear" name="plantingYear" />
+                    </div>
+                  </div>
+
+                  <div class="col-sm-12 mb-2">
+                    <label id="noteLabel" for="note" class="form-label text-uppercase">Keterangan</label>
+                    <input type="text" class="form-control fw-light text-uppercase" id="note" name="note" />
+                  </div>
+                </div>
+                <div class="col-sm-4 mb-2">
+                  <div class="d-flex gap-3">
+                    <div class="flex-fill mb-2">
+                      <label id="emptyBunchLabel" class="form-label text-uppercase" for="emptyBunch"> Janjang Kosong </label>
+                      <input type="text" class="form-control fw-light text-uppercase text-end" onkeyup="validateDouble(this)" value="0" onfocus="removeZero(this)" id="emptyBunch" name="emptyBunch" />
+                    </div>
+
+                    <div class="flex-fill mb-2">
+                      <label id="overripeLabel" class="form-label text-uppercase" for="overripe"> Lewat Mateng </label>
+                      <input type="text" class="form-control fw-light text-uppercase text-end" onkeyup="validateDouble(this)" value="0" onfocus="removeZero(this)" id="overripe" name="overripe" />
+                    </div>
+                  </div>
+                  <div class="d-flex gap-3">
+                    <div class="flex-fill mb-2">
+                      <label id="unripeLabel" class="form-label text-uppercase" for="unripe">mentah</label>
+                      <input type="text" class="form-control fw-light text-uppercase text-end" onkeyup="validateDouble(this)" value="0" onfocus="removeZero(this)" id="unripe" name="unripe" />
+                    </div>
+                    <div class="flex-fill mb-2">
+                      <label id="longStalkLabel" for="longStalk" class="form-label text-uppercase">tangkai panjang</label>
+                      <input type="text" class="form-control fw-light text-uppercase text-end" onkeyup="validateDouble(this)" value="0" onfocus="removeZero(this)" id="longStalk" name="longStalk" />
+                    </div>
+                  </div>
+                  <div class="col-sm-6 mb-2">
+                    <label id="mandatoryDeductionLabel" class="form-label text-uppercase" for="mandatoryDeduction">Potongan Wajib</label>
+                    <input type="text" class="form-control fw-light text-uppercase text-end" onkeyup="validateDouble(this)" value="0" onfocus="removeZero(this)" id="mandatoryDeduction" name="mandatoryDeduction" />
+                  </div>
+                </div>
+              </div>
+              <div class="">
+                <div class="row mt-4">
+                  <div class="col-sm-4 border-end">
+                    <div class="row align-items-center">
+                      <div class="col-md-2 text-center">
+                        <div class="text-primary mb-2"><i class="fa fa-arrow-down fa-3x"></i></div>
+                        <div id="incomingWeighing" class="fw-bold text-primary">TIMBANG MASUK</div>
+                      </div>
+                      <div class="col-md-7 border-end">
+                        <div class="row mb-2">
+                          <label class="col-sm-4 col-form-label text-uppercase" id="dateInLabel" for="dateIn">Waktu</label>
+                          <div class="col-sm-8">
+                            <input type="text" class="form-control fw-light" id="dateIn" name="dateIn" disabled />
+                          </div>
+                        </div>
+                        <div class="row">
+                          <label class="col-sm-4 col-form-label text-uppercase" id="weightInLabel" for="weightIn">Berat</label>
+                          <div class="col-sm-8">
+                            <input type="text" class="form-control fw-bold text-end" id="weightIn" name="weightIn" value="0" disabled />
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-3 text-center">
+                        <button class="btn btn-primary px-4 py-4 fw-bold">
+                          <div id="getWeightIn">GET WEIGHT</div>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4 border-end">
+                    <div class="row align-items-center">
+                      <div class="col-md-2 text-center">
+                        <div class="text-primary mb-2"><i class="fa fa-arrow-up fa-3x"></i></div>
+                        <div id="outgoingWeighing" class="fw-bold text-primary">TIMBANG KELUAR</div>
+                      </div>
+                      <div class="col-md-7 border-end">
+                        <div class="row mb-2">
+                          <label class="col-sm-4 col-form-label text-uppercase" id="dateOutLabel" for="dateOut">Waktu</label>
+                          <div class="col-sm-8">
+                            <input type="text" class="form-control fw-light" id="dateOut" name="dateOut" disabled />
+                          </div>
+                        </div>
+                        <div class="row">
+                          <label class="col-sm-4 col-form-label text-uppercase" id="weightOutLabel" for="weightOut">Berat</label>
+                          <div class="col-sm-8">
+                            <input type="text" class="form-control fw-bold text-end" id="weightOut" name="weightOut" value="0" disabled />
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-3 text-center">
+                        <button class="btn btn-secondary px-4 py-4 fw-bold">
+                          <div id="getWeightOut">GET WEIGHT</div>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="row align-items-center">
+                      <div class="col-md-2 text-center">
+                        <div class="text-primary mb-2"><i class="fa-regular fa-circle-check fa-3x"></i></div>
+                        <div id="total" class="fw-bold text-primary">TOTAL</div>
+                      </div>
+                      <div class="col-md-7 border-end">
+                        <div class="row mb-2">
+                          <label class="col-sm-4 col-form-label text-uppercase" id="grossWeightLabel" for="grossWeight">brutto</label>
+                          <div class="col-sm-8">
+                            <input type="text" class="form-control fw-bold text-end" id="grossWeight" value="0" name="grossWeight" disabled />
+                          </div>
+                        </div>
+                        <div class="row mb-2">
+                          <label class="col-sm-4 col-form-label text-uppercase" id="deductionLabel" for="deduction">potongan</label>
+                          <div class="col-sm-8">
+                            <input type="text" class="form-control fw-bold text-end" id="deduction" value="0" name="deduction" disabled />
+                          </div>
+                        </div>
+                        <div class="row">
+                          <label class="col-sm-4 col-form-label text-uppercase" id="netWeightLabel" for="netWeight">netto</label>
+                          <div class="col-sm-8">
+                            <input type="text" class="form-control fw-bold text-end" id="netWeight" name="netWeight" value="0" disabled />
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-3 text-center">
+                        <button class="btn btn-secondary px-4 py-4 fw-bold">
+                          <div id="save" class="text-uppercase">SAVE & Print</div>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="">
+          <div class="block block-rounded">
+            <div class="block-content block-content-full">
+              <div class="d-flex align-items-center gap-2 mb-4">
+                <i class="fa-solid fa-scale-balanced fa-2x text-primary"></i>
+                <h4 id="weighbridgeData" class="text-uppercase my-auto">DATA TIMBANGAn</h4>
+              </div>
+              <div class="row table-responsive mb-2">
+                <table id="dynamicTable" class="table table-bordered table-striped table-vcenter js-dataTable-simple">
+                  <thead>
+                    <tr>
+                      <th class="text-center text-uppercase">#</th>
+                      <th id="noVehicleThead" class="text-center text-uppercase">No Polisi</th>
+                      <th id="driverThead" class="text-center text-uppercase">supir</th>
+                      <th id="estateThead" class="text-center text-uppercase">estate</th>
+                      <th id="divisionThead" class="text-center text-uppercase">divsi</th>
+                      <th id="plantingYearThead" class="text-center text-uppercase">tahun Tanam</th>
+                    </tr>
+                  </thead>
+                  <tbody id="dataTableItem"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+      <footer id="page-footer" class="bg-body-light"><%- include('../partials/footer'); %></footer>
+    </div>
+    <div class="modal" id="modalCompany" style="overflow: hidden" tabindex="-1" role="dialog" data-bs-backdrop="static" aria-labelledby="modalCompany" aria-hidden="true">
+      <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+          <div class="block block-rounded block-themed block-transparent mb-0">
+            <div class="block-header bg-primary-dark">
+              <h3 id="titleCompany" class="block-title text-uppercase">Add Company</h3>
+              <div class="block-options">
+                <button type="button" class="btn-block-option text-gray" data-toggle="block-option" data-action="fullscreen_toggle"></button>
+              </div>
+              <!-- <div class="block-options">
+                            <button type="button" class="btn-block-option" onclick="closeModal()" aria-label="Close">
+                                <i class="fa fa-fw fa-times"></i>
+                            </button>
+                        </div> -->
+            </div>
+            <form style="max-height: 90vh; overflow-y: auto" class="js-validation" id="form2">
+              <div class="block-content">
+                <div hidden class="col-sm-12 mb-2">
+                  <label class="form-label fw-light text-uppercase" for="level">Level</label>
+                  <input type="text" class="form-control fw-light text-uppercase" id="level" name="level" />
+                </div>
+                <div hidden class="col-sm-12 mb-2">
+                  <label id="parentLabel" class="form-label fw-light text-uppercase" for="parent">Parent Code<span class="text-danger">*</span></label>
+                  <input type="text" class="form-control fw-light text-uppercase" id="parent" name="parent" />
+                </div>
+                <div class="col-sm-12 mb-2">
+                  <label id="codeLabel" class="form-label text-uppercase" for="code">Code<span class="text-danger">*</span></label>
+                  <input type="text" class="js-maxlength form-control fw-light text-uppercase" data-always-show="true" data-warning-class="badge bg-primary" data-limit-reached-class="badge bg-primary" id="code" name="code" required />
+                </div>
+                <div class="col-sm-12 mb-2">
+                  <label id="nameLabel" class="form-label text-uppercase" for="name">Name<span class="text-danger">*</span></label>
+                  <input type="text" class="form-control fw-light text-uppercase" id="name" name="name" required />
+                </div>
+                <div class="col-sm-12 mb-2">
+                  <label id="typeLabel" class="form-label text-uppercase" for="type">Type<span class="text-danger">*</span></label>
+                  <select class="js-select2 form-select fw-light text-uppercase" name="type" id="type" style="width: 100%" data-container="#modalCompany" required></select>
+                </div>
+                <div class="col-sm-12 mb-2">
+                  <label id="addressLabel" class="form-label text-uppercase" for="address">Address</label>
+                  <input type="text" class="form-control fw-light text-uppercase" id="address" name="address" />
+                </div>
+                <div class="col-sm-12 mb-2">
+                  <label id="provinceLabel" class="form-label text-uppercase" for="province">Province</label>
+                  <select class="js-select2 form-select fw-light text-uppercase" name="province" id="province" style="width: 100%" data-container="#modalCompany"></select>
+                </div>
+                <div class="col-sm-12 mb-2">
+                  <label id="phone_numberLabel" class="form-label text-uppercase" for="phone_number">Phone Number</label>
+                  <input type="text" class="form-control fw-light text-uppercase" id="phone_number" name="phone_number" />
+                </div>
+                <div class="col-sm-12 mb-2">
+                  <label id="emailLabel" class="form-label text-uppercase" for="email">Email</label>
+                  <input type="text" class="form-control fw-light" id="email" name="email" />
+                </div>
+                <div class="col-sm-12 mb-2">
+                  <label id="cityLabel" class="form-label text-uppercase" for="city">City</label>
+                  <select class="js-select2 form-select fw-light text-uppercase" name="city" id="city" style="width: 100%" data-container="#modalCompany"></select>
+                </div>
+                <div class="col-sm-12 mb-2">
+                  <label id="zip_codeLabel" class="form-label text-uppercase" for="zip_code">Zip Code</label>
+                  <input type="text" class="form-control fw-light text-uppercase" id="zip_code" name="zip_code" />
+                </div>
+                <div class="col-sm-12 mb-2">
+                  <label id="taxLabel" class="form-label text-uppercase" for="tax">Tax Identification Number</label>
+                  <input type="text" class="form-control fw-light text-uppercase" id="tax" name="tax" />
+                </div>
+                <div class="col-sm-12 mb-2">
+                  <label id="capacityLabel" class="form-label text-uppercase" for="capacity">Capacity</label>
+                  <input type="text" class="form-control fw-light text-uppercase" onfocus="removeZero(this)" value="0" id="capacity" name="capacity" />
+                </div>
+              </div>
+              <div id="load" class="block-content block-content-full text-end bg-body">
+                <!-- <button id="cancelBtn" onclick="closeModal()" class="btn  btn-danger">Close</button>
+                            <button id="doneBtn" type="submit" onclick="insertuserlogin()"
+                                class="btn  btn-primary">Done</button> -->
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- CORE LIBRARIES (jQuery MUST be first) -->
+    <script src="assets/js/lib/jquery.min.js"></script>
+    <script src="assets/js/dashmix.app.min.js"></script>
+
+    <!-- APPLICATION CORE -->
+    <script src="js/mainUrl.js"></script>
+    <!-- <script src="lib/loadingPage.js"></script> -->
+    <script src="lib/epps.js"></script>
+
+    <!-- FORM VALIDATION & INPUT HANDLING -->
+    <script src="assets/js/plugins/jquery-validation/jquery.validate.min.js"></script>
+    <script src="assets/js/plugins/jquery-validation/additional-methods.js"></script>
+    <script src="assets/js/plugins/jquery.maskedinput/jquery.maskedinput.min.js"></script>
+    <script src="assets/js/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+
+    <!-- UI COMPONENTS -->
+    <script src="assets/js/plugins/select2/js/select2.full.min.js"></script>
+    <script src="assets/js/plugins/flatpickr/flatpickr.min.js"></script>
+    <script src="assets/js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+    <script src="assets/js/plugins/bootstrap-notify/bootstrap-notify.min.js"></script>
+
+    <!-- DATATABLES SUITE -->
+    <script src="assets/js/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="assets/js/plugins/datatables-bs5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="assets/js/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="assets/js/plugins/datatables-responsive-bs5/js/responsive.bootstrap5.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons/dataTables.buttons.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons-bs5/js/buttons.bootstrap5.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons-jszip/jszip.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons-pdfmake/pdfmake.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons-pdfmake/vfs_fonts.js"></script>
+    <script src="assets/js/plugins/datatables-buttons/buttons.print.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons/buttons.html5.min.js"></script>
+
+    <!-- DATA VISUALIZATION -->
+    <script src="assets/js/plugins/chart.js/chart.umd.js"></script>
+
+    <!-- PAGE SPECIFIC SCRIPTS -->
+    <script src="assets/js/pages/be_pages_dashboard.min.js"></script>
+
+    <!-- COMPANY MODULE -->
+    <script src="js/internal_ffb/selectInternalFFB.js"></script>
+    <script src="js/internal_ffb/insertInternalFFB.js"></script>
+    <script src="js/internal_ffb/updateInternalFFB.js"></script>
+    <script src="js/internal_ffb/deleteInternalFFB.js"></script>
+
+    <!-- INITIALIZATION (Single combined call) -->
+    <script>
+      Dashmix.helpersOnLoad(["js-flatpickr", "jq-datepicker", "jq-maxlength", "jq-select2", "jq-rangeslider", "jq-masked-inputs", "jq-pw-strength", "jq-notify"]);
+      $("#plantingYear").datepicker({
+        format: "yyyy",
+        startView: "years",
+        minViewMode: "years",
+        autoclose: true
+      });
+    </script>
+  </body>
+</html>

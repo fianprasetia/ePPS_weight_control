@@ -14,11 +14,7 @@ controller.selectUsers = async function (req, res) {
         let selectLoginData = await model.adm_user_login.findAll({
             include: [
                 {
-                    model: model.adm_company,
-                    attributes: ["name", "code_company_type", "parent_code"],
-                },
-                {
-                    model: model.hrd_employee,
+                    model: model.adm_employee,
                 },
             ],
         },
@@ -47,12 +43,8 @@ controller.insertUsers = async function (req, res) {
     try {
         var language = req.body.language_POST
         var username = req.body.username_POST
-        var usernameLogin = req.body.username_login_POST
         var employeeId = req.body.employeeID_POST
         var password = md5(req.body.password_POST)
-        var location = req.body.location_POST
-        var accessWeb = req.body.accessWeb_POST
-        var accessMobile = req.body.accessMobile_POST
         var status = req.body.status_POST
         let insertLoginData = await model.adm_user_login.findAll(
             {
@@ -80,10 +72,7 @@ controller.insertUsers = async function (req, res) {
                     employee_id: employeeId,
                     password: password,
                     old_password: password,
-                    code_company: location,
                     change_password: 0,
-                    access_web: accessWeb,
-                    access_mobile: accessMobile,
                     status: status,
                 },
                 {
@@ -96,12 +85,6 @@ controller.insertUsers = async function (req, res) {
                     access: "success",
                     message: messages[language]?.insertData,
                     data: insertLoginNewData,
-                });
-                logger.info('Insert User', {
-                    "1.username": `${usernameLogin}`,
-                    "2.module": 'insertUsers',
-                    "3.status": 'success',
-                    "4.action": req.body
                 });
             } else {
                 await transaction.rollback();
@@ -125,11 +108,7 @@ controller.selectUsersByUsername = async function (req, res) {
         let selectUsersByUsernameData = await model.adm_user_login.findAll({
             include: [
                 {
-                    model: model.adm_company,
-                    attributes: ["name", "code_company_type", "parent_code"],
-                },
-                {
-                    model: model.hrd_employee,
+                    model: model.adm_employee,
                 },
             ],
             where: {
@@ -160,7 +139,6 @@ controller.updatePassword = async function (req, res) {
     try {
         var username = req.params.username
         var language = req.body.language_POST
-        const usernameLogin = req.body.username_POST
         var password = md5(req.body.password_POST)
         let updatePasswordData = await model.adm_user_login.update(
             {
@@ -184,12 +162,6 @@ controller.updatePassword = async function (req, res) {
                 message: messages[language]?.updateData,
                 data: updatePasswordData,
             });
-            logger.info('Update Password User', {
-                "1.username": `${usernameLogin}`,
-                "2.module": 'updatePassword',
-                "3.status": 'success',
-                "4.action": req.body
-            });
         } else {
             await transaction.rollback();
             res.status(200).json({
@@ -210,18 +182,11 @@ controller.updateUsers = async function (req, res) {
     try {
         var username = req.params.username
         var language = req.body.language_POST
-        const usernameLogin = req.body.username_POST
         var employeeID = req.body.employeeID_POST
-        var location = req.body.location_POST
-        var accessWeb = req.body.accessWeb_POST
-        var accessMobile = req.body.accessMobile_POST
         var status = req.body.status_POST
         let updateUsersData = await model.adm_user_login.update(
             {
                 username: username,
-                code_company: location,
-                access_web: accessWeb,
-                access_mobile: accessMobile,
                 status: status,
             },
             {
@@ -239,12 +204,6 @@ controller.updateUsers = async function (req, res) {
                 access: "success",
                 message: messages[language]?.updateData,
                 data: updateUsersData,
-            });
-            logger.info('Update User', {
-                "1.username": `${usernameLogin}`,
-                "2.module": 'updateUsers',
-                "3.status": 'success',
-                "4.action": req.body
             });
         } else {
             await transaction.rollback();
@@ -459,9 +418,9 @@ controller.selectUsersWeb = async function (req, res) {
                 //         model: model.hrd_employee,
                 //     },
                 // ],
-                where: {
-                    access_web: 1
-                },
+                // where: {
+                //     access_web: 1
+                // },
                 order: [
                     ['username', 'ASC'],
                 ],

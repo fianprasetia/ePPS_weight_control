@@ -11,22 +11,31 @@ const os = require('os');
 const numCPUs = os.cpus().length;
 const rateLimit = require('express-rate-limit');
 const { authorize } = require('./public/lib/authorize');
+const http = require('http');
+const { Server } = require('socket.io');
 
+// if (cluster.isMaster) {
+//     console.log(`Master ${process.pid} is running`);
 
-if (cluster.isMaster) {
-    console.log(`Master ${process.pid} is running`);
+//     for (let i = 0; i < numCPUs; i++) {
+//         cluster.fork();
+//     }
 
-    for (let i = 0; i < numCPUs; i++) {
-        cluster.fork();
-    }
+//     cluster.on('exit', (worker, code, signal) => {
+//         console.log(`Worker ${worker.process.pid} died`);
+//     });
 
-    cluster.on('exit', (worker, code, signal) => {
-        console.log(`Worker ${worker.process.pid} died`);
-    });
-
-} else {
+// } else {
     const validateToken = require('./middleware/verifyToken');
     var app = express();
+    const server = http.createServer(app);
+
+    const io = new Server(server, {
+        cors: {
+            origin: '*',
+            methods: ['GET', 'POST']
+        }
+    });
     const corsOptions = {
         origin: '*', // Ganti dengan origin yang tepat
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -77,11 +86,20 @@ if (cluster.isMaster) {
     app.get('/login', function (req, res) {
         res.render('pages/login');
     });
-    app.get('/login', function (req, res) {
-        res.render('pages/login');
+    app.get('/company', function (req, res) {
+        res.render('pages/company');
     });
     app.get('/menu_directory', function (req, res) {
         res.render('pages/menu_directory');
+    });
+    app.get('/users', function (req, res) {
+        res.render('pages/users');
+    });
+    app.get('/language', function (req, res) {
+        res.render('pages/language');
+    });
+    app.get('/Internal_ffb', function (req, res) {
+        res.render('pages/Internal_ffb');
     });
 
     const routes = [
@@ -90,6 +108,8 @@ if (cluster.isMaster) {
         ['/login', require('./routes/login')],
         ['/language', require('./routes/language')],
         ['/translate', require('./routes/translate')],
+        ['/users', require('./routes/users')],
+        ['/employee', require('./routes/employee')],
         ['/download-test-file.bin', require('./routes/download')],
         ['/protected-route', validateToken, (req, res) => res.json({ message: 'Access granted', user: req.user })]
 
@@ -98,12 +118,10 @@ if (cluster.isMaster) {
     routes.forEach(([path, ...middleware]) => {
         app.use(path, ...middleware);
     });
-
     // 404 handler
     app.use((req, res, next) => {
         next(createError(404));
     });
-
     // Error handler
     app.use((err, req, res, next) => {
         res.locals.message = err.message;
@@ -112,8 +130,25 @@ if (cluster.isMaster) {
         res.json({ error: err.message });
     });
 
-    const PORT = process.env.PORT || 8084;
-    app.listen(PORT, () => {
-        console.log(`Server running on port ${PORT}`);
-    });
-}
+//     io.on('connection', (socket) => {
+//     console.log('Socket Connected:', socket.id);
+//     socket.on('weightFromScale', (data) => {
+//         console.log('Weight Receive:', data);
+//         // broadcast ke semua browser
+//         io.emit('weightUpdate', data);
+//     });
+//     socket.on('disconnect', () => {
+//         console.log('Socket Disconnect');
+//     });
+
+// });
+
+const PORT = process.env.PORT || 8084;
+
+server.listen(PORT, () => {
+
+    console.log(`Server running on port ${PORT}`);
+
+});
+
+// }

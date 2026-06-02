@@ -1,14 +1,14 @@
 async function showModalInsertLanguage() {
     await selectLanguage();
-    let token = await JSON.parse(getCookie("dataToken"));
-    if (token == null) {
-        await getAccessToken();
-        var myModal = new bootstrap.Modal(document.getElementById("modalLanguage"), { keyboard: false });
-        myModal.toggle();
-    } else {
-        var myModal = new bootstrap.Modal(document.getElementById("modalLanguage"), { keyboard: false });
-        myModal.toggle();
-    }
+    // let token = await JSON.parse(getCookie("dataToken"));
+    // if (token == null) {
+    //     await getAccessToken();
+    //     var myModal = new bootstrap.Modal(document.getElementById("modalLanguage"), { keyboard: false });
+    //     myModal.toggle();
+    // } else {
+    // }
+    var myModal = new bootstrap.Modal(document.getElementById("modalLanguage"), { keyboard: false });
+    myModal.toggle();
     document.getElementById("key").disabled = false
     document.getElementById("load").innerHTML =
         "<a id='cancelBtn' onclick='closeModal()' class='btn  btn-danger'>" + kapital(cancel) + "</a> <a id='doneBtn' type='submit' onclick='insertLanguage()' class='btn  btn-primary'>" + kapital(done) + "</a>";
@@ -47,10 +47,6 @@ async function insertLanguage() {
     const isValid = form.valid();
     if (!isValid) {
         return false;
-    }
-    let token = await JSON.parse(getCookie("dataToken"));
-   if (!token) {
-        token = await getAccessToken(); 
     }
     const language = await JSON.parse(getCookie("language"));
     const key = document.getElementById("key").value
@@ -145,7 +141,6 @@ async function insertLanguage() {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
     xhr.send(data);
     return false;
 }

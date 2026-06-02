@@ -1,20 +1,12 @@
-// document.addEventListener("DOMContentLoaded", function () {
-//   document.getElementById("page-container").style.zoom = "80%";
-// });
-
-
-
 testClientBandwidth()
 window.addEventListener("DOMContentLoaded", () => {
   const iconColor = localStorage.getItem("bandwidthIconColor");
   const keterangan = localStorage.getItem("bandwidthKeterangan");
   const speed = localStorage.getItem("bandwidthSpeed");
-
   if (iconColor && keterangan) {
     document.getElementById("connection").innerHTML = `<i class="fa-solid fa-signal ${iconColor}"></i>`;
     document.getElementById("textConnection").innerHTML = `${keterangan} (${speed} Mbps)`
   } else {
-    // Kalau belum pernah diukur, tampilkan ikon abu-abu
     document.getElementById("connection").innerHTML = `<i class="fa-solid fa-signal text-gray"></i>`;
   }
 });
@@ -76,7 +68,7 @@ async function authorize() {
   const path = window.location.pathname;
   if (path === "/") return; // Skip pengecekan untuk root path
   try {
-    const { dataMenu } = JSON.parse(sessionStorage.getItem("epps_session_menu"))[0];
+    const { dataMenu } = JSON.parse(sessionStorage.getItem("epps_session_menu_wb"))[0];
     const pathExists = dataMenu.some(item => item.page?.trim() === path);
     if (!pathExists) {
       window.location.href = "/";
@@ -135,90 +127,6 @@ function getCookie(name) {
   }
   return null;
 }
-// async function getAccessToken() {
-//   return new Promise((resolve, reject) => {
-//     const sessionLogin = JSON.parse(getCookie("dataLogin"));
-//     const language = JSON.parse(getCookie("language"));
-//     const username = sessionLogin["username"];
-
-//     const xhr = new XMLHttpRequest();
-//     const url = mainUrl + "token";
-//     const data = JSON.stringify({
-//       username_POST: username,
-//       language_POST: language
-//     });
-
-//     xhr.onloadend = function () {
-//       if (this.readyState === 4 && this.status === 200) {
-//         const responseLogin = JSON.parse(xhr.response);
-//         if (responseLogin["access"] === "success") {
-//           const accessToken = responseLogin["data"];
-//           setCookieToken("dataToken", JSON.stringify(accessToken), 15);
-//           resolve(accessToken); // ✅ token baru dikembalikan
-//         } else {
-//           const message = responseLogin["message"];
-//           Dashmix.helpers("jq-notify", {
-//             z_index: 2000,
-//             type: "danger",
-//             icon: "fa fa-times me-1",
-//             message: message
-//           });
-//           clearCookies();
-//           setTimeout(() => {
-//             window.location.href = "/login";
-//           }, 3000);
-//           reject(new Error(message));
-//         }
-//       } else if (this.status !== 200) {
-//         reject(new Error("Failed to fetch token"));
-//       }
-//     };
-
-//     xhr.onerror = () => reject(new Error("Network error"));
-
-//     xhr.open("POST", url, true);
-//     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-//     xhr.send(data);
-//   });
-// }
-
-// async function getAccessToken() {
-//   var sessionLogin = await JSON.parse(getCookie("dataLogin"));
-//   const language = await JSON.parse(getCookie("language"));
-//   username = sessionLogin["username"];
-//   var xhr = new XMLHttpRequest();
-//   var url = mainUrl + "token";
-//   var data = JSON.stringify({
-//     username_POST: username,
-//     language_POST: language
-//   });
-//   xhr.onloadend = async function () {
-//     if (this.readyState == 4 && this.status == 200) {
-//       var responseLogin = await JSON.parse(xhr.response);
-//       if (responseLogin["access"] == "success") {
-//         var accessToken = responseLogin["data"];
-//         const dataTokenString = JSON.stringify(accessToken);
-//         setCookieToken("dataToken", dataTokenString, 60);
-//       } else if (responseLogin["access"] == "failed") {
-//         message = responseLogin["message"];
-//         Dashmix.helpers("jq-notify", {
-//           z_index: 2000,
-//           type: "danger",
-//           icon: "fa fa-times me-1",
-//           message: message
-//         });
-//         await clearCookies();
-//         setTimeout(async function () {
-//           window.location.href = "/login";
-//         }, 3000);
-//       }
-//     }
-//   };
-//   xhr.open("POST", url, true);
-//   xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-//   xhr.send(data);
-//   return false;
-// }
 function setCookieToken(name, value, minutes) {
   const date = new Date();
   date.setTime(date.getTime() + minutes * 60 * 1000); // Mengatur waktu kadaluarsa
@@ -558,13 +466,9 @@ async function content() {
     notice_return = await filterLanguage[0]["content"]["notice_return"];
     document.getElementById("mainMenuNav").innerHTML = await filterLanguage[0]["content"]["main_menu"];
     document.getElementById("homeNav").innerHTML = await filterLanguage[0]["content"]["home"];;
-    // document.getElementById("signoutindex").innerHTML = await filterLanguage[0]["content"]["signout"];;
-    // document.getElementById("accountIndex").innerHTML = await filterLanguage[0]["content"]["account"];;
     document.getElementById("pleaseWait").innerHTML = await filterLanguage[0]["content"]["please_wait"];;
   }
-  // await approvalTransaction();
 }
-// let loadingModalInstance;
 async function keluar() {
   const modalEl = document.getElementById("loadingModal");
   loadingModalInstance = new bootstrap.Modal(modalEl, {
@@ -586,7 +490,7 @@ async function keluar() {
 }
 getePPSSessionMenu();
 async function getePPSSessionMenu() {
-  categoriesMenu = await JSON.parse(sessionStorage.getItem("epps_session_menu"));
+  categoriesMenu = await JSON.parse(sessionStorage.getItem("epps_session_menu_wb"));
   categories = categoriesMenu[0]["dataMenu"];
   categories.filter(c => c.parent_id).forEach(c => {
     const parent = categories.find(p => p.id_menu === c.parent_id);
@@ -712,7 +616,7 @@ async function getePPSSessionMenu() {
 }
 getePPSSessionNameEmplyee();
 async function getePPSSessionNameEmplyee() {
-  sessionFullName = await JSON.parse(getCookie("dataEmployee"));
+  sessionFullName = await JSON.parse(getCookie("dataEmployeeWB"));
   fullName = sessionFullName["fullname"];
   photo = sessionFullName["photo"];
   const urlPhoto = mainUrl + "img/employee/" + photo;
@@ -841,7 +745,7 @@ async function selectLanguage() {
         }
       };
 
-      xhr.open("GET", url, true);
+      xhr.open("POST", url, true);
       xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
       xhr.send(data);
     } catch (error) {
@@ -959,7 +863,7 @@ async function dictionary(param) {
 
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
+   
     xhr.send(data);
   });
 }
@@ -1177,7 +1081,7 @@ function convertToMinutes(time) {
 //   };
 //   xhr.open("POST", url, true);
 //   xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-//   xhr.setRequestHeader("Authorization", "Bearer " + token);
+//  
 //   xhr.send(data);
 //   return false;
 // }
@@ -1249,7 +1153,7 @@ async function deleteFile(fileUrl) {
   };
   xhr.open("DELETE", url, true);
   xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-  xhr.setRequestHeader("Authorization", "Bearer " + token);
+ 
   xhr.send(data);
 }
 function unformatRupiah(formatted) {
@@ -1293,7 +1197,7 @@ function validateDouble(input) {
   input.value = input.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');// hanya angka 0-9
 }
 var get_login = JSON.parse(getCookie("dataLogin"));
-var epps_session_menu = JSON.parse(sessionStorage.getItem("epps_session_menu"));
-if (get_login == null || epps_session_menu == null) {
+var epps_session_menu_wb = JSON.parse(sessionStorage.getItem("epps_session_menu_wb"));
+if (get_login == null || epps_session_menu_wb == null) {
   window.location.href = "/login";
 }

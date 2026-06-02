@@ -207,16 +207,13 @@ async function selectEmployee() {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
+   
     xhr.send(data);
     return false;
 }
 async function selectGender(genderCode) {
     const language = await JSON.parse(getCookie("language"));
-    var token = await JSON.parse(getCookie("dataToken"));
-   if (!token) {
-        token = await getAccessToken(); 
-    }
+    var
     var xhr = new XMLHttpRequest();
     var url = mainUrl + "gender/bylanguage"
     xhr.onerror = function () {
@@ -281,7 +278,7 @@ async function selectGender(genderCode) {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
+   
     xhr.send(data);
     return false;
 }
@@ -368,10 +365,7 @@ async function selectCountry(countryCode) {
 }
 async function selectDepartment(departmentCode) {
     const language = await JSON.parse(getCookie("language"));
-    var token = await JSON.parse(getCookie("dataToken"));
-   if (!token) {
-        token = await getAccessToken(); 
-    }
+    var
     var xhr = new XMLHttpRequest();
     var url = mainUrl + "department/bylanguage"
     xhr.onerror = function () {
@@ -438,16 +432,13 @@ async function selectDepartment(departmentCode) {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
+   
     xhr.send(data);
     return false;
 }
 async function selectJobTitle(jobTitleCode) {
     const language = await JSON.parse(getCookie("language"));
-    var token = await JSON.parse(getCookie("dataToken"));
-   if (!token) {
-        token = await getAccessToken(); 
-    }
+    var
     var xhr = new XMLHttpRequest();
     var url = mainUrl + "jobtitle/bylanguage"
     xhr.onerror = function () {
@@ -514,7 +505,7 @@ async function selectJobTitle(jobTitleCode) {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
+   
     xhr.send(data);
     return false;
 }
@@ -593,16 +584,13 @@ async function selectCompany(companyCode) {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
+   
     xhr.send(data);
     return false;
 }
 async function selectType(typeCode) {
     const language = await JSON.parse(getCookie("language"));
-    var token = await JSON.parse(getCookie("dataToken"));
-   if (!token) {
-        token = await getAccessToken(); 
-    }
+    var
     var xhr = new XMLHttpRequest();
     var url = mainUrl + "employeetype/bylanguage"
     xhr.onerror = function () {
@@ -669,16 +657,13 @@ async function selectType(typeCode) {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
+   
     xhr.send(data);
     return false;
 }
 async function selectStatus(statusCode) {
     const language = await JSON.parse(getCookie("language"));
-    var token = await JSON.parse(getCookie("dataToken"));
-   if (!token) {
-        token = await getAccessToken(); 
-    }
+    var
     var xhr = new XMLHttpRequest();
     var url = mainUrl + "employeestatus/bylanguage"
     xhr.onerror = function () {
@@ -745,16 +730,13 @@ async function selectStatus(statusCode) {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
+   
     xhr.send(data);
     return false;
 }
 async function selectGrade(gradeCode) {
     const language = await JSON.parse(getCookie("language"));
-    var token = await JSON.parse(getCookie("dataToken"));
-   if (!token) {
-        token = await getAccessToken(); 
-    }
+    var
     var xhr = new XMLHttpRequest();
     var url = mainUrl + "grade/bylanguage"
     xhr.onerror = function () {
@@ -821,7 +803,7 @@ async function selectGrade(gradeCode) {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
+   
     xhr.send(data);
     return false;
 }
@@ -904,16 +886,13 @@ async function selectWorksite(worksiteCode) {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
+   
     xhr.send(data);
     return false;
 }
 async function selectProvinceReception(provinceReceptionCode) {
     const language = await JSON.parse(getCookie("language"));
-    var token = await JSON.parse(getCookie("dataToken"));
-   if (!token) {
-        token = await getAccessToken(); 
-    }
+    var
     var xhr = new XMLHttpRequest();
     var url = mainUrl + "company/province"
     xhr.onerror = function () {
@@ -994,16 +973,13 @@ async function selectProvinceReception(provinceReceptionCode) {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
+   
     xhr.send(data);
     return false;
 }
 async function selectCatu(catuCode) {
     const language = await JSON.parse(getCookie("language"));
-    var token = await JSON.parse(getCookie("dataToken"));
-   if (!token) {
-        token = await getAccessToken(); 
-    }
+    var
     var xhr = new XMLHttpRequest();
     var url = mainUrl + "catu/bylanguage"
     xhr.onerror = function () {
@@ -1070,16 +1046,13 @@ async function selectCatu(catuCode) {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
+   
     xhr.send(data);
     return false;
 }
 async function selectStatusTax(statusTaxCode) {
     const language = await JSON.parse(getCookie("language"));
-    var token = await JSON.parse(getCookie("dataToken"));
-   if (!token) {
-        token = await getAccessToken(); 
-    }
+    var
     var xhr = new XMLHttpRequest();
     var url = mainUrl + "employeestatustax/bylanguage"
     xhr.onerror = function () {
@@ -1146,16 +1119,13 @@ async function selectStatusTax(statusTaxCode) {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
+   
     xhr.send(data);
     return false;
 }
 async function selectSalary(salaryCode) {
     const language = await JSON.parse(getCookie("language"));
-    var token = await JSON.parse(getCookie("dataToken"));
-   if (!token) {
-        token = await getAccessToken(); 
-    }
+    var
     var xhr = new XMLHttpRequest();
     var url = mainUrl + "employeesalary/bylanguage"
     xhr.onerror = function () {
@@ -1224,16 +1194,13 @@ async function selectSalary(salaryCode) {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
+   
     xhr.send(data);
     return false;
 }
 async function selectMarital(maritalCode) {
     const language = await JSON.parse(getCookie("language"));
-    var token = await JSON.parse(getCookie("dataToken"));
-   if (!token) {
-        token = await getAccessToken(); 
-    }
+    var
     var xhr = new XMLHttpRequest();
     var url = mainUrl + "employeemarital/bylanguage"
     xhr.onerror = function () {
@@ -1302,16 +1269,13 @@ async function selectMarital(maritalCode) {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
+   
     xhr.send(data);
     return false;
 }
 async function selectReligion(religionCode) {
     const language = await JSON.parse(getCookie("language"));
-    var token = await JSON.parse(getCookie("dataToken"));
-   if (!token) {
-        token = await getAccessToken(); 
-    }
+    var
     var xhr = new XMLHttpRequest();
     var url = mainUrl + "religion/bylanguage"
     xhr.onerror = function () {
@@ -1380,16 +1344,13 @@ async function selectReligion(religionCode) {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
+   
     xhr.send(data);
     return false;
 }
 async function selectEducation(educationCode) {
     const language = await JSON.parse(getCookie("language"));
-    var token = await JSON.parse(getCookie("dataToken"));
-   if (!token) {
-        token = await getAccessToken(); 
-    }
+    var
     var xhr = new XMLHttpRequest();
     var url = mainUrl + "education/bylanguage"
     xhr.onerror = function () {
@@ -1458,7 +1419,7 @@ async function selectEducation(educationCode) {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
+   
     xhr.send(data);
     return false;
 }

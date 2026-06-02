@@ -73,7 +73,7 @@ async function showModalUpdateItemMaster(id) {
   };
   xhr.open("POST", url, true);
   xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-  xhr.setRequestHeader("Authorization", "Bearer " + token);
+ 
   xhr.send(data);
   return false;
 }
@@ -195,7 +195,7 @@ async function updateItemMaster() {
   };
   xhr.open("PUT", url, true);
   xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-  xhr.setRequestHeader("Authorization", "Bearer " + token);
+ 
   xhr.send(data);
   return false;
 }

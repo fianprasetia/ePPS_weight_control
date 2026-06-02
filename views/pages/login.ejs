@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <%- include('../partials/login_head'); %>
   </head>
 
   <body>
     <div id="page-container">
       <main id="main-container">
-        <div class="bg-image" style="background-image: url('assets/media/photos/weighbridge.png')">
+        <div class="bg-image" style="background-image: url(&quot;assets/media/photos/weighbridge.png&quot;)">
           <div class="row g-0 justify-content-center bg-primary-dark-op">
             <div class="hero-static col-sm-8 col-md-6 col-xl-4 d-flex align-items-center p-1 px-sm-0">
               <div class="block block-transparent block-rounded w-100 mb-0 overflow-hidden">
@@ -54,6 +54,51 @@
         </div>
       </main>
     </div>
+
+    <div class="modal" id="modal-block-vcenter" tabindex="-1" role="dialog" data-bs-backdrop="static" aria-labelledby="modal-block-vcenter" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="block block-rounded block-themed block-transparent mb-0">
+            <div class="block-header bg-primary-dark">
+              <h3 id="titleCreatePassword" class="block-title text-uppercase">Create Password</h3>
+              <div class="block-options">
+                <button type="button" class="btn-block-option text-gray" data-toggle="block-option" data-action="fullscreen_toggle"></button>
+              </div>
+            </div>
+            <form class="js-validation">
+              <div class="block-content">
+                <div hidden class="input-group mb-4">
+                  <input type="text" class="form-control shadow has-validation" id="usernamereset" placeholder="username" required />
+                </div>
+                <div class="col-sm-12 mb-2">
+                  <label id="passwordLabel1" class="form-label text-uppercase" for="password1">Password</label>
+                  <div class="input-group">
+                    <input type="password" class="form-control fw-light" id="password1" name="password1" />
+                    <span class="input-group-text bg-transparent" onclick="viewPassword('password1', 'eyeIcon1')">
+                      <i class="fa-solid fa-eye-slash" id="eyeIcon1"></i>
+                    </span>
+                  </div>
+                </div>
+                <div class="col-sm-12 mb-2">
+                  <label id="repasswordLabel2" class="form-label text-uppercase" for="password2">ReType Password</label>
+                  <div class="input-group">
+                    <input type="password" onkeyup="validatePassword()" class="form-control fw-light" id="password2" name="password2" />
+                    <span class="input-group-text bg-transparent" onclick="viewPassword('password2', 'eyeIcon2')">
+                      <i class="fa-solid fa-eye-slash" id="eyeIcon2"></i>
+                    </span>
+                  </div>
+                  <span id="salah" style="color: red; font-size: 12px; margin-left: 10px"></span>
+                </div>
+              </div>
+              <div id="loadResetLogin" class="block-content block-content-full text-end bg-body">
+                <button id="cancelBtn" onclick="closeModal()" class="btn btn-danger">Close</button>
+                <a id="doneBtn" type="submit" onclick="resetPassword()" class="btn btn-primary">Done</a>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
     <script src="assets/js/lib/jquery.min.js"></script>
     <script src="assets/js/plugins/bootstrap-notify/bootstrap-notify.min.js"></script>
     <script src="assets/js/plugins/jquery-validation/jquery.validate.min.js"></script>
@@ -65,5 +110,11 @@
     <script>
       Dashmix.helpersOnLoad(["jq-notify"]);
     </script>
+    <!-- <script>
+      const socket = io("http://localhost:8084");
+      socket.on("weightUpdate", (data) => {
+        console.log(data);
+      });
+    </script> -->
   </body>
 </html>

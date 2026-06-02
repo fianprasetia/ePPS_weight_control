@@ -1,16 +1,6 @@
 async function showModalUpdateMenu(id) {
-    let token = await JSON.parse(getCookie("dataToken"));
-    if (token == null) {
-        await getAccessToken()
-        if (token == null) {
-            return;
-        }
-        var myModal = new bootstrap.Modal(document.getElementById("modalMenu"), { keyboard: false });
-        myModal.toggle();
-    } else {
-        var myModal = new bootstrap.Modal(document.getElementById("modalMenu"), { keyboard: false });
-        myModal.toggle();
-    }
+    var myModal = new bootstrap.Modal(document.getElementById("modalMenu"), { keyboard: false });
+    myModal.toggle();
     await selectLanguage()
     let language = await JSON.parse(getCookie("language"));
     const dataLogin = await JSON.parse(getCookie("dataLogin"));
@@ -49,7 +39,7 @@ async function showModalUpdateMenu(id) {
                 for (i = 0; i < languageData.length; i++) {
                     document.getElementById("language" + i).value = await responseData[0]["adm_menu_translations"][i]["translation"]
                 }
-                document.getElementById("load").innerHTML = "<a id='cancelBtn' onclick='closeModal()' class='btn  btn-danger'>" + kapital(cancel) + "</a> <button id='doneBtn' type='submit' onclick='updateMenu()' class='btn  btn-primary'>" + kapital(done) + "</button>"
+                document.getElementById("load").innerHTML = "<a id='cancelBtn' onclick='closeModal()' class='btn  btn-danger'>" + kapital(cancel) + "</a> <a id='doneBtn' type='submit' onclick='updateMenu()' class='btn  btn-primary'>" + kapital(done) + "</a>"
             } else if (response["access"] == "failed") {
                 message = response["message"];
                 Dashmix.helpers("jq-notify", { type: "danger", z_index: 2000, message: message });
@@ -77,15 +67,11 @@ async function showModalUpdateMenu(id) {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
+   
     xhr.send(data);
     return false;
 }
 async function updateMenu() {
-    let token = await JSON.parse(getCookie("dataToken"));
-   if (!token) {
-        token = await getAccessToken(); 
-    }
     !(function () {
         class e {
             static initValidation() {
@@ -202,7 +188,6 @@ async function updateMenu() {
     };
     xhr.open("PUT", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
     xhr.send(data);
     return false;
 }

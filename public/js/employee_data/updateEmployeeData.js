@@ -161,7 +161,7 @@ async function showModalUpdateEmployee(id) {
   };
   xhr.open("POST", url, true);
   xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-  xhr.setRequestHeader("Authorization", "Bearer " + token);
+ 
   xhr.send(data);
   return false;
 
@@ -413,7 +413,7 @@ async function updateEmployee() {
   };
   xhr.open("PUT", url, true);
   // xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-  xhr.setRequestHeader("Authorization", "Bearer " + token);
+ 
   xhr.send(formData);
   return false;
 }

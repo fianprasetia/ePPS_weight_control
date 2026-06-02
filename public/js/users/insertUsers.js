@@ -1,40 +1,19 @@
 async function showModalInsertUsers(id) {
   const element = document.getElementById(id)
-  let token = await JSON.parse(getCookie("dataToken"));
-  if (token == null) {
-    await getAccessToken()
-    if (token == null) {
-      return;
-    }
-    var myModal = new bootstrap.Modal(document.getElementById("modalUsers"), { keyboard: false });
-    myModal.toggle();
-  } else {
-    var myModal = new bootstrap.Modal(document.getElementById("modalUsers"), { keyboard: false });
-    myModal.toggle();
-  }
+  var myModal = new bootstrap.Modal(document.getElementById("modalUsers"), { keyboard: false });
+  myModal.toggle();
   document.getElementById("selectFullname").disabled = false
   document.getElementById("passwordhide").hidden = false
   await selectEmployee()
-  await selectCompany()
   document.getElementById("load").innerHTML = "<a id='cancelBtn' onclick='closeModal()' class='btn  btn-danger'>" + kapital(cancel) + "</a>  <button id='doneBtn' type='submit' onclick='insertUsers()' class='btn  btn-primary'>" + kapital(done) + "</button>"
-  document.getElementById("selectAccess_web").innerHTML = "<option class='fw-light text-uppercase' selected disabled value=''>" + kapital(select) + "</option> <option value='1'>" + kapital(active) + "</option><option value='0'>" + kapital(nonactive) + "</option>"
-  document.getElementById("selectAccess_mobile").innerHTML = "<option class='fw-light text-uppercase' selected disabled value=''>" + kapital(select) + "</option> <option value='1'>" + kapital(active) + "</option><option value='0'>" + kapital(nonactive) + "</option>"
   document.getElementById("selectStatusActive").innerHTML = "<option class='fw-light text-uppercase' selected disabled value=''>" + kapital(select) + "</option> <option value='1'>" + kapital(active) + "</option><option value='0'>" + kapital(nonactive) + "</option>"
 }
 async function insertUsers() {
   const language = await JSON.parse(getCookie("language"));
   const dataLogin = await JSON.parse(getCookie("dataLogin"));
-  const usernameLogin = dataLogin["username"];
-  var token = await JSON.parse(getCookie("dataToken"));
-  if (!token) {
-        token = await getAccessToken(); 
-    }
   const fullname = document.getElementById("selectFullname").value
   const username = document.getElementById("selectUsername").value
   const password = document.getElementById("password").value
-  const location = document.getElementById("selectLocation").value
-  const access_web = document.getElementById("selectAccess_web").value
-  const access_mobile = document.getElementById("selectAccess_mobile").value
   const status = document.getElementById("selectStatusActive").value
   !(function () {
     class e {
@@ -46,9 +25,6 @@ async function insertUsers() {
               "selectUsername": { required: !0, minlength: 4 },
               "selectFullname": { required: !0 },
               "password": { required: !0 },
-              "selectLocation": { required: !0 },
-              "selectAccess_web": { required: !0 },
-              "selectAccess_mobile": { required: !0 },
               "selectStatusActive": { required: !0 },
             },
             messages: {
@@ -58,9 +34,6 @@ async function insertUsers() {
               },
               "selectFullname": required,
               "password": required,
-              "selectLocation": required,
-              "selectAccess_web": required,
-              "selectAccess_mobile": required,
               "selectStatusActive": required,
             },
           }),
@@ -77,7 +50,7 @@ async function insertUsers() {
     }
     Dashmix.onLoad(() => e.init());
   })();
-  if (fullname == "" || username == "" || password == "" || password == "" || location == "" || access_web == "" || access_mobile == "" || status == "") {
+  if (fullname == "" || username == "" || password == "" || password == "" || status == "") {
     return false
   }
   var xhr = new XMLHttpRequest();
@@ -101,19 +74,15 @@ async function insertUsers() {
     }, 3000);
   };
 
-  var data = JSON.stringify(
-    {
-      language_POST: language,
-      username_POST: username,
-      password_POST: password,
-      employeeID_POST: fullname,
-      location_POST: location,
-      accessWeb_POST: access_web,
-      accessMobile_POST: access_mobile,
-      status_POST: status,
-      username_login_POST: usernameLogin,
-    }
-  );
+  var data = JSON.stringify({
+    language_POST: language,
+    username_POST: username,
+    password_POST: password,
+    employeeID_POST: fullname,
+    status_POST: status
+  });
+  console.log(data)
+  return false
   xhr.onloadend = function () {
     if (this.readyState == 4 && this.status == 200) {
       var responseLogin = JSON.parse(xhr.response);
@@ -160,7 +129,6 @@ async function insertUsers() {
   };
   xhr.open("POST", url, true);
   xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-  xhr.setRequestHeader("Authorization", "Bearer " + token);
   xhr.send(data);
   return false;
 }
