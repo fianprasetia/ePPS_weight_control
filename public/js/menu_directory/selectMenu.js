@@ -38,7 +38,7 @@ async function selectMenu() {
     xhr.onloadend = async function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = await JSON.parse(xhr.response);
-            if (response["access"] == "success") {
+            if (response["success"] == true) {
                 var responseData = response["data"]
                 responseData.filter((c) => c.parent_id).forEach((c) => {
                     const parent = responseData.find((p) => p.id_menu === c.parent_id);
@@ -118,7 +118,7 @@ async function selectMenu() {
                 setTimeout(() => {
                     hideSpinner();
                 }, 1000);
-            } else if (response["access"] == "failed") {
+            } else {
                 message = response["message"];
                 Dashmix.helpers("jq-notify", { type: "danger", z_index: 2000, message: message });
                 setTimeout(function () {

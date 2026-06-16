@@ -33,7 +33,7 @@ async function showModalUpdateEmployee(id) {
   xhr.onloadend = async function () {
     if (this.readyState == 4 && this.status == 200) {
       var response = await JSON.parse(xhr.response);
-      if (response["access"] == "success") {
+      if (response["success"] == true) {
         var responseData = response["data"]
         const dateBirthTemp = responseData[0]["date_of_birth"]
         const dateJoiningTemp = responseData[0]["date_of_joining"]
@@ -60,7 +60,7 @@ async function showModalUpdateEmployee(id) {
         const educationCode = responseData[0]["code_education"]
         const bloodCode = responseData[0]["blood_type"]
         const photo = responseData[0]["photo"]
-      
+
         await selectGender(genderCode)
         await selectCity(cityCode)
         await selectProvince(provinceCode)
@@ -91,7 +91,7 @@ async function showModalUpdateEmployee(id) {
         // // Display the photo in the img element
         // const photoElement = document.getElementById("avatarPreview");
         // photoElement.src = urlPhoto;  // Directly setting src for the preview image
-        
+
         // // Optionally: If you want to keep the photo URL hidden for further use, you can do this:
         // const photoElementHidden = document.getElementById("avatarInput");
         // photoElementHidden.dataset.src = urlPhoto;  
@@ -152,7 +152,7 @@ async function showModalUpdateEmployee(id) {
       setTimeout(function () {
         window.location.href = "/";
       }, 3000);
-    }if (this.status == 500) {
+    } if (this.status == 500) {
       Dashmix.helpers("jq-notify", { type: "danger", z_index: 2000, message: status_500 });
       setTimeout(function () {
         window.location.href = "/";
@@ -161,7 +161,7 @@ async function showModalUpdateEmployee(id) {
   };
   xhr.open("POST", url, true);
   xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
- 
+
   xhr.send(data);
   return false;
 
@@ -172,8 +172,8 @@ async function updateEmployee() {
   const username = dataLogin["username"];
   var token = await JSON.parse(getCookie("dataToken"));
   if (!token) {
-        token = await getAccessToken(); 
-    }
+    token = await getAccessToken();
+  }
   !(function () {
     class e {
       static initValidation() {
@@ -290,7 +290,7 @@ async function updateEmployee() {
   const fields = [identityNumber, fullname, gender, department, jobTitle, company, employeeType, employeeStatus, grade, dateJoining, worksite, receptionLocation, ration, taxStatus, salarySystem, marital, religion, education];
 
   if (fields.some(field => field === "")) {
-      return false;
+    return false;
   }
 
   var xhr = new XMLHttpRequest();
@@ -370,7 +370,7 @@ async function updateEmployee() {
   xhr.onloadend = function () {
     if (this.readyState == 4 && this.status == 200) {
       var responseLogin = JSON.parse(xhr.response);
-      if (responseLogin["access"] == "success") {
+      if (responseLogin["success"] == true) {
         message = responseLogin["message"];
         Dashmix.helpers("jq-notify", {
           z_index: 2000,
@@ -393,7 +393,7 @@ async function updateEmployee() {
           window.location.href = "/employee_data";
         }, 3000);
       }
-    } 
+    }
     if (this.status == 404) {
       Dashmix.helpers("jq-notify", { type: "danger", z_index: 2000, message: status_404 });
       setTimeout(function () {
@@ -404,7 +404,7 @@ async function updateEmployee() {
       setTimeout(function () {
         window.location.href = "/";
       }, 3000);
-    }if (this.status == 500) {
+    } if (this.status == 500) {
       Dashmix.helpers("jq-notify", { type: "danger", z_index: 2000, message: status_500 });
       setTimeout(function () {
         window.location.href = "/";
@@ -413,7 +413,7 @@ async function updateEmployee() {
   };
   xhr.open("PUT", url, true);
   // xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
- 
+
   xhr.send(formData);
   return false;
 }
@@ -421,13 +421,13 @@ function loadImageToCanvas(imageUrl) {
   const canvas = document.getElementById('canvas');
   const context = canvas.getContext('2d');
   const image = new Image();
-  
-  image.onload = function() {
+
+  image.onload = function () {
     canvas.width = image.width;
     canvas.height = image.height;
     context.drawImage(image, 0, 0);
   };
-  
+
   image.src = imageUrl;
 }
 function previewAvatar() {
@@ -440,13 +440,13 @@ function previewAvatar() {
     const file = input.files[0];
     const reader = new FileReader();
 
-    reader.onload = function(e) {
+    reader.onload = function (e) {
       // Tampilkan gambar di elemen img
       avatarPreview.src = e.target.result;
 
       // Tampilkan gambar di canvas
       const image = new Image();
-      image.onload = function() {
+      image.onload = function () {
         // Atur ukuran canvas sesuai dengan ukuran gambar
         canvas.width = image.width;
         canvas.height = image.height;

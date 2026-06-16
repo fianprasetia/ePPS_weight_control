@@ -88,7 +88,7 @@ async function updateLanguage() {
     xhr.onloadend = async function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = await JSON.parse(xhr.response);
-            if (response["access"] == "success") {
+            if (response["success"] == true) {
                 message = response["message"];
                 Dashmix.helpers("jq-notify", {
                     z_index: 2000,
@@ -130,7 +130,7 @@ async function updateLanguage() {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-   
+
     xhr.send(data);
     return false;
 }

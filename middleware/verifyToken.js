@@ -1,25 +1,24 @@
-
 const jwt = require('jsonwebtoken');
+const responseHelper = require('../helpers/responseHelper');
 
 const verifyToken = (req, res, next) => {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader.split(' ')[1];
-    if (!token == null) {
-        res.status(401).json({
-            access: "failed",
-            // message: messages[language]?.userToken,
-        });
-        return
+    try {
+        const authHeader = req.headers['authorization'];
+        if (!authHeader) {
+            return responseHelper.unauthorized(res, "Access token required");
+        }
+
+        const token = authHeader.split(' ')[1];
+        if (!token) {
+            return responseHelper.unauthorized(res, "Access token required");
+        }
+
+        const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+        req.user = decoded;
+        next();
+    } catch (error) {
+        return responseHelper.unauthorized(res, "Invalid access token");
     }
-    // if(res.status(500)){
-    //     res.json({
-    //         access: "failed",
-    //         // message: messages[language]?.userAccess,
-    //         message: "Please refresh your browser",
-    //       });
-    // }
-    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-    req.user = decoded;
-    next();
-}
+};
+
 module.exports = verifyToken;

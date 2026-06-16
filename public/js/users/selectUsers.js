@@ -19,7 +19,6 @@ async function selectContent() {
         document.getElementById("passwordLabel").innerHTML = filterLanguage[0]["content"]["password"] + "<span class='text-danger'>*</span>"
         document.getElementById("passwordLabel1").innerHTML = filterLanguage[0]["content"]["password"] + "<span class='text-danger'>*</span>"
         document.getElementById("repasswordLabel2").innerHTML = filterLanguage[0]["content"]["retype_password"] + "<span class='text-danger'>*</span>"
-        // document.getElementById("locationLabel").innerHTML = filterLanguage[0]["content"]["location"] + "<span class='text-danger'>*</span>"
         document.getElementById("titleUsersAccess").innerHTML = filterLanguage[0]["content"]["web_menu_access"]
         document.getElementById("status").innerHTML = filterLanguage[0]["content"]["status"]
         document.getElementById("statusLabel").innerHTML = filterLanguage[0]["content"]["status"] + "<span class='text-danger'>*</span>"
@@ -51,7 +50,7 @@ async function selectUsers() {
     xhr.onloadend = async function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = JSON.parse(xhr.response);
-            if (response["access"] == "success") {
+            if (response["success"] == true) {
                 var responseData = response["data"]
                 var tableItem = "";
                 for (i = 0; i < responseData.length; i++) {
@@ -72,7 +71,7 @@ async function selectUsers() {
                 setTimeout(() => {
                     hideSpinner();
                 }, 1000);
-            } else if (response["access"] == "failed") {
+            } else {
                 message = response["message"];
                 Dashmix.helpers("jq-notify", { type: "danger", z_index: 2000, message: message });
                 setTimeout(function () {
@@ -124,7 +123,7 @@ async function selectEmployee(employeeID) {
     xhr.onloadend = async function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = await JSON.parse(xhr.response);
-            if (response["access"] == "success") {
+            if (response["success"] == true) {
                 var responseData = response["data"]
                 console.table(responseData)
                 var filterSubData = responseData.filter((filterSubData) => filterSubData.employee_id == employeeID);
@@ -146,7 +145,7 @@ async function selectEmployee(employeeID) {
                 }
 
                 document.getElementById("selectFullname").innerHTML = mainOptionItem + "" + subOptionItem;
-            } else if (response["access"] == "failed") {
+            } else {
                 message = response["message"];
                 Dashmix.helpers("jq-notify", { type: "danger", z_index: 2000, message: message });
                 setTimeout(function () {
@@ -197,7 +196,7 @@ async function selectUsername() {
     xhr.onloadend = async function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = await JSON.parse(xhr.response);
-            if (response["access"] == "success") {
+            if (response["success"] == true) {
                 var responseData = response["data"]
                 var subOptionItem = ""
                 mainOptionItem = "<option class='fw-light text-uppercase' value='' selected disabled>" + kapital(select) + "</option>";
@@ -210,7 +209,7 @@ async function selectUsername() {
                         "</option>";
                 }
                 document.getElementById("selectUsernameCopy").innerHTML = mainOptionItem + "" + subOptionItem;
-            } else if (response["access"] == "failed") {
+            } else {
                 message = response["message"];
                 Dashmix.helpers("jq-notify", { type: "danger", z_index: 2000, message: message });
                 setTimeout(function () {

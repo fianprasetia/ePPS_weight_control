@@ -1,31 +1,25 @@
-const model = require("../models/index")
-const messages = require("./message")
-const controller = {}
-const { Op, json } = require("sequelize")
+const model = require("../models/index");
+const messages = require("./message");
+const responseHelper = require('../helpers/responseHelper');
+
+const controller = {};
 
 controller.selectLanguage = async function (req, res) {
     try {
-        let selectLanguageData = await model.adm_language.findAll({
+        const language = req.body.language_POST || 'en';
+        const selectLanguageData = await model.adm_language.findAll({
             order: [
                 ['language_code', 'ASC'],
             ],
         });
         if (selectLanguageData.length > 0) {
-            res.status(200).json({
-                access: "success",
-                data: selectLanguageData,
-            });
+            return responseHelper.success(res, "successfulData", selectLanguageData);
         } else {
-            res.status(200).json({
-                access: "failed",
-                message: messages[language]?.nodata,
-                data: [],
-            });
+            return responseHelper.Unsuccessful(res, messages[language]?.nodata || "No data available", []);
         }
     } catch (error) {
-        res.status(404).json({
-            message: error,
-        });
+        return responseHelper.error(res, error, "Terjadi kesalahan saat memproses data bahasa");
     }
-}
+};
+
 module.exports = controller;

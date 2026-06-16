@@ -86,7 +86,7 @@ async function insertUsers() {
   xhr.onloadend = function () {
     if (this.readyState == 4 && this.status == 200) {
       var responseLogin = JSON.parse(xhr.response);
-      if (responseLogin["access"] == "success") {
+      if (responseLogin["success"] == true) {
         message = responseLogin["message"];
         Dashmix.helpers("jq-notify", {
           z_index: 2000,

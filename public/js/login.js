@@ -51,21 +51,21 @@ function login() {
   });
   xhr.onloadend = async function () {
     if (this.readyState == 4 && this.status == 200) {
-      var responseLogin = await JSON.parse(xhr.response);
-      if (responseLogin["access"] == "success") {
-        responseLogin = JSON.parse(xhr.response);
-        message = responseLogin["message"];
+      var response = await JSON.parse(xhr.response);
+      if (response["success"] == true) {
+        responeData = response["data"];
+        message = response["message"];
         Dashmix.helpers("jq-notify", {
           type: "success",
           icon: "fa fa-check me-1",
           message: message,
         });
-        session(responseLogin, language);
+        session(responeData, language);
         setTimeout(function () {
           window.location.href = "/";
         }, 3000);
-      } else if (responseLogin["access"] == "failed") {
-        message = responseLogin["message"];
+      } else {
+        message = response["message"];
         Dashmix.helpers("jq-notify", {
           type: "danger",
           icon: "fa fa-times me-1",
@@ -74,8 +74,8 @@ function login() {
         setTimeout(function () {
           window.location.href = "/login";
         }, 3000);
-      } else if (responseLogin["access"] == "change") {
-        username = responseLogin["data"];
+      } if (response["access"] == "change") {
+        username = response["data"];
         modalResetPassword(username);
       }
     } if (this.status == 404) {
@@ -206,9 +206,9 @@ async function resetPassword() {
   });
   xhr.onloadend = function () {
     if (this.readyState == 4 && this.status == 200) {
-      var responseLogin = JSON.parse(xhr.response);
-      if (responseLogin["access"] == "success") {
-        message = responseLogin["message"];
+      var response = JSON.parse(xhr.response);
+      if (response["success"] == true) {
+        message = response["message"];
         Dashmix.helpers("jq-notify", {
           z_index: 2000,
           type: "success",
@@ -218,8 +218,8 @@ async function resetPassword() {
         setTimeout(function () {
           window.location.href = "/login";
         }, 3000);
-      } else if (responseLogin["access"] == "failed") {
-        message = responseLogin["message"];
+      } else if (response["access"] == "failed") {
+        message = response["message"];
         Dashmix.helpers("jq-notify", {
           z_index: 2000,
           type: "danger",
@@ -286,5 +286,4 @@ function language(id) {
 }
 function closeModal() {
   $('.modal').modal('hide');
-  // document.getElementById("form2").reset()
 }

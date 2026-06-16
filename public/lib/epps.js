@@ -292,6 +292,8 @@ let notice_done
 let closed
 let returnd
 let notice_return
+let estate
+let vehicle_number
 
 async function content() {
   let language = await JSON.parse(getCookie("language"));
@@ -464,6 +466,8 @@ async function content() {
     closed = await filterLanguage[0]["content"]["close"];
     returnd = await filterLanguage[0]["content"]["return"];
     notice_return = await filterLanguage[0]["content"]["notice_return"];
+    estate = await filterLanguage[0]["content"]["estate"];
+    vehicle_number = await filterLanguage[0]["content"]["vehicle_number"];
     document.getElementById("mainMenuNav").innerHTML = await filterLanguage[0]["content"]["main_menu"];
     document.getElementById("homeNav").innerHTML = await filterLanguage[0]["content"]["home"];;
     document.getElementById("pleaseWait").innerHTML = await filterLanguage[0]["content"]["please_wait"];;
@@ -679,7 +683,7 @@ async function selectLanguage() {
       xhr.onloadend = async function () {
         if (this.readyState === 4 && this.status === 200) {
           var response = JSON.parse(xhr.response);
-          if (response["access"] === "success") {
+          if (response["success"] === true) {
             var responseData = response["data"];
             var languageMenu = `
                 <div class="col-sm-6 mb-2">
@@ -781,7 +785,7 @@ async function autoTranslate(param) {
   xhr.onloadend = async function () {
     if (this.readyState == 4 && this.status == 200) {
       var response = JSON.parse(xhr.response);
-      if (response["access"] == "success") {
+      if (response["success"] == true) {
         var responseData = response["data"]
         var values = Object.values(responseData);
         // console.log(param)
@@ -847,7 +851,7 @@ async function dictionary(param) {
     xhr.onloadend = function () {
       if (this.readyState == 4 && this.status == 200) {
         var response = JSON.parse(xhr.response);
-        if (response["access"] == "success") {
+        if (response["success"] == true) {
           resolve(response["data"]); // ⬅️ Kembalikan hasil
         } else {
           reject(response["message"]);
@@ -863,7 +867,7 @@ async function dictionary(param) {
 
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-   
+
     xhr.send(data);
   });
 }
@@ -994,7 +998,7 @@ function convertToMinutes(time) {
 //   xhr.onloadend = async function () {
 //     if (this.readyState == 4 && this.status == 200) {
 //       var response = JSON.parse(xhr.response);
-//       if (response["access"] == "success") {
+//      if (response["success"] == true) {
 //         var responseData = response["data"];
 //         jmldataPurchaseRequest = responseData["dataPurchaseRequest"].length;
 //         jmldataGoodsReceipt = responseData["dataGoodsReceipt"].length;
@@ -1110,7 +1114,7 @@ async function deleteFile(fileUrl) {
   xhr.onloadend = async function () {
     if (this.readyState == 4 && this.status == 200) {
       var response = JSON.parse(xhr.response);
-      if (response["access"] == "success") {
+      if (response["success"] == true) {
         message = await response["message"];
         Dashmix.helpers("jq-notify", {
           z_index: 2000,
@@ -1153,7 +1157,7 @@ async function deleteFile(fileUrl) {
   };
   xhr.open("DELETE", url, true);
   xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
- 
+
   xhr.send(data);
 }
 function unformatRupiah(formatted) {

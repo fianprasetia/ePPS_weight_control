@@ -1,5 +1,5 @@
 async function selectContent() {
-   
+
 
     let language = await JSON.parse(getCookie("language"));
     const data = "file/language.json";
@@ -58,7 +58,7 @@ async function selectItemMaster() {
         Dashmix.helpers("jq-notify", {
             type: "danger",
             z_index: 2000,
-            message:overload,
+            message: overload,
         });
         setTimeout(async function () {
             await keluar()
@@ -72,7 +72,7 @@ async function selectItemMaster() {
     xhr.onloadend = async function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = JSON.parse(xhr.response);
-            if (response["access"] == "success") {
+            if (response["success"] == true) {
                 await resetDataTables()
                 var responseData = response["data"]
                 var tableItem = "";
@@ -120,7 +120,7 @@ async function selectItemMaster() {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-   
+
     xhr.send(data);
     return false;
 }
@@ -163,7 +163,7 @@ async function selectItemCategory(codeCategory) {
         Dashmix.helpers("jq-notify", {
             type: "danger",
             z_index: 2000,
-            message:overload,
+            message: overload,
         });
         setTimeout(async function () {
             await keluar()
@@ -175,7 +175,7 @@ async function selectItemCategory(codeCategory) {
     xhr.onloadend = async function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = JSON.parse(xhr.response);
-            if (response["access"] == "success") {
+            if (response["success"] == true) {
                 var responseData = response["data"]
                 var filterSubData = responseData.filter((filterSubData) => filterSubData.code_category == codeCategory);
                 var filternotSubData = responseData.filter((filternotSubData) => filternotSubData.code_category != codeCategory);
@@ -222,7 +222,7 @@ async function selectItemCategory(codeCategory) {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-   
+
     xhr.send(data);
     return false;
 }
@@ -235,7 +235,7 @@ async function selectSearchItemCategory(codeCategory) {
         Dashmix.helpers("jq-notify", {
             type: "danger",
             z_index: 2000,
-            message:overload,
+            message: overload,
         });
         setTimeout(async function () {
             await keluar()
@@ -247,7 +247,7 @@ async function selectSearchItemCategory(codeCategory) {
     xhr.onloadend = async function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = await JSON.parse(xhr.response);
-            if (response["access"] == "success") {
+            if (response["success"] == true) {
                 var responseData = response["data"]
                 subOptionItem = "";
                 for (i = 0; i < responseData.length; i++) {
@@ -289,7 +289,7 @@ async function selectSearchItemCategory(codeCategory) {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-   
+
     xhr.send(data);
     return false;
 }

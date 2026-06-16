@@ -25,7 +25,7 @@ async function showModalUpdateUsers(id) {
   xhr.onloadend = async function () {
     if (this.readyState == 4 && this.status == 200) {
       var response = await JSON.parse(xhr.response);
-      if (response["access"] == "success") {
+      if (response["success"] == true) {
         var responseData = response["data"]
         // const companyCode = responseData[0]["code_company"]
         // await selectCompany(companyCode)
@@ -44,7 +44,7 @@ async function showModalUpdateUsers(id) {
         optionStatus = "<option  class='fw-light text-uppercase' value=" + (status != "0" ? "0" : "1") + ">" + (status != "0" ? kapital(nonactive) : kapital(active)) + "</option>";
         document.getElementById("selectStatusActive").innerHTML = "" + mainOptionStatus + "" + optionStatus + "";
 
-      } else if (response["access"] == "failed") {
+      } else {
         message = response["message"];
         Dashmix.helpers("jq-notify", { type: "danger", z_index: 2000, message: message });
         setTimeout(function () {
@@ -149,9 +149,9 @@ async function updateUsers() {
   );
   xhr.onloadend = function () {
     if (this.readyState == 4 && this.status == 200) {
-      var responseLogin = JSON.parse(xhr.response);
-      if (responseLogin["access"] == "success") {
-        message = responseLogin["message"];
+      var response = JSON.parse(xhr.response);
+      if (response["success"] == true) {
+        message = response["message"];
         Dashmix.helpers("jq-notify", {
           z_index: 2000,
           type: "success",
@@ -161,8 +161,8 @@ async function updateUsers() {
         setTimeout(function () {
           window.location.href = "/users";
         }, 3000);
-      } else if (responseLogin["access"] == "failed") {
-        message = responseLogin["message"];
+      } else {
+        message = response["message"];
         Dashmix.helpers("jq-notify", {
           z_index: 2000,
           type: "danger",
@@ -273,9 +273,9 @@ async function updatePassword() {
   );
   xhr.onloadend = function () {
     if (this.readyState == 4 && this.status == 200) {
-      var responseLogin = JSON.parse(xhr.response);
-      if (responseLogin["access"] == "success") {
-        message = responseLogin["message"];
+      var response = JSON.parse(xhr.response);
+      if (response["success"] == true) {
+        message = response["message"];
         Dashmix.helpers("jq-notify", {
           z_index: 2000,
           type: "success",
@@ -285,8 +285,8 @@ async function updatePassword() {
         setTimeout(function () {
           window.location.href = "/users";
         }, 3000);
-      } else if (responseLogin["access"] == "failed") {
-        message = responseLogin["message"];
+      } else {
+        message = response["message"];
         Dashmix.helpers("jq-notify", {
           z_index: 2000,
           type: "danger",
@@ -401,7 +401,7 @@ async function showModalUpdateAccess(id) {
   xhr.onloadend = async function () {
     if (this.readyState == 4 && this.status == 200) {
       var response = await JSON.parse(xhr.response);
-      if (response["access"] == "success") {
+      if (response["success"] == true) {
         var responseData = response["data"]
         dataAuth = responseData['dataAuth']
         dataMenu = responseData['dataMenu']
@@ -522,7 +522,7 @@ async function showModalUpdateAccess(id) {
 
         await scriptTree()
         document.getElementById("treeAccess").innerHTML = detailMenu;
-      } else if (response["access"] == "failed") {
+      } else {
         message = response["message"];
         Dashmix.helpers("jq-notify", { type: "danger", z_index: 2000, message: message });
         setTimeout(function () {
@@ -643,9 +643,9 @@ async function updateAccess() {
   var data = JSON.stringify(dataMenuAccess);
   xhr.onloadend = function () {
     if (this.readyState == 4 && this.status == 200) {
-      var responseLogin = JSON.parse(xhr.response);
-      if (responseLogin["access"] == "success") {
-        message = responseLogin["message"];
+      var response = JSON.parse(xhr.response);
+      if (response["success"] == true) {
+        message = response["message"];
         Dashmix.helpers("jq-notify", {
           z_index: 2000,
           type: "success",
@@ -655,8 +655,8 @@ async function updateAccess() {
         setTimeout(function () {
           window.location.href = "/users";
         }, 3000);
-      } else if (responseLogin["access"] == "failed") {
-        message = responseLogin["message"];
+      } else {
+        message = response["message"];
         Dashmix.helpers("jq-notify", {
           z_index: 2000,
           type: "danger",
@@ -771,9 +771,9 @@ async function updateCopyAccess() {
   );
   xhr.onloadend = function () {
     if (this.readyState == 4 && this.status == 200) {
-      var responseLogin = JSON.parse(xhr.response);
-      if (responseLogin["access"] == "success") {
-        message = responseLogin["message"];
+      var response = JSON.parse(xhr.response);
+      if (response["success"] == true) {
+        message = response["message"];
         Dashmix.helpers("jq-notify", {
           z_index: 2000,
           type: "success",
@@ -783,8 +783,8 @@ async function updateCopyAccess() {
         setTimeout(function () {
           window.location.href = "/users";
         }, 3000);
-      } else if (responseLogin["access"] == "failed") {
-        message = responseLogin["message"];
+      } else {
+        message = response["message"];
         Dashmix.helpers("jq-notify", {
           z_index: 2000,
           type: "danger",
@@ -910,7 +910,7 @@ async function showModalUpdateMobileAccess(id) {
   xhr.onloadend = async function () {
     if (this.readyState == 4 && this.status == 200) {
       var response = await JSON.parse(xhr.response);
-      if (response["access"] == "success") {
+      if (response["success"] == true) {
         var responseData = response["data"]
         dataAuth = responseData['dataAuth']
         dataMenu = responseData['dataMenu']
@@ -1031,7 +1031,7 @@ async function showModalUpdateMobileAccess(id) {
 
         await scriptTree()
         document.getElementById("treeAccess").innerHTML = detailMenu;
-      } else if (response["access"] == "failed") {
+      } else {
         message = response["message"];
         Dashmix.helpers("jq-notify", { type: "danger", z_index: 2000, message: message });
         setTimeout(function () {
@@ -1116,9 +1116,9 @@ async function updateAccessMobile() {
   var data = JSON.stringify(dataMenuAccess);
   xhr.onloadend = function () {
     if (this.readyState == 4 && this.status == 200) {
-      var responseLogin = JSON.parse(xhr.response);
-      if (responseLogin["access"] == "success") {
-        message = responseLogin["message"];
+      var response = JSON.parse(xhr.response);
+      if (response["success"] == true) {
+        message = response["message"];
         Dashmix.helpers("jq-notify", {
           z_index: 2000,
           type: "success",
@@ -1128,8 +1128,8 @@ async function updateAccessMobile() {
         setTimeout(function () {
           window.location.href = "/users";
         }, 3000);
-      } else if (responseLogin["access"] == "failed") {
-        message = responseLogin["message"];
+      } else {
+        message = response["message"];
         Dashmix.helpers("jq-notify", {
           z_index: 2000,
           type: "danger",
@@ -1244,9 +1244,9 @@ async function updateCopyAccessMobile() {
   );
   xhr.onloadend = function () {
     if (this.readyState == 4 && this.status == 200) {
-      var responseLogin = JSON.parse(xhr.response);
-      if (responseLogin["access"] == "success") {
-        message = responseLogin["message"];
+      var response = JSON.parse(xhr.response);
+      if (response["success"] == true) {
+        message = response["message"];
         Dashmix.helpers("jq-notify", {
           z_index: 2000,
           type: "success",
@@ -1256,8 +1256,8 @@ async function updateCopyAccessMobile() {
         setTimeout(function () {
           window.location.href = "/users";
         }, 3000);
-      } else if (responseLogin["access"] == "failed") {
-        message = responseLogin["message"];
+      } else {
+        message = response["message"];
         Dashmix.helpers("jq-notify", {
           z_index: 2000,
           type: "danger",

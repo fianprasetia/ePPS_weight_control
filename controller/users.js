@@ -1,111 +1,85 @@
-const model = require("../models/index")
-const messages = require("./message")
+const model = require("../models/index");
+const messages = require("./message");
 const koneksi = require("../config/database");
 const sequelize = require("sequelize");
-const extend = require('extend');
 const md5 = require("md5");
-const controller = {}
-const { Op, json } = require("sequelize")
+const { Op } = require("sequelize");
 const logger = require('./logger');
+const responseHelper = require('../helpers/responseHelper');
+
+const controller = {};
 
 controller.selectUsers = async function (req, res) {
     try {
-        var language = req.body.language_POST
-        let selectLoginData = await model.adm_user_login.findAll({
+        const language = req.body.language_POST || 'en';
+        const selectLoginData = await model.adm_user_login.findAll({
             include: [
                 {
                     model: model.adm_employee,
                 },
             ],
-        },
-        );
+        });
         if (selectLoginData.length > 0) {
-            res.status(200).json({
-                access: "success",
-                message: messages[language]?.insertData,
-                data: selectLoginData,
-            });
+            return responseHelper.success(res, messages[language]?.insertData || "Users retrieved successfully", selectLoginData);
         } else {
-            res.status(200).json({
-                access: "failed",
-                message: messages[language]?.nodata,
-                data: [],
-            });
+            return responseHelper.Unsuccessful(res, messages[language]?.nodata || "No data available", []);
         }
     } catch (error) {
-        res.status(404).json({
-            message: error,
-        });
+        return responseHelper.error(res, error, "Terjadi kesalahan saat mengambil data users");
     }
-}
+};
+
 controller.insertUsers = async function (req, res) {
-    const transaction = await koneksi.transaction()
+    const transaction = await koneksi.transaction();
     try {
-        var language = req.body.language_POST
-        var username = req.body.username_POST
-        var employeeId = req.body.employeeID_POST
-        var password = md5(req.body.password_POST)
-        var status = req.body.status_POST
-        let insertLoginData = await model.adm_user_login.findAll(
-            {
-                where: {
-                    username: username
-                },
+        const language = req.body.language_POST || 'en';
+        const username = req.body.username_POST;
+        const employeeId = req.body.employeeID_POST;
+        const password = md5(req.body.password_POST);
+        const status = req.body.status_POST;
+
+        const insertLoginData = await model.adm_user_login.findAll({
+            where: {
+                username: username
             },
-            {
-                transaction: transaction
-            }
-        );
+            transaction
+        });
+
         if (insertLoginData.length > 0) {
             await transaction.rollback();
-            res.status(200).json({
-                access: "failed",
-                message: messages[language]?.userExists,
-            });
-        } else {
-            await insertUsersLogin()
+            return responseHelper.Unsuccessful(res, messages[language]?.userExists || "Username already exists");
         }
-        async function insertUsersLogin() {
-            let insertLoginNewData = await model.adm_user_login.create(
-                {
-                    username: username,
-                    employee_id: employeeId,
-                    password: password,
-                    old_password: password,
-                    change_password: 0,
-                    status: status,
-                },
-                {
-                    transaction: transaction
-                }
-            );
-            if (insertLoginNewData) {
-                await transaction.commit();
-                res.status(200).json({
-                    access: "success",
-                    message: messages[language]?.insertData,
-                    data: insertLoginNewData,
-                });
-            } else {
-                await transaction.rollback();
-                res.status(200).json({
-                    access: "failed",
-                    message: messages[language]?.failedData,
-                });
-            }
+
+        const insertLoginNewData = await model.adm_user_login.create(
+            {
+                username: username,
+                employee_id: employeeId,
+                password: password,
+                old_password: password,
+                change_password: 0,
+                status: status,
+            },
+            { transaction }
+        );
+
+        if (insertLoginNewData) {
+            await transaction.commit();
+            return responseHelper.success(res, messages[language]?.insertData, insertLoginNewData);
+        } else {
+            await transaction.rollback();
+            return responseHelper.Unsuccessful(res, messages[language]?.failedData || "Insert user failed");
         }
     } catch (error) {
         await transaction.rollback();
-        res.status(404).json({
-            message: error,
-        });
+        return responseHelper.error(res, error, "Terjadi kesalahan saat menambahkan user baru");
     }
-}
+};
+
 controller.selectUsersByUsername = async function (req, res) {
     try {
-        var language = req.body.language_POST
-        var username = req.body.username_POST
-        let selectUsersByUsernameData = await model.adm_user_login.findAll({
+        const language = req.body.language_POST || 'en';
+        const username = req.body.username_POST;
+        const selectUsersByUsernameData = await model.adm_user_login.findAll({
             include: [
                 {
                     model: model.adm_employee,
@@ -116,115 +90,89 @@ controller.selectUsersByUsername = async function (req, res) {
             },
         });
         if (selectUsersByUsernameData.length > 0) {
-            res.json({
-                access: "success",
-                message: "data success",
-                data: selectUsersByUsernameData,
-            });
+            return responseHelper.success(res, "data success", selectUsersByUsernameData);
         } else {
-            res.status(200).json({
-                access: "failed",
-                message: messages[language]?.nodata,
-                data: [],
-            });
+            return responseHelper.Unsuccessful(res, messages[language]?.nodata || "No data available", []);
         }
     } catch (error) {
-        res.status(404).json({
-            message: error,
-        });
+        return responseHelper.error(res, error, "Terjadi kesalahan saat mencari user");
     }
-}
+};
+
 controller.updatePassword = async function (req, res) {
-    const transaction = await koneksi.transaction()
+    const transaction = await koneksi.transaction();
     try {
-        var username = req.params.username
-        var language = req.body.language_POST
-        var password = md5(req.body.password_POST)
-        let updatePasswordData = await model.adm_user_login.update(
+        const username = req.params.username;
+        const language = req.body.language_POST || 'en';
+        const password = md5(req.body.password_POST);
+
+        const updatePasswordData = await model.adm_user_login.update(
             {
                 password: password,
                 old_password: password,
                 change_password: 0,
             },
             {
-                where:
-                {
+                where: {
                     username: username
                 },
-                transaction: transaction
+                transaction
             },
         );
 
-        if (updatePasswordData) {
+        if (updatePasswordData[0] > 0) {
             await transaction.commit();
-            res.status(200).json({
-                access: "success",
-                message: messages[language]?.updateData,
-                data: updatePasswordData,
-            });
+            return responseHelper.success(res, messages[language]?.updateData, updatePasswordData);
         } else {
             await transaction.rollback();
-            res.status(200).json({
-                access: "failed",
-                message: messages[language]?.nodata,
-                data: [],
-            });
+            return responseHelper.Unsuccessful(res, messages[language]?.nodata || "No data available", []);
         }
     } catch (error) {
         await transaction.rollback();
-        res.status(404).json({
-            message: error,
-        });
+        return responseHelper.error(res, error, "Terjadi kesalahan saat memperbarui password");
     }
-}
+};
+
 controller.updateUsers = async function (req, res) {
-    const transaction = await koneksi.transaction()
+    const transaction = await koneksi.transaction();
     try {
-        var username = req.params.username
-        var language = req.body.language_POST
-        var employeeID = req.body.employeeID_POST
-        var status = req.body.status_POST
-        let updateUsersData = await model.adm_user_login.update(
+        const username = req.params.username;
+        const language = req.body.language_POST || 'en';
+        const employeeID = req.body.employeeID_POST;
+        const status = req.body.status_POST;
+
+        const updateUsersData = await model.adm_user_login.update(
             {
                 username: username,
                 status: status,
             },
             {
-                where:
-                {
+                where: {
                     employee_id: employeeID,
                 },
-                transaction: transaction
+                transaction
             },
         );
 
-        if (updateUsersData) {
+        if (updateUsersData[0] > 0) {
             await transaction.commit();
-            res.status(200).json({
-                access: "success",
-                message: messages[language]?.updateData,
-                data: updateUsersData,
-            });
+            return responseHelper.success(res, messages[language]?.updateData, updateUsersData);
         } else {
             await transaction.rollback();
-            res.status(200).json({
-                access: "failed",
-                message: messages[language]?.nodata,
-                data: [],
-            });
+            return responseHelper.Unsuccessful(res, messages[language]?.nodata || "No data available", []);
         }
     } catch (error) {
         await transaction.rollback();
-        res.status(404).json({
-            message: error,
-        });
+        return responseHelper.error(res, error, "Terjadi kesalahan saat memperbarui user");
     }
-}
+};
+
 controller.selectAuthByUsername = async function (req, res) {
     try {
-        language = req.body.language_POST
-        username = req.body.username_POST
-        let selectAuthByUsernameData = await model.adm_authentication.findAll({
+        const language = req.body.language_POST || 'en';
+        const username = req.body.username_POST;
+
+        const selectAuthByUsernameData = await model.adm_authentication.findAll({
             include: [
                 {
                     model: model.adm_menu,
@@ -232,8 +180,7 @@ controller.selectAuthByUsername = async function (req, res) {
                         {
                             model: model.adm_menu_translations,
                             attributes: ["translation"],
-                            where:
-                            {
+                            where: {
                                 language_code: language
                             },
                         }
@@ -244,44 +191,29 @@ controller.selectAuthByUsername = async function (req, res) {
                     ],
                 }
             ],
-            where:
-            {
+            where: {
                 username: username
             },
             order: [
                 ['id_menu', 'ASC'],
             ],
         });
-        var data = {
-            dataAuth: selectAuthByUsernameData
-        }
+
         if (selectAuthByUsernameData.length > 0) {
-            getMenu(data)
-        } else {
-            getMenuAll2()
-        }
-        async function getMenu(data) {
-            var arrIdMenu = [];
-            for (var i = 0; i < data["dataAuth"].length; i++)
-                arrIdMenu.push(data["dataAuth"][i].id_menu);
-            var getMenuAll = await model.adm_menu.findAll({
+            const arrIdMenu = selectAuthByUsernameData.map(auth => auth.id_menu);
+            const getMenuAll = await model.adm_menu.findAll({
                 include: [
                     {
                         model: model.adm_menu_translations,
                         attributes: ["translation"],
-                        where:
-                        {
+                        where: {
                             language_code: language
                         },
                     }
-                ],
-                order: [
-                    ['level', 'ASC'],
-                    ['no_ordinal', 'ASC'],
                 ],
                 where: {
                     id_menu: {
-                        [sequelize.Op.not]: arrIdMenu
+                        [Op.notIn]: arrIdMenu
                     }
                 },
                 order: [
@@ -289,25 +221,20 @@ controller.selectAuthByUsername = async function (req, res) {
                     ['no_ordinal', 'ASC'],
                 ],
             });
-            var data = {
-                dataAuth: data["dataAuth"],
-                dataMenu: getMenuAll,
-            }
-            res.status(200).json({
-                access: "success",
-                message: "Akun privilage anda",
-                data: data
-            });
 
-        }
-        async function getMenuAll2() {
-            let getMenuAll2Date = await model.adm_menu.findAll({
+            const responseData = {
+                dataAuth: selectAuthByUsernameData,
+                dataMenu: getMenuAll,
+            };
+
+            return responseHelper.success(res, "Akun privilege anda", responseData);
+        } else {
+            const getMenuAll2Data = await model.adm_menu.findAll({
                 include: [
                     {
                         model: model.adm_menu_translations,
                         attributes: ["translation"],
-                        where:
-                        {
+                        where: {
                             language_code: language
                         },
                     }
@@ -317,309 +244,215 @@ controller.selectAuthByUsername = async function (req, res) {
                     ['no_ordinal', 'ASC'],
                 ],
             });
-            var data = {
+
+            const responseData = {
                 dataAuth: [],
-                dataMenu: getMenuAll2Date,
-            }
-            if (getMenuAll2Date.length > 0) {
-                res.status(200).json({
-                    access: "success",
-                    // message: "Akun anda belum ada privilage, silahkan hubungi administrator",
-                    data: data
-                });
+                dataMenu: getMenuAll2Data,
+            };
+
+            if (getMenuAll2Data.length > 0) {
+                return responseHelper.success(res, "Retrieved all menus", responseData);
             } else {
-                res.status(200).json({
-                    access: "failed",
-                    // message: "Akun anda belum ada privilage, silahkan hubungi administrator",
-                    data: data
-                });
+                return responseHelper.Unsuccessful(res, messages[language]?.nodata || "No data available", responseData);
             }
-
-        };
-    } catch (error) {
-        res.status(404).json({
-            message: error,
-        });
-    }
-}
-controller.insertAuthByUsername = async function (req, res) {
-    const transaction = await koneksi.transaction()
-    try {
-        var username = req.body["dataAuth"][0]["username_POST"]
-        var language = req.body["dataLanguage"]["language_POST"]
-        var usernameLogin = req.body["dataUsername"]["username_POST"]
-
-        var menuUserAccess = []
-        var id_menu_POST = [];
-        var username_POST = [];
-        var jml = req.body["dataAuth"].length
-        for (var i = 0; i < jml; i++) {
-            id_menu_POST = JSON.parse('{"id_menu": ' + req.body["dataAuth"][i]["userprivilege_POST"] + '}')
-            username_POST = JSON.parse('{"username": "' + req.body["dataAuth"][i]["username_POST"] + '"}')
-            extend(id_menu_POST, username_POST);
-            menuUserAccess.push(id_menu_POST);
         }
-        let deleteAuthMenuByUsernameData = await model.adm_authentication.destroy({
+    } catch (error) {
+        return responseHelper.error(res, error, "Terjadi kesalahan saat mengambil privilege user");
+    }
+};
+
+controller.insertAuthByUsername = async function (req, res) {
+    const transaction = await koneksi.transaction();
+    try {
+        const username = req.body["dataAuth"][0]["username_POST"];
+        const language = req.body["dataLanguage"]["language_POST"] || 'en';
+        const usernameLogin = req.body["dataUsername"]["username_POST"];
+
+        const menuUserAccess = [];
+        const jml = req.body["dataAuth"].length;
+        for (let i = 0; i < jml; i++) {
+            menuUserAccess.push({
+                id_menu: req.body["dataAuth"][i]["userprivilege_POST"],
+                username: req.body["dataAuth"][i]["username_POST"]
+            });
+        }
+
+        await model.adm_authentication.destroy({
             where: {
                 username: username
             },
-            transaction: transaction
+            transaction
         });
 
-        if (deleteAuthMenuByUsernameData > 0) {
-            await insertAuthByUsernameData(menuUserAccess)
-        } else {
-            await insertAuthByUsernameData(menuUserAccess)
-        }
-        async function insertAuthByUsernameData(menuUserAccess) {
+        const insertAuthMenuData = await model.adm_authentication.bulkCreate(
+            menuUserAccess,
+            { transaction }
+        );
 
-            let insertAuthMenuData = await model.adm_authentication.bulkCreate(
-                menuUserAccess, { transaction: transaction }
-            );
-            if (res.status(200)) {
-                await transaction.commit()
-                res.json({
-                    access: "success",
-                    message: messages[language]?.insertData,
-                    data: insertAuthMenuData,
-                });
-                logger.info('Insert Auth By Username', {
-                    "1.username": `${usernameLogin}`,
-                    "2.module": 'insertAuthByUsername',
-                    "3.status": 'success',
-                    "4.action": req.body
-                });
-            } else {
-                await transaction.rollback()
-                res.status(200).json({
-                    access: "failed",
-                    message: messages[language]?.failedData,
-                });
-            }
+        if (insertAuthMenuData) {
+            await transaction.commit();
+            logger.info('Insert Auth By Username', {
+                "1.username": `${usernameLogin}`,
+                "2.module": 'insertAuthByUsername',
+                "3.status": 'success',
+                "4.action": req.body
+            });
+            return responseHelper.success(res, messages[language]?.insertData, insertAuthMenuData);
+        } else {
+            await transaction.rollback();
+            return responseHelper.Unsuccessful(res, messages[language]?.failedData || "Insert auth failed");
         }
     } catch (error) {
-        await transaction.rollback()
-        res.status(404).json({
-            message: error,
-        });
+        await transaction.rollback();
+        return responseHelper.error(res, error, "Terjadi kesalahan saat menyimpan privilege user");
     }
-}
+};
+
 controller.selectUsersWeb = async function (req, res) {
     try {
-        var language = req.body.language_POST
-        let selectLoginData = await model.adm_user_login.findAll(
-            {
-                // include: [
-                //     {
-                //         model: model.adm_company,
-                //         attributes: ["name", "code_company_type", "parent_code"],
-                //     },
-                //     {
-                //         model: model.hrd_employee,
-                //     },
-                // ],
-                // where: {
-                //     access_web: 1
-                // },
-                order: [
-                    ['username', 'ASC'],
-                ],
-            },
-        );
+        const language = req.body.language_POST || 'en';
+        const selectLoginData = await model.adm_user_login.findAll({
+            order: [
+                ['username', 'ASC'],
+            ],
+        });
         if (selectLoginData.length > 0) {
-            res.status(200).json({
-                access: "success",
-                message: messages[language]?.insertData,
-                data: selectLoginData,
-            });
+            return responseHelper.success(res, messages[language]?.insertData || "Users web retrieved successfully", selectLoginData);
         } else {
-            res.status(200).json({
-                access: "failed",
-                message: messages[language]?.nodata,
-                data: [],
-            });
+            return responseHelper.Unsuccessful(res, messages[language]?.nodata || "No data available", []);
         }
     } catch (error) {
-        res.status(404).json({
-            message: error,
-        });
+        return responseHelper.error(res, error, "Terjadi kesalahan saat mengambil users web");
     }
-}
+};
+
 controller.selectUsersMobile = async function (req, res) {
     try {
-        var language = req.body.language_POST
-        let selectLoginData = await model.adm_user_login.findAll(
-            {
-                // include: [
-                //     {
-                //         model: model.adm_company,
-                //         attributes: ["name", "code_company_type", "parent_code"],
-                //     },
-                //     {
-                //         model: model.hrd_employee,
-                //     },
-                // ],
-                where: {
-                    access_mobile: 1
-                },
-                order: [
-                    ['username', 'ASC'],
-                ],
+        const language = req.body.language_POST || 'en';
+        const selectLoginData = await model.adm_user_login.findAll({
+            where: {
+                access_mobile: 1
             },
-        );
+            order: [
+                ['username', 'ASC'],
+            ],
+        });
         if (selectLoginData.length > 0) {
-            res.status(200).json({
-                access: "success",
-                message: messages[language]?.insertData,
-                data: selectLoginData,
-            });
+            return responseHelper.success(res, messages[language]?.insertData || "Users mobile retrieved successfully", selectLoginData);
         } else {
-            res.status(200).json({
-                access: "failed",
-                message: messages[language]?.nodata,
-                data: [],
-            });
+            return responseHelper.Unsuccessful(res, messages[language]?.nodata || "No data available", []);
         }
     } catch (error) {
-        res.status(404).json({
-            message: error,
-        });
+        return responseHelper.error(res, error, "Terjadi kesalahan saat mengambil users mobile");
     }
-}
+};
+
 controller.insertAuthCopyUser = async function (req, res) {
-    const transaction = await koneksi.transaction()
+    const transaction = await koneksi.transaction();
     try {
-        var language = req.body.language_POST
-        const usernameLogin = req.body.username_POST
-        var source = req.body.source_POST
-        var target = req.body.target_POST
-        let selectAuthsourceData = await model.adm_authentication.findAll({
-            where:
-            {
+        const language = req.body.language_POST || 'en';
+        const usernameLogin = req.body.username_POST;
+        const source = req.body.source_POST;
+        const target = req.body.target_POST;
+
+        const selectAuthsourceData = await model.adm_authentication.findAll({
+            where: {
                 username: source
             },
             order: [
                 ['id_menu', 'ASC'],
             ],
+            transaction
         });
-        var data = {
-            dataAuthTarget: selectAuthsourceData
+
+        if (selectAuthsourceData.length === 0) {
+            await transaction.rollback();
+            return responseHelper.Unsuccessful(res, messages[language]?.failedData || "Source auth data not found");
         }
-        if (selectAuthsourceData.length > 0) {
-            deletetarget(data)
+
+        await model.adm_authentication.destroy({
+            where: {
+                username: target
+            },
+            transaction
+        });
+
+        const menuUserAccess = [];
+        for (let i = 0; i < selectAuthsourceData.length; i++) {
+            menuUserAccess.push({
+                username: target,
+                id_menu: selectAuthsourceData[i].id_menu
+            });
+        }
+
+        const insertAuthsourceData = await model.adm_authentication.bulkCreate(
+            menuUserAccess,
+            { transaction }
+        );
+
+        if (insertAuthsourceData.length > 0) {
+            await transaction.commit();
+            logger.info('Insert Auth Copy User', {
+                "1.username": `${usernameLogin}`,
+                "2.module": 'insertAuthCopyUser',
+                "3.status": 'success',
+                "4.action": req.body
+            });
+            return responseHelper.success(res, messages[language]?.insertData, insertAuthsourceData);
         } else {
-            await transaction.rollback()
-            res.status(200).json({
-                access: "failed",
-                message: messages[language]?.failedData,
-            });
-        }
-        async function deletetarget(data) {
-            let deleteAuthMenuByUserData = await model.adm_authentication.destroy({
-                where: {
-                    username: target
-                },
-            });
-            if (deleteAuthMenuByUserData > 0) {
-                insertAuthsource(data)
-            } else {
-                insertAuthsource(data)
-            }
-        }
-        async function insertAuthsource(data) {
-            var menuUserAccess = []
-            for (var i = 0; i < data["dataAuthTarget"].length; i++) {
-                id_menu = JSON.parse('{"id_menu": ' + data["dataAuthTarget"][i].id_menu + '}')
-                username = JSON.parse('{"username": "' + req.body.target_POST + '"}')
-                extend(username, id_menu);
-                menuUserAccess.push(username);
-            }
-            var insertAuthsourceData = await model.adm_authentication.bulkCreate(
-                menuUserAccess,
-                {
-                    transaction: transaction
-                }
-            );
-            if (insertAuthsourceData.length > 0) {
-                await transaction.commit()
-                res.json({
-                    access: "success",
-                    message: messages[language]?.insertData,
-                    data: insertAuthsourceData,
-                });
-                logger.info('Insert Auth Copy User', {
-                    "1.username": `${usernameLogin}`,
-                    "2.module": 'insertAuthCopyUser',
-                    "3.status": 'success',
-                    "4.action": req.body
-                });
-            } else {
-                await transaction.rollback()
-                res.status(200).json({
-                    access: "failed",
-                    message: messages[language]?.failedData,
-                });
-            }
+            await transaction.rollback();
+            return responseHelper.Unsuccessful(res, messages[language]?.failedData || "Copy auth failed");
         }
     } catch (error) {
-        await transaction.rollback()
-        res.status(404).json({
-            message: error,
-        });
+        await transaction.rollback();
+        return responseHelper.error(res, error, "Terjadi kesalahan saat menyalin privilege user");
     }
-}
+};
+
 controller.updateWorksite = async function (req, res) {
-    const transaction = await koneksi.transaction()
+    const transaction = await koneksi.transaction();
     try {
-        var username = req.params.username
-        var language = req.body.language_POST
-        var worksite = req.body.worksite_POST
-        let updateWorksiteData = await model.adm_user_login.update(
+        const username = req.params.username;
+        const language = req.body.language_POST || 'en';
+        const worksite = req.body.worksite_POST;
+
+        const updateWorksiteData = await model.adm_user_login.update(
             {
                 code_company: worksite,
             },
             {
-                where:
-                {
+                where: {
                     username: username
                 },
-                transaction: transaction
+                transaction
             },
         );
 
-        if (updateWorksiteData) {
+        if (updateWorksiteData[0] > 0) {
             await transaction.commit();
-            res.status(200).json({
-                access: "success",
-                message: messages[language]?.updateData,
-                data: updateWorksiteData,
-            });
             logger.info('Update Worksite', {
                 "1.username": `${username}`,
                 "2.module": 'updateWorksite',
                 "3.status": 'success',
                 "4.action": req.body
             });
+            return responseHelper.success(res, messages[language]?.updateData, updateWorksiteData);
         } else {
             await transaction.rollback();
-            res.status(200).json({
-                access: "failed",
-                message: messages[language]?.nodata,
-                data: [],
-            });
+            return responseHelper.Unsuccessful(res, messages[language]?.nodata || "No data available", []);
         }
     } catch (error) {
         await transaction.rollback();
-        res.status(404).json({
-            message: error,
-        });
+        return responseHelper.error(res, error, "Terjadi kesalahan saat memperbarui worksite");
     }
-}
+};
+
 controller.selectAuthMobileByUsername = async function (req, res) {
     try {
-        language = req.body.language_POST
-        username = req.body.username_POST
-        let selectAuthByUsernameData = await model.adm_authentication_mobile.findAll({
+        const language = req.body.language_POST || 'en';
+        const username = req.body.username_POST;
+
+        const selectAuthByUsernameData = await model.adm_authentication_mobile.findAll({
             include: [
                 {
                     model: model.adm_menu_mobile,
@@ -627,8 +460,7 @@ controller.selectAuthMobileByUsername = async function (req, res) {
                         {
                             model: model.adm_menu_mobile_translations,
                             attributes: ["translation"],
-                            where:
-                            {
+                            where: {
                                 language_code: language
                             },
                         }
@@ -639,44 +471,29 @@ controller.selectAuthMobileByUsername = async function (req, res) {
                     ],
                 }
             ],
-            where:
-            {
+            where: {
                 username: username
             },
             order: [
                 ['id_menu', 'ASC'],
             ],
         });
-        var data = {
-            dataAuth: selectAuthByUsernameData
-        }
+
         if (selectAuthByUsernameData.length > 0) {
-            getMenu(data)
-        } else {
-            getMenuAll2()
-        }
-        async function getMenu(data) {
-            var arrIdMenu = [];
-            for (var i = 0; i < data["dataAuth"].length; i++)
-                arrIdMenu.push(data["dataAuth"][i].id_menu);
-            var getMenuAll = await model.adm_menu_mobile.findAll({
+            const arrIdMenu = selectAuthByUsernameData.map(auth => auth.id_menu);
+            const getMenuAll = await model.adm_menu_mobile.findAll({
                 include: [
                     {
                         model: model.adm_menu_mobile_translations,
                         attributes: ["translation"],
-                        where:
-                        {
+                        where: {
                             language_code: language
                         },
                     }
                 ],
-                order: [
-                    ['level', 'ASC'],
-                    ['no_ordinal', 'ASC'],
-                ],
                 where: {
                     id_menu: {
-                        [sequelize.Op.not]: arrIdMenu
+                        [Op.notIn]: arrIdMenu
                     }
                 },
                 order: [
@@ -684,25 +501,20 @@ controller.selectAuthMobileByUsername = async function (req, res) {
                     ['no_ordinal', 'ASC'],
                 ],
             });
-            var data = {
-                dataAuth: data["dataAuth"],
-                dataMenu: getMenuAll,
-            }
-            res.status(200).json({
-                access: "success",
-                message: "Akun privilage anda",
-                data: data
-            });
 
-        }
-        async function getMenuAll2() {
-            let getMenuAll2Date = await model.adm_menu_mobile.findAll({
+            const responseData = {
+                dataAuth: selectAuthByUsernameData,
+                dataMenu: getMenuAll,
+            };
+
+            return responseHelper.success(res, "Akun privilege anda", responseData);
+        } else {
+            const getMenuAll2Date = await model.adm_menu_mobile.findAll({
                 include: [
                     {
                         model: model.adm_menu_mobile_translations,
                         attributes: ["translation"],
-                        where:
-                        {
+                        where: {
                             language_code: language
                         },
                     }
@@ -712,173 +524,130 @@ controller.selectAuthMobileByUsername = async function (req, res) {
                     ['no_ordinal', 'ASC'],
                 ],
             });
-            var data = {
+
+            const responseData = {
                 dataAuth: [],
                 dataMenu: getMenuAll2Date,
-            }
+            };
+
             if (getMenuAll2Date.length > 0) {
-                res.status(200).json({
-                    access: "success",
-                    // message: "Akun anda belum ada privilage, silahkan hubungi administrator",
-                    data: data
-                });
+                return responseHelper.success(res, "Retrieved all menus", responseData);
             } else {
-                res.status(200).json({
-                    access: "failed",
-                    // message: "Akun anda belum ada privilage, silahkan hubungi administrator",
-                    data: data
-                });
+                return responseHelper.Unsuccessful(res, messages[language]?.nodata || "No data available", responseData);
             }
-
-        };
-    } catch (error) {
-        res.status(404).json({
-            message: error,
-        });
-    }
-}
-controller.insertAuthMobileByUsername = async function (req, res) {
-    const transaction = await koneksi.transaction()
-    try {
-        var username = req.body["dataAuth"][0]["username_POST"]
-        var language = req.body["dataLanguage"]["language_POST"]
-        var usernameLogin = req.body["dataUsername"]["username_POST"]
-
-        var menuUserAccess = []
-        var id_menu_POST = [];
-        var username_POST = [];
-        var jml = req.body["dataAuth"].length
-        for (var i = 0; i < jml; i++) {
-            id_menu_POST = JSON.parse('{"id_menu": ' + req.body["dataAuth"][i]["userprivilege_POST"] + '}')
-            username_POST = JSON.parse('{"username": "' + req.body["dataAuth"][i]["username_POST"] + '"}')
-            extend(id_menu_POST, username_POST);
-            menuUserAccess.push(id_menu_POST);
         }
-        let deleteAuthMenuByUsernameData = await model.adm_authentication_mobile.destroy({
+    } catch (error) {
+        return responseHelper.error(res, error, "Terjadi kesalahan saat mengambil privilege mobile");
+    }
+};
+
+controller.insertAuthMobileByUsername = async function (req, res) {
+    const transaction = await koneksi.transaction();
+    try {
+        const username = req.body["dataAuth"][0]["username_POST"];
+        const language = req.body["dataLanguage"]["language_POST"] || 'en';
+        const usernameLogin = req.body["dataUsername"]["username_POST"];
+
+        const menuUserAccess = [];
+        const jml = req.body["dataAuth"].length;
+        for (let i = 0; i < jml; i++) {
+            menuUserAccess.push({
+                id_menu: req.body["dataAuth"][i]["userprivilege_POST"],
+                username: req.body["dataAuth"][i]["username_POST"]
+            });
+        }
+
+        await model.adm_authentication_mobile.destroy({
             where: {
                 username: username
             },
-            transaction: transaction
+            transaction
         });
 
-        if (deleteAuthMenuByUsernameData > 0) {
-            await insertAuthByUsernameData(menuUserAccess)
-        } else {
-            await insertAuthByUsernameData(menuUserAccess)
-        }
-        async function insertAuthByUsernameData(menuUserAccess) {
+        const insertAuthMenuData = await model.adm_authentication_mobile.bulkCreate(
+            menuUserAccess,
+            { transaction }
+        );
 
-            let insertAuthMenuData = await model.adm_authentication_mobile.bulkCreate(
-                menuUserAccess, { transaction: transaction }
-            );
-            if (res.status(200)) {
-                await transaction.commit()
-                res.json({
-                    access: "success",
-                    message: messages[language]?.insertData,
-                    data: insertAuthMenuData,
-                });
-                logger.info('Insert Auth Mobile By Username', {
-                    "1.username": `${usernameLogin}`,
-                    "2.module": 'insertAuthMobileByUsername',
-                    "3.status": 'success',
-                    "4.action": req.body
-                });
-            } else {
-                await transaction.rollback()
-                res.status(200).json({
-                    access: "failed",
-                    message: messages[language]?.failedData,
-                });
-            }
+        if (insertAuthMenuData) {
+            await transaction.commit();
+            logger.info('Insert Auth Mobile By Username', {
+                "1.username": `${usernameLogin}`,
+                "2.module": 'insertAuthMobileByUsername',
+                "3.status": 'success',
+                "4.action": req.body
+            });
+            return responseHelper.success(res, messages[language]?.insertData, insertAuthMenuData);
+        } else {
+            await transaction.rollback();
+            return responseHelper.Unsuccessful(res, messages[language]?.failedData || "Insert mobile auth failed");
         }
     } catch (error) {
-        await transaction.rollback()
-        res.status(404).json({
-            message: error,
-        });
+        await transaction.rollback();
+        return responseHelper.error(res, error, "Terjadi kesalahan saat menyimpan privilege mobile");
     }
-}
+};
+
 controller.insertAuthCopyUserMobile = async function (req, res) {
-    const transaction = await koneksi.transaction()
+    const transaction = await koneksi.transaction();
     try {
-        var language = req.body.language_POST
-        const usernameLogin = req.body.username_POST
-        var source = req.body.source_POST
-        var target = req.body.target_POST
-        let selectAuthsourceData = await model.adm_authentication_mobile.findAll({
-            where:
-            {
+        const language = req.body.language_POST || 'en';
+        const usernameLogin = req.body.username_POST;
+        const source = req.body.source_POST;
+        const target = req.body.target_POST;
+
+        const selectAuthsourceData = await model.adm_authentication_mobile.findAll({
+            where: {
                 username: source
             },
             order: [
                 ['id_menu', 'ASC'],
             ],
+            transaction
         });
-        var data = {
-            dataAuthTarget: selectAuthsourceData
+
+        if (selectAuthsourceData.length === 0) {
+            await transaction.rollback();
+            return responseHelper.Unsuccessful(res, messages[language]?.failedData || "Source auth data not found");
         }
-        if (selectAuthsourceData.length > 0) {
-            deletetarget(data)
+
+        await model.adm_authentication_mobile.destroy({
+            where: {
+                username: target
+            },
+            transaction
+        });
+
+        const menuUserAccess = [];
+        for (let i = 0; i < selectAuthsourceData.length; i++) {
+            menuUserAccess.push({
+                username: target,
+                id_menu: selectAuthsourceData[i].id_menu
+            });
+        }
+
+        const insertAuthsourceData = await model.adm_authentication_mobile.bulkCreate(
+            menuUserAccess,
+            { transaction }
+        );
+
+        if (insertAuthsourceData.length > 0) {
+            await transaction.commit();
+            logger.info('Insert Auth Copy User Mobile', {
+                "1.username": `${usernameLogin}`,
+                "2.module": 'insertAuthCopyUserMobile',
+                "3.status": 'success',
+                "4.action": req.body
+            });
+            return responseHelper.success(res, messages[language]?.insertData, insertAuthsourceData);
         } else {
-            await transaction.rollback()
-            res.status(200).json({
-                access: "failed",
-                message: messages[language]?.failedData,
-            });
-        }
-        async function deletetarget(data) {
-            let deleteAuthMenuByUserData = await model.adm_authentication_mobile.destroy({
-                where: {
-                    username: target
-                },
-            });
-            if (deleteAuthMenuByUserData > 0) {
-                insertAuthsource(data)
-            } else {
-                insertAuthsource(data)
-            }
-        }
-        async function insertAuthsource(data) {
-            var menuUserAccess = []
-            for (var i = 0; i < data["dataAuthTarget"].length; i++) {
-                id_menu = JSON.parse('{"id_menu": ' + data["dataAuthTarget"][i].id_menu + '}')
-                username = JSON.parse('{"username": "' + req.body.target_POST + '"}')
-                extend(username, id_menu);
-                menuUserAccess.push(username);
-            }
-            var insertAuthsourceData = await model.adm_authentication_mobile.bulkCreate(
-                menuUserAccess,
-                {
-                    transaction: transaction
-                }
-            );
-            if (insertAuthsourceData.length > 0) {
-                await transaction.commit()
-                res.json({
-                    access: "success",
-                    message: messages[language]?.insertData,
-                    data: insertAuthsourceData,
-                });
-                logger.info('Insert Auth Copy User Mobile', {
-                    "1.username": `${usernameLogin}`,
-                    "2.module": 'insertAuthCopyUserMobile',
-                    "3.status": 'success',
-                    "4.action": req.body
-                });
-            } else {
-                await transaction.rollback()
-                res.status(200).json({
-                    access: "failed",
-                    message: messages[language]?.failedData,
-                });
-            }
+            await transaction.rollback();
+            return responseHelper.Unsuccessful(res, messages[language]?.failedData || "Copy auth failed");
         }
     } catch (error) {
-        await transaction.rollback()
-        res.status(404).json({
-            message: error,
-        });
+        await transaction.rollback();
+        return responseHelper.error(res, error, "Terjadi kesalahan saat menyalin privilege mobile");
     }
-}
+};
+
 module.exports = controller;

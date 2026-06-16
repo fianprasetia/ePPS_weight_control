@@ -113,7 +113,7 @@ async function selectEmployee() {
     xhr.onloadend = async function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = JSON.parse(xhr.response);
-            if (response["access"] == "success") {
+           if (response["success"] == true) {
                 var responseData = response["data"]
                 var tableItem = "";
                 for (i = 0; i < responseData.length; i++) {
@@ -232,7 +232,7 @@ async function selectGender(genderCode) {
     xhr.onloadend = async function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = await JSON.parse(xhr.response);
-            if (response["access"] == "success") {
+           if (response["success"] == true) {
                 var responseData = response["data"]
                 var filterSubData = responseData.filter((filterSubData) => filterSubData.gender_code == genderCode);
                 var filternotSubData = responseData.filter((filternotSubData) => filternotSubData.gender_code != genderCode);
@@ -384,7 +384,7 @@ async function selectDepartment(departmentCode) {
     xhr.onloadend = async function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = await JSON.parse(xhr.response);
-            if (response["access"] == "success") {
+           if (response["success"] == true) {
                 var responseData = response["data"]
                 var filterSubData = responseData.filter((filterSubData) => filterSubData.department_code == departmentCode);
                 var filternotSubData = responseData.filter((filternotSubData) => filternotSubData.department_code != departmentCode);
@@ -457,7 +457,7 @@ async function selectJobTitle(jobTitleCode) {
     xhr.onloadend = async function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = await JSON.parse(xhr.response);
-            if (response["access"] == "success") {
+           if (response["success"] == true) {
                 var responseData = response["data"]
                 var filterSubData = responseData.filter((filterSubData) => filterSubData.id_job_title == jobTitleCode);
                 var filternotSubData = responseData.filter((filternotSubData) => filternotSubData.id_job_title != jobTitleCode);
@@ -538,7 +538,7 @@ async function selectCompany(companyCode) {
     xhr.onloadend = async function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = await JSON.parse(xhr.response);
-            if (response["access"] == "success") {
+           if (response["success"] == true) {
                 var responseData = response["data"]
                 var filterSubData = responseData.filter((filterSubData) => filterSubData.code_company == companyCode);
                 var filternotSubData = responseData.filter((filternotSubData) => filternotSubData.code_company != companyCode);
@@ -609,7 +609,7 @@ async function selectType(typeCode) {
     xhr.onloadend = async function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = await JSON.parse(xhr.response);
-            if (response["access"] == "success") {
+           if (response["success"] == true) {
                 var responseData = response["data"]
                 var filterSubData = responseData.filter((filterSubData) => filterSubData.employee_type_code == typeCode);
                 var filternotSubData = responseData.filter((filternotSubData) => filternotSubData.employee_type_code != typeCode);
@@ -682,7 +682,7 @@ async function selectStatus(statusCode) {
     xhr.onloadend = async function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = await JSON.parse(xhr.response);
-            if (response["access"] == "success") {
+           if (response["success"] == true) {
                 var responseData = response["data"]
                 var filterSubData = responseData.filter((filterSubData) => filterSubData.code_employee_status == statusCode);
                 var filternotSubData = responseData.filter((filternotSubData) => filternotSubData.code_employee_status != statusCode);
@@ -755,7 +755,7 @@ async function selectGrade(gradeCode) {
     xhr.onloadend = async function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = await JSON.parse(xhr.response);
-            if (response["access"] == "success") {
+           if (response["success"] == true) {
                 var responseData = response["data"]
                 var filterSubData = responseData.filter((filterSubData) => filterSubData.grade_code == gradeCode);
                 var filternotSubData = responseData.filter((filternotSubData) => filternotSubData.grade_code != gradeCode);
@@ -838,7 +838,7 @@ async function selectWorksite(worksiteCode) {
     xhr.onloadend = async function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = await JSON.parse(xhr.response);
-            if (response["access"] == "success") {
+           if (response["success"] == true) {
                 var responseData = response["data"]
                 var filterSubData = responseData.filter((filterSubData) => filterSubData.code_company == worksiteCode);
                 var filternotSubData = responseData.filter((filternotSubData) => filternotSubData.code_company != worksiteCode);
@@ -911,7 +911,7 @@ async function selectProvinceReception(provinceReceptionCode) {
     xhr.onloadend = async function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = await JSON.parse(xhr.response);
-            if (response["access"] == "success") {
+           if (response["success"] == true) {
                 var responseDataProvince = response["data"]
                 var detailCode = []
                 for (i = 0; i < responseDataProvince.length; i++) {
@@ -998,7 +998,7 @@ async function selectCatu(catuCode) {
     xhr.onloadend = async function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = await JSON.parse(xhr.response);
-            if (response["access"] == "success") {
+           if (response["success"] == true) {
                 var responseData = response["data"]
                 var filterSubData = responseData.filter((filterSubData) => filterSubData.catu_code == catuCode);
                 var filternotSubData = responseData.filter((filternotSubData) => filternotSubData.catu_code != catuCode);
@@ -1071,7 +1071,7 @@ async function selectStatusTax(statusTaxCode) {
     xhr.onloadend = async function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = await JSON.parse(xhr.response);
-            if (response["access"] == "success") {
+           if (response["success"] == true) {
                 var responseData = response["data"]
                 var filterSubData = responseData.filter((filterSubData) => filterSubData.employee_tax_code == statusTaxCode);
                 var filternotSubData = responseData.filter((filternotSubData) => filternotSubData.employee_tax_code != statusTaxCode);
@@ -1144,7 +1144,7 @@ async function selectSalary(salaryCode) {
     xhr.onloadend = async function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = await JSON.parse(xhr.response);
-            if (response["access"] == "success") {
+           if (response["success"] == true) {
                 var responseData = response["data"]
                 var filterSubData = responseData.filter((filterSubData) => filterSubData.employee_salary_code == salaryCode);
                 var filternotSubData = responseData.filter((filternotSubData) => filternotSubData.employee_salary_code != salaryCode);
@@ -1219,7 +1219,7 @@ async function selectMarital(maritalCode) {
     xhr.onloadend = async function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = await JSON.parse(xhr.response);
-            if (response["access"] == "success") {
+           if (response["success"] == true) {
                 var responseData = response["data"]
                 var filterSubData = responseData.filter((filterSubData) => filterSubData.marital_code == maritalCode);
                 var filternotSubData = responseData.filter((filternotSubData) => filternotSubData.marital_code != maritalCode);
@@ -1294,7 +1294,7 @@ async function selectReligion(religionCode) {
     xhr.onloadend = async function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = await JSON.parse(xhr.response);
-            if (response["access"] == "success") {
+           if (response["success"] == true) {
                 var responseData = response["data"]
                 var filterSubData = responseData.filter((filterSubData) => filterSubData.code_religion == religionCode);
                 var filternotSubData = responseData.filter((filternotSubData) => filternotSubData.code_religion != religionCode);
@@ -1369,7 +1369,7 @@ async function selectEducation(educationCode) {
     xhr.onloadend = async function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = await JSON.parse(xhr.response);
-            if (response["access"] == "success") {
+           if (response["success"] == true) {
                 var responseData = response["data"]
                 var filterSubData = responseData.filter((filterSubData) => filterSubData.code_education == educationCode);
                 var filternotSubData = responseData.filter((filternotSubData) => filternotSubData.code_education != educationCode);

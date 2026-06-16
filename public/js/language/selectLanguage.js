@@ -51,7 +51,7 @@ async function selectTranslate() {
             xhr.onloadend = async function () {
                 if (this.readyState === 4 && this.status === 200) {
                     var response = JSON.parse(xhr.response);
-                    if (response["access"] === "success") {
+                    if (response["success"] === true) {
                         var responseData = response["data"];
                         let codes = [];
                         var languageMenu = `

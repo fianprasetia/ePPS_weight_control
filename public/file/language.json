@@ -483,7 +483,8 @@
       "net_weight": "Net Weight",
       "save_&_print": "Save & Print",
       "weighbridge_data": "Weighbridge Data",
-      "time": "Time"
+      "time": "Time",
+      "mill_activation": "Mill Activation"
     }
   },
   {
@@ -970,7 +971,8 @@
       "net_weight": "Netto",
       "save_&_print": "simpan & catek",
       "weighbridge_data": "Data Timbangan",
-      "time": "Waktu"
+      "time": "Waktu",
+      "mill_activation": "Aktivasi Mill"
     }
   },
   {
@@ -1457,7 +1459,8 @@
       "net_weight": "净重",
       "save_&_print": "保存并打印",
       "weighbridge_data": "地磅数据",
-      "time": "时间"
+      "time": "时间",
+      "mill_activation": "激活磨机"
     }
   }
 ]

@@ -1,411 +1,310 @@
 require('dotenv').config();
-const model = require("../models/index")
+const model = require("../models/index");
 const koneksi = require("../config/database");
-const messages = require("./message")
-const jwt = require('jsonwebtoken');
-var md5 = require("md5");
-const controller = {}
-const { Op, json } = require("sequelize")
+const messages = require("./message");
+const md5 = require("md5");
+const { Op } = require("sequelize");
 const logger = require('./logger');
+const responseHelper = require('../helpers/responseHelper');
 
+const controller = {};
+
+// 1. SELECT LOGIN (WEB)
 controller.selectLogin = async function (req, res) {
-    const transaction = await koneksi.transaction()
+    const transaction = await koneksi.transaction();
     try {
-        const requestData = req.body;
         const {
             language_POST: language,
             password_POST: password,
             username_POST: username,
-        } = requestData;
+        } = req.body;
 
-        const selectLoginData = await selectLogin()
+        // Query Login
+        const selectLoginData = await model.adm_user_login.findAll({
+            include: [
+                {
+                    model: model.adm_employee,
+                },
+            ],
+            where: {
+                [Op.and]: [
+                    { username: username },
+                    { password: md5(password) }
+                ],
+            },
+            transaction
+        });
+
         if (selectLoginData.length === 0) {
             await transaction.rollback();
-            return sendFailedResponse(messages[language]?.accessFailed);
+            return responseHelper.Unsuccessful(res, messages[language]?.accessFailed);
         }
-        if (selectLoginData[0]["status"] === 0) {
+
+        if (selectLoginData[0].status === 0) {
             await transaction.rollback();
-            return sendFailedResponse(messages[language]?.userStatus);
+            return responseHelper.Unsuccessful(res, messages[language]?.userStatus);
         }
-        const selectAuthenticationData = await selectAuthentication(selectLoginData)
-        if (selectAuthenticationData["selectAuthenticationData"].length === 0) {
+
+        // Check password reset requirement
+        const change_password = selectLoginData[0].change_password;
+        if (change_password == 0) {
             await transaction.rollback();
-            return sendFailedResponse(messages[language]?.userAccess);
+            return responseHelper.Unsuccessful(res, messages[language]?.resetPassword, username);
         }
-        const selectMenuData = await selectMenu(selectAuthenticationData)
+
+        // Query Authentication
+        const selectAuthenticationData = await model.adm_authentication.findAll({
+            where: {
+                username: username
+            },
+            transaction
+        });
+
+        if (selectAuthenticationData.length === 0) {
+            await transaction.rollback();
+            return responseHelper.Unsuccessful(res, messages[language]?.userAccess);
+        }
+
+        // Query Menu
+        const arrIdMenu = selectAuthenticationData.map(auth => auth.id_menu);
+        const selectMenuData = await model.adm_menu.findAll({
+            include: [
+                {
+                    model: model.adm_menu_translations,
+                    attributes: ["translation"],
+                    where: {
+                        language_code: language
+                    },
+                }
+            ],
+            where: {
+                id_menu: arrIdMenu,
+            },
+            transaction,
+            order: [
+                ['parent_id', 'ASC'],
+                ['level', 'ASC'],
+                ['no_ordinal', 'ASC'],
+            ],
+        });
+
         if (selectMenuData.length === 0) {
             await transaction.rollback();
-            return sendFailedResponse(messages[language]?.userAccess);
+            return responseHelper.Unsuccessful(res, messages[language]?.userAccess);
         }
-        await transaction.commit();
-        sendSuccessResponse(messages[language]?.accessSuccess, selectMenuData);
-        logAction('success');
 
-        async function selectLogin() {
-            return await model.adm_user_login.findAll({
-                include: [
-                    {
-                        model: model.adm_employee,
-                    },
-                ],
-                where: {
-                    [Op.and]: [
-                        { username: username },
-                        { password: md5(password) }
-                    ],
-                },
-                transaction
-            });
+        await transaction.commit();
+
+        const responseData = {
+            dataLogin: selectLoginData,
+            dataMenu: selectMenuData
+        };
+
+        logger.info('Login Success', { username });
+        return responseHelper.success(res, messages[language]?.accessSuccess, responseData);
+
+    } catch (error) {
+        await transaction.rollback();
+        return responseHelper.error(res, error, "Terjadi kesalahan pada server");
+    }
+};
+
+// 2. UPDATE PASSWORD
+controller.updatePasswordLoginUser = async function (req, res) {
+    const transaction = await koneksi.transaction();
+    try {
+        const language = req.body.language_POST;
+        const username = req.body.username_POST;
+        const password = md5(req.body.password_POST);
+
+        const selectUserData = await model.adm_user_login.findAll({
+            where: {
+                username: username
+            },
+            transaction
+        });
+
+        if (selectUserData.length === 0) {
+            await transaction.rollback();
+            return responseHelper.notFound(res, messages[language]?.userNotFound || 'User not found');
         }
-        async function selectAuthentication(selectLoginData) {
-            change_password = selectLoginData[0]["change_password"]
-            if (change_password == 0) {
-                await transaction.rollback();
-                res.status(200).json({
-                    access: "change",
-                    message: messages[language]?.resetPassword,
-                    data: username
-                });
-                return false
-            }
-            let selectAuthenticationData = await model.adm_authentication.findAll({
+
+        if (selectUserData[0].old_password === password) {
+            await transaction.rollback();
+            return responseHelper.Unsuccessful(res, messages[language]?.passwordSAme);
+        }
+
+        const updatePasswordData = await model.adm_user_login.update(
+            {
+                password: password,
+                change_password: 1
+            },
+            {
                 where: {
                     username: username
                 },
                 transaction
-            })
-            var data = {
-                dataLogin: selectLoginData,
-                dataAuth: selectAuthenticationData
-            }
-            return { selectAuthenticationData, data }
-        }
-        async function selectMenu(selectAuthenticationData) {
-            const dataResult = selectAuthenticationData["data"]
-            var arrIdMenu = [];
-            for (var i = 0; i < dataResult["dataAuth"].length; i++)
-                arrIdMenu.push(dataResult["dataAuth"][i].id_menu);
-            let selectMenuData = await model.adm_menu.findAll({
-                include: [
-                    {
-                        model: model.adm_menu_translations,
-                        attributes: ["translation"],
-                        where:
-                        {
-                            language_code: language
-                        },
-                    }
-                ],
-                where: {
-                    [Op.and]: [{ id_menu: arrIdMenu }],
-                },
-                transaction: transaction,
-                order: [
-                    ['parent_id', 'ASC'],
-                    ['level', 'ASC'],
-                    ['no_ordinal', 'ASC'],
-                ],
-            });
-            var data = {
-                dataLogin: dataResult["dataLogin"],
-                dataMenu: selectMenuData
-            }
-            return data
-        }
-        function sendSuccessResponse(message, data = null) {
-            if (res.headersSent) return;
-            res.status(200).json({
-                access: "success",
-                message: message,
-                ...(data || {})
-            });
-        }
-        function sendFailedResponse(message) {
-            if (res.headersSent) return;
-            res.status(200).json({
-                access: "failed",
-                message: message
-            });
-        }
-    } catch (error) {
-        if (!res.headersSent) {
-            await transaction.rollback();
-            res.status(500).json({
-                message: error.message
-            });
-        }
-    }
-}
-controller.updatePasswordLoginUser = async function (req, res) {
-    const transaction = await koneksi.transaction()
-    try {
-        language = req.body.language_POST;
-        username = req.body.username_POST;
-        password = md5(req.body.password_POST);
-        let selectUserData = await model.adm_user_login.findAll(
-            {
-                where: {
-                    [Op.and]: [{ username: username }],
-                },
             }
         );
-        if (selectUserData[0]["old_password"] == password) {
-            res.status(200).json({
-                access: "failed",
-                message: messages[language]?.passwordSAme,
-            });
+
+        if (updatePasswordData[0] > 0) {
+            await transaction.commit();
+            return responseHelper.success(res, messages[language]?.resetPasswordSuccess, updatePasswordData);
         } else {
-            UpdatePassword()
+            await transaction.rollback();
+            return responseHelper.Unsuccessful(res, messages[language]?.userAccess);
         }
-        async function UpdatePassword() {
-            let UpdatePasswordData = await model.adm_user_login.update(
-                {
-                    password: password,
-                    change_password: 1
-                },
-                {
-                    where: {
-                        [Op.and]: [{ username: username }],
-                    }, transaction: transaction
-                }
-            );
-            if (UpdatePasswordData.length > 0) {
-                await transaction.commit();
-                res.status(200).json({
-                    access: "success",
-                    message: messages[language]?.resetPasswordSuccess,
-                    data: UpdatePasswordData
-                });
-            } else {
-                await transaction.rollback();
-                res.status(200).json({
-                    access: "failed",
-                    message: messages[language]?.userAccess,
-                });
-            }
-        }
+
     } catch (error) {
-        res.status(404).json({
-            message: error,
-        });
+        await transaction.rollback();
+        return responseHelper.error(res, error, "Terjadi kesalahan pada server saat memperbarui password");
     }
 };
+
+// 3. SELECT LOGIN MOBILE (FLAT ASYNC/AWAIT)
 controller.selectLoginMobile = async function (req, res) {
-    const transaction = await koneksi.transaction()
+    const transaction = await koneksi.transaction();
     try {
-        var username = req.body.username_POST
-        var password = md5(req.body.password_POST)
-        var language = req.body.language_POST
-        let selectLoginData = await model.adm_user_login.findAll({
+        const username = req.body.username_POST;
+        const password = md5(req.body.password_POST);
+        const language = req.body.language_POST;
+
+        // Query Login
+        const selectLoginData = await model.adm_user_login.findAll({
             include: [
                 {
                     model: model.adm_company,
-                    attributes: ["name", "code_company_type", "code_company",],
+                    attributes: ["name", "code_company_type", "code_company"],
                 },
                 {
                     model: model.hrd_employee,
                 },
             ],
             where: {
-                [Op.and]: [
-                    { username: username },
-                    { password: password }
-                ],
+                username: username,
+                password: password
             },
-            // transaction: transaction
+            transaction
         });
-        if (selectLoginData.length > 0) {
-            selectAuthentication(selectLoginData)
-        } else {
+
+        if (selectLoginData.length === 0) {
             await transaction.rollback();
-            res.status(200).json({
-                access: "failed",
-                message: messages[language]?.accessFailed,
-            });
+            return responseHelper.Unsuccessful(res, messages[language]?.accessFailed);
         }
-        async function selectAuthentication(selectLoginData) {
-            statusUser = selectLoginData[0]["status"]
-            access_mobile = selectLoginData[0]["access_mobile"]
-            change_password = selectLoginData[0]["change_password"]
-            if (statusUser == 0) {
-                await transaction.rollback();
-                res.status(200).json({
-                    access: "failed",
-                    message: messages[language]?.userStatus,
-                });
-                return false
-            }
-            if (change_password == 0) {
-                await transaction.rollback();
-                res.status(200).json({
-                    access: "change",
-                    message: messages[language]?.resetPassword,
-                    data: username
-                });
-                return false
-            }
-            if (access_mobile == 0) {
-                res.status(200).json({
-                    access: "failed",
-                    message: messages[language]?.userStatus,
-                    data: username
-                });
-                return false
-            }
-            let selectAuthenticationData = await model.adm_authentication_mobile.findAll({
-                where: {
-                    username: username
-                },
-                // transaction: transaction
-            })
-            var data = {
-                dataLogin: selectLoginData,
-                dataAuth: selectAuthenticationData
-            }
-            if (selectAuthenticationData.length > 0) {
-                selectMenu(data)
-            } else {
-                await transaction.rollback();
-                res.status(200).json({
-                    access: "failed",
-                    message: messages[language]?.userAccess,
-                });
-            }
-        }
-        async function selectMenu(data) {
-            var arrIdMenu = [];
-            for (var i = 0; i < data["dataAuth"].length; i++)
-                arrIdMenu.push(data["dataAuth"][i].id_menu);
-            let selectMenuData = await model.adm_menu_mobile.findAll({
-                include: [
-                    {
-                        model: model.adm_menu_mobile_translations,
-                        attributes: ["translation"],
-                        where:
-                        {
-                            language_code: language
-                        },
-                    }
-                ],
-                where: {
-                    [Op.and]: [{ id_menu: arrIdMenu }],
-                },
-                transaction: transaction,
-                order: [
-                    ['level', 'ASC'],
-                    ['no_ordinal', 'ASC'],
-                ],
-            });
-            var data = {
-                dataLogin: data["dataLogin"],
-                dataMenu: selectMenuData
-            }
-            // res.json(data)
-            if (selectMenuData.length > 0) {
-                selectCompany(data)
-            }
-        }
-        async function selectCompany(data) {
 
-            codeCompany = data["dataLogin"][0]["adm_company"]["code_company"]
-            let selectCompanyData = await model.adm_company.findAll({
-                where: {
-                    code_company: codeCompany
-                },
-                transaction: transaction
-            });
-            var data = {
-                dataLogin: data["dataLogin"],
-                dataCompany: selectCompanyData,
-                dataMenu: data["dataMenu"],
-            }
-            if (selectCompanyData.length > 0) {
-                selectEmployeeByWorksite(data)
-            }
+        const user = selectLoginData[0];
+        const statusUser = user.status;
+        const access_mobile = user.access_mobile;
+        const change_password = user.change_password;
+
+        if (statusUser == 0) {
+            await transaction.rollback();
+            return responseHelper.Unsuccessful(res, messages[language]?.userStatus);
         }
-        async function selectEmployeeByWorksite(data) {
-            worksite = data["dataLogin"][0]["hrd_employee"]["worksite"]
-            codeCompany = data["dataLogin"][0]["code_company"];
-            let selectEmployeeByWorksiteData = await model.hrd_employee.findAll({
-                attributes: ["employee_id", "worksite", "fullname", "code_company"],
-                where:
+
+        if (change_password == 0) {
+            await transaction.rollback();
+            return responseHelper.Unsuccessful(res, messages[language]?.resetPassword, username);
+        }
+
+        if (access_mobile == 0) {
+            await transaction.rollback();
+            return responseHelper.Unsuccessful(res, messages[language]?.userStatus);
+        }
+
+        // Query Authentication Mobile
+        const selectAuthenticationData = await model.adm_authentication_mobile.findAll({
+            where: {
+                username: username
+            },
+            transaction
+        });
+
+        if (selectAuthenticationData.length === 0) {
+            await transaction.rollback();
+            return responseHelper.Unsuccessful(res, messages[language]?.userAccess);
+        }
+
+        // Query Menu Mobile
+        const arrIdMenu = selectAuthenticationData.map(auth => auth.id_menu);
+        const selectMenuData = await model.adm_menu_mobile.findAll({
+            include: [
                 {
-                    [Op.and]: [
-                        {
-                            worksite:
-                            {
-                                [Op.like]: codeCompany + "%"
-                            }
-                        },
-                        {
-                            date_of_exit: null
-                        }
-                    ],
+                    model: model.adm_menu_mobile_translations,
+                    attributes: ["translation"],
+                    where: {
+                        language_code: language
+                    },
+                }
+            ],
+            where: {
+                id_menu: arrIdMenu
+            },
+            transaction,
+            order: [
+                ['level', 'ASC'],
+                ['no_ordinal', 'ASC'],
+            ],
+        });
 
-                },
-                transaction: transaction
-            });
-            var data = {
-                dataLogin: data["dataLogin"],
-                dataCompany: data["dataCompany"],
-                dataMenu: data["dataMenu"],
-                dataEmployeeGroup: selectEmployeeByWorksiteData
-            }
-            if (selectEmployeeByWorksiteData.length > 0) {
-                selectWorksiteByCompanyCode(data)
-            }
+        if (selectMenuData.length === 0) {
+            await transaction.rollback();
+            return responseHelper.Unsuccessful(res, messages[language]?.userAccess);
         }
-        async function selectWorksiteByCompanyCode(data) {
-            worksite = data["dataLogin"][0]["hrd_employee"]["worksite"]
-            codeCompany = data["dataLogin"][0]["code_company"];
-            let selectWorksiteByCompanyCodeData = await model.adm_company.findAll({
-                attributes: ["code_company", "name", "code_company_type"],
-                where:
-                // {
-                //     [Op.and]: [
-                //         {
-                //             code_company:
-                //     {
-                //         [Op.like]: codeCompany + "%"
-                //     }
-                //         },
-                //         { code_company_type: "Block" }
-                //     ],
-                // },
 
+        // Query Company
+        const codeCompany = user.adm_company?.code_company;
+        const selectCompanyData = await model.adm_company.findAll({
+            where: {
+                code_company: codeCompany
+            },
+            transaction
+        });
 
-
-
-
-                {
-                    code_company:
-                    {
-                        [Op.like]: codeCompany + "%"
-                    }
-                },
-                transaction: transaction
-            });
-            var data = {
-                dataLogin: data["dataLogin"],
-                dataCompany: data["dataCompany"],
-                dataMenu: data["dataMenu"],
-                dataEmployeeGroup: data["dataEmployeeGroup"],
-                dataWorksite: selectWorksiteByCompanyCodeData
-            }
-            if (selectWorksiteByCompanyCodeData) {
-                await transaction.commit();
-                res.json({
-                    access: "success",
-                    message: messages[language]?.accessSuccess,
-                    data: data,
-                });
-            }
+        if (selectCompanyData.length === 0) {
+            await transaction.rollback();
+            return responseHelper.Unsuccessful(res, messages[language]?.userAccess);
         }
+
+        // Query Employee Group by Worksite
+        const selectEmployeeByWorksiteData = await model.hrd_employee.findAll({
+            attributes: ["employee_id", "worksite", "fullname", "code_company"],
+            where: {
+                worksite: {
+                    [Op.like]: user.code_company + "%"
+                },
+                date_of_exit: null
+            },
+            transaction
+        });
+
+        // Query Worksite List
+        const selectWorksiteByCompanyCodeData = await model.adm_company.findAll({
+            attributes: ["code_company", "name", "code_company_type"],
+            where: {
+                code_company: {
+                    [Op.like]: user.code_company + "%"
+                }
+            },
+            transaction
+        });
+
+        await transaction.commit();
+
+        const responseData = {
+            dataLogin: selectLoginData,
+            dataCompany: selectCompanyData,
+            dataMenu: selectMenuData,
+            dataEmployeeGroup: selectEmployeeByWorksiteData,
+            dataWorksite: selectWorksiteByCompanyCodeData
+        };
+
+        return responseHelper.success(res, messages[language]?.accessSuccess, responseData);
+
     } catch (error) {
         await transaction.rollback();
-        res.status(400).json({
-            message: error,
-        });
+        return responseHelper.error(res, error, "Terjadi kesalahan pada server saat login mobile");
     }
-}
+};
+
 module.exports = controller;

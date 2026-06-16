@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('../partials/head'); %>
+  </head>
+
+  <body>
+    <div id="page-container" class="sidebar-dark enable-page-overlay side-scroll page-header-fixed page-footer-fixed side-trans-enabled">
+      <nav id="sidebar" aria-label="Main Navigation"><%- include('../partials/navigasi'); %></nav>
+      <!-- END Sidebar -->
+
+      <!-- Header -->
+      <header id="page-header">
+        <!-- Header Content -->
+        <%- include('../partials/header'); %>
+      </header>
+      <!-- END Header -->
+
+      <!-- Main Container -->
+      <main id="main-container">
+        <!-- Page Content -->
+        <div class="content">
+          <h4 id="millActivationPage" class="content-heading text-uppercase"></h4>
+          <div class="block block-rounded">
+            <div class="block-header">
+              <!-- <h3 class="block-title">add</h3> -->
+              <div class="block-title">
+                <button title="Add" type="submit" onclick="showModalInsertMillActivation()" class="btn btn-primary">
+                  <i class="fa-solid fa-plus"></i>
+                </button>
+              </div>
+              <div class="block-options">
+                <button type="button" class="btn-block-option" data-toggle="block-option" data-action="fullscreen_toggle"></button>
+              </div>
+            </div>
+            <div class="block-content block-content-full">
+              <div class="table-responsive">
+                <table class="table table-vcenter">
+                  <thead>
+                    <tr>
+                      <th id="codeThead" class="text-center text-uppercase">Code</th>
+                      <th id="companyThead" class="text-center text-uppercase">Company</th>
+                      <th id="millThead" class="text-center text-uppercase">Mill</th>
+                    </tr>
+                  </thead>
+                  <tbody id="dataTable"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <!-- END Store Growth -->
+        </div>
+      </main>
+      <footer id="page-footer" class="bg-body-light"><%- include('../partials/footer'); %></footer>
+    </div>
+    <div class="modal" id="modalMillActivation" tabindex="-1" role="dialog" data-bs-backdrop="static" aria-labelledby="modalMillActivation" aria-hidden="true">
+      <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+          <div class="block block-rounded block-themed block-transparent mb-0">
+            <div class="block-header bg-primary-dark">
+              <h3 id="titleMillActivation" class="block-title text-uppercase">Mill Activation</h3>
+              <div class="block-options">
+                <button type="button" class="btn-block-option text-gray" data-toggle="block-option" data-action="fullscreen_toggle"></button>
+              </div>
+            </div>
+            <form id="form2" class="js-validation">
+              <div class="block-content">
+                <div class="col-sm-12 mb-2 p-5">
+                  <label id="codeActivateLabel" class="form-label text-uppercase" for="codeActivate">code activate</label>
+                  <div class="input-group">
+                    <input type="text" value="0" onkeyup="validateNumber(this)" onfocus="removeZero(this)" class="form-control" id="codeActivate" name="codeActivate" />
+                    <div id="loadsearch" class="input-group-append">
+                      <span onclick="activeCode()" class="input-group-text fw-semibold btn btn-primary"><i class="fa-solid fa-magnifying-glass"></i> </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="block-content block-content-full">
+                  <div class="table-responsive">
+                    <table class="table table-vcenter">
+                      <thead>
+                        <tr>
+                          <th id="codeActivateThead" class="text-center text-uppercase">Code</th>
+                          <th id="companyActivateThead" class="text-center text-uppercase">Company</th>
+                          <th id="millActivateThead" class="text-center text-uppercase">Mill</th>
+                        </tr>
+                      </thead>
+                      <tbody id="dataActivateTable"></tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div id="loadActivate" class="block-content block-content-full text-end bg-body"></div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal" id="modalUsersAccess" tabindex="-1" role="dialog" data-bs-backdrop="static" aria-labelledby="modalUsersAccess" aria-hidden="true">
+      <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+          <div class="block block-rounded block-themed block-transparent mb-0">
+            <div class="block-header bg-primary-dark">
+              <h3 id="titleUsersAccess" class="block-title text-uppercase">Add Menu</h3>
+              <div class="block-options">
+                <button type="button" class="btn-block-option text-gray" data-toggle="block-option" data-action="fullscreen_toggle"></button>
+              </div>
+            </div>
+            <form id="formAccess" class="js-validation formAccess">
+              <div id="tabList" class="block-content">
+                <ul class="nav nav-tabs nav-tabs-alt" role="tablist">
+                  <li class="nav-item">
+                    <a class="nav-link space-x-1 active" onclick="headersMenuAccess('edit', cancel, done)" data-bs-toggle="tab" data-bs-target="#account-profile" role="tab" aria-controls="account-profile" aria-selected="true">
+                      <i class="fa fa-user-circle d-sm-none"></i>
+                      <span id="editMenu" class="d-none d-sm-inline">Edit Menu Access</span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link space-x-1" onclick="headersMenuAccess('copy', cancel, done)" data-bs-toggle="tab" data-bs-target="#account-password" role="tab" aria-controls="account-password" aria-selected="false">
+                      <i class="fa fa-asterisk d-sm-none"></i>
+                      <span id="copyMenu" class="d-none d-sm-inline">Copy Menu Access</span>
+                    </a>
+                  </li>
+                </ul>
+                <div class="block-content tab-content">
+                  <div class="tab-pane active" id="account-profile" role="tabpanel" aria-labelledby="account-profile-tab" tabindex="0">
+                    <div id="rowAccess" class="row" hidden>
+                      <div id="treeAccess" class="tree"></div>
+                    </div>
+                    <div hidden class="col-sm-12 mb-2">
+                      <input type="text" class="form-control fw-light" id="selectUsernameAccess" name="selectUsernameAccess" />
+                    </div>
+                  </div>
+                  <div class="tab-pane" id="account-password" role="tabpanel" aria-labelledby="account-password-tab" tabindex="0">
+                    <div class="row push p-sm-2 p-lg-4">
+                      <div class="offset-xl-1 col-xl-4 order-xl-1">
+                        <p id="descriptionCopMenu" class="bg-body-light p-4 rounded-3 text-muted fs-sm">can copy access from another user by selecting the user you want to copy.</p>
+                      </div>
+                      <div class="col-xl-6 order-xl-0">
+                        <div class="col-sm-12 mb-2">
+                          <label id="usernameLabelCopy" class="form-label text-uppercase" for="selectUsernameCopy"></label>
+                          <select value="" class="js-select2 form-select fw-light text-uppercase" name="selectUsernameCopy" id="selectUsernameCopy" style="width: 100%" data-container="#modalUsersAccess"></select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div id="loadAccess" class="block-content block-content-full text-end bg-body"></div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Core Libraries (jQuery must be first) -->
+    <script src="assets/js/lib/jquery.min.js"></script>
+    <script src="assets/js/dashmix.app.min.js"></script>
+
+    <!-- Application Core -->
+    <script src="js/mainUrl.js"></script>
+    <script src="lib/loadingPage.js"></script>
+    <script src="lib/epps.js"></script>
+
+    <!-- Form Controls & Validation -->
+    <script src="assets/js/plugins/select2/js/select2.full.min.js"></script>
+    <script src="assets/js/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+    <script src="assets/js/plugins/jquery-validation/jquery.validate.min.js"></script>
+    <script src="assets/js/plugins/jquery-validation/additional-methods.js"></script>
+    <script src="assets/js/plugins/jquery.maskedinput/jquery.maskedinput.min.js"></script>
+
+    <!-- Date/Time Pickers -->
+    <script src="assets/js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+    <script src="assets/js/plugins/flatpickr/flatpickr.min.js"></script>
+
+    <!-- Data Tables & Export -->
+    <script src="assets/js/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="assets/js/plugins/datatables-bs5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="assets/js/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="assets/js/plugins/datatables-responsive-bs5/js/responsive.bootstrap5.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons/dataTables.buttons.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons-bs5/js/buttons.bootstrap5.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons-jszip/jszip.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons-pdfmake/pdfmake.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons-pdfmake/vfs_fonts.js"></script>
+    <script src="assets/js/plugins/datatables-buttons/buttons.print.min.js"></script>
+    <script src="assets/js/plugins/datatables-buttons/buttons.html5.min.js"></script>
+
+    <!-- Visualization & Notifications -->
+    <script src="assets/js/plugins/chart.js/chart.umd.js"></script>
+    <script src="assets/js/plugins/bootstrap-notify/bootstrap-notify.min.js"></script>
+
+    <!-- Page Specific Scripts -->
+    <script src="assets/js/pages/be_pages_dashboard.min.js"></script>
+
+    <!-- User Management Modules -->
+    <script src="js/mill_activation/selectMillActivation.js"></script>
+    <script src="js/mill_activation/insertMillActivation.js"></script>
+    <script src="js/mill_activation/updateMillActivation.js"></script>
+    <script src="js/mill_activation/deleteMillActivation.js"></script>
+
+    <!-- Initialization -->
+    <script>
+      Dashmix.helpersOnLoad(["js-flatpickr", "jq-datepicker", "jq-maxlength", "jq-select2", "jq-rangeslider", "jq-masked-inputs", "jq-pw-strength", "jq-notify"]);
+    </script>
+  </body>
+</html>

@@ -1,74 +1,51 @@
-async function session(responseLogin, language) {
-  await clearCookies()
-  sessionStorage.clear()
-  localStorage.clear()
-  const username = await responseLogin["dataLogin"][0]["username"]
-  console.log(username)
-  // const codeCompany = await responseLogin["data"]["dataLogin"][0]["code_company"]
-  const idEmployee = await responseLogin["dataLogin"][0]["employee_id"]
+async function session(responeData, language) {
+  await clearCookies();
+  sessionStorage.clear();
+  localStorage.clear();
+
+  const username = responeData["dataLogin"][0]["username"];
+  const idEmployee = responeData["dataLogin"][0]["employee_id"];
+
   const dataLogin = {
     username: username,
-    // codeCompany: codeCompany,
     idEmployee: idEmployee
   };
+
   const dataLoginString = JSON.stringify(dataLogin);
   setCookie('dataLogin', dataLoginString, 8);
-  await sessionLanguage(responseLogin, language, username)
+
+  await sessionLanguage(responeData, language, username);
 }
-async function sessionLanguage(responseLogin, language, username) {
+async function sessionLanguage(responeData, language, username) {
   const dataLanguageString = JSON.stringify(language);
   setCookie('language', dataLanguageString, 8);
-  await sessionMenu(responseLogin, language, username)
+  await sessionMenu(responeData, language, username);
 }
-async function sessionMenu(responseLogin, language, username) {
-  const dataMenu = await responseLogin["dataMenu"]
-  if (sessionStorage.epps_session_menu_wb) {
-    epps_session_menu_wb = JSON.parse(sessionStorage.getItem("epps_session_menu_wb"));
-  } else {
-    epps_session_menu_wb = [];
-  }
-  epps_session_menu_wb.push({
+async function sessionMenu(responeData, language, username) {
+  const dataMenu = responeData["dataMenu"];
+
+  // Perbaikan: Gunakan array baru, bukan push ke existing array
+  const epps_session_menu_wb = [{
     dataMenu: dataMenu,
-  });
+  }];
+
   sessionStorage.setItem("epps_session_menu_wb", JSON.stringify(epps_session_menu_wb));
-  await sessionEmployee(responseLogin, language)
-  // await insertSessionMenu(username, dataMenu)
+  await sessionEmployee(responeData, language);
 }
-async function sessionEmployee(responseLogin, language) {
-  const dataEmployee = await responseLogin["dataLogin"][0]["adm_employee"]
+async function sessionEmployee(responeData, language) {
+  const dataEmployee = responeData["dataLogin"][0]["adm_employee"];
   const dataEmployeeString = JSON.stringify(dataEmployee);
   setCookie('dataEmployeeWB', dataEmployeeString, 8);
-  // sessionCompany(responseLogin, language)
+
+  // Panggil fungsi selanjutnya jika ada
+  // await sessionCompany(responeData, language);
 }
-// async function sessionCompany(responseLogin, language) {
-//   dataCompany = await responseLogin["data"]["dataCompany"]
-//   const dataCompanyString = JSON.stringify(dataCompany);
-//   setCookie('dataCompany', dataCompanyString, 8);
-//   sessionToken(responseLogin, language)
-// }
-// async function sessionToken(responseLogin, language) {
-//   dataToken = await responseLogin["token"]
-//   const dataTokenString = JSON.stringify(dataToken);
-//   setCookieToken('dataToken', dataTokenString, 15);
-//   sessionPeriodeFAT(responseLogin, language)
-// }
-// async function sessionPeriodeFAT(responseLogin, language) {
-//   dataPeriods = await responseLogin["data"]["dataAccountingPeriods"]
-//   const dataPeriodsString = JSON.stringify(dataPeriods);
-//   setCookie('dataPeriods', dataPeriodsString, 8);
-// }
 function setCookie(name, value, hours) {
   const date = new Date();
   date.setTime(date.getTime() + (hours * 60 * 60 * 1000)); // Mengatur waktu kadaluarsa
   const expires = "expires=" + date.toUTCString();
   document.cookie = name + "=" + value + ";" + expires + ";path=/";
 }
-// function setCookieToken(name, value, minutes) {
-//   const date = new Date();
-//   date.setTime(date.getTime() + (minutes * 60 * 1000)); // Mengatur waktu kadaluarsa
-//   const expires = "expires=" + date.toUTCString();
-//   document.cookie = name + "=" + value + ";" + expires + ";path=/";
-// }
 function clearCookies() {
   const cookies = document.cookie.split(";");
   for (let i = 0; i < cookies.length; i++) {
@@ -78,56 +55,3 @@ function clearCookies() {
     document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
   }
 }
-// async function insertSessionMenu(username, dataMenu) {
-//   const allPages = dataMenu
-//     .filter(item => item.page && item.page.trim() !== '')
-//     .map(item => item.page);
-
-//   var xhr = new XMLHttpRequest();
-//   var url = secondUrl + "session/insertmenu";
-
-//   var data = JSON.stringify({
-//     username_POST: username,
-//     menu_POST: allPages,
-//   });
-//   // xhr.onloadend = function () {
-//   //   if (this.readyState == 4 && this.status == 200) {
-//   //     var responseLogin = JSON.parse(xhr.response);
-//   //     if (responseLogin["access"] == "success") {
-//   //       insertSignatureData()
-
-//   //     } else if (responseLogin["access"] == "failed") {
-//   //       message = responseLogin["message"];
-//   //       Dashmix.helpers("jq-notify", {
-//   //         z_index: 2000,
-//   //         type: "danger",
-//   //         icon: "fa fa-times me-1",
-//   //         message: message,
-//   //       });
-//   //       setTimeout(function () {
-//   //         window.location.href = "/signature";
-//   //       }, 3000);
-//   //     }
-//   //   } if (this.status == 404) {
-//   //     message = "data failed to load";
-//   //     Dashmix.helpers("jq-notify", { type: "danger", z_index: 2000, message: status_404 });
-//   //     setTimeout(function () {
-//   //       window.location.href = "/";
-//   //     }, 3000);
-//   //   } if (this.status == 401) {
-//   //     Dashmix.helpers("jq-notify", { type: "danger", z_index: 2000, message: status_401 });
-//   //     setTimeout(function () {
-//   //       window.location.href = "/";
-//   //     }, 3000);
-//   //   } if (this.status == 500) {
-//   //     Dashmix.helpers("jq-notify", { type: "danger", z_index: 2000, message: status_500 });
-//   //     setTimeout(function () {
-//   //       window.location.href = "/";
-//   //     }, 3000);
-//   //   }
-//   // };
-//   xhr.open("POST", url, true);
-//   xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-//  
-//   xhr.send(data);
-// }

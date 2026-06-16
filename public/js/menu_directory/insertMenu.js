@@ -92,11 +92,11 @@ async function insertMenu() {
   };
 
   var data = JSON.stringify(dataMenu);
-  xhr.onloadend = function () {
+  xhr.onloadend = async function () {
     if (this.readyState == 4 && this.status == 200) {
-      var responseLogin = JSON.parse(xhr.response);
-      if (responseLogin["access"] == "success") {
-        message = responseLogin["message"];
+      var response = await JSON.parse(xhr.response);
+      if (response["success"] == true) {
+        message = response["message"];
         Dashmix.helpers("jq-notify", {
           z_index: 2000,
           type: "success",
@@ -106,8 +106,8 @@ async function insertMenu() {
         setTimeout(function () {
           window.location.href = "/menu_directory";
         }, 3000);
-      } else if (responseLogin["access"] == "failed") {
-        message = responseLogin["message"];
+      } else {
+        message = response["message"];
         Dashmix.helpers("jq-notify", {
           z_index: 2000,
           type: "danger",
