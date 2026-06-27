@@ -42,7 +42,6 @@ async function selectItemMaster() {
     const language = await JSON.parse(getCookie("language"));
     const searchDescription = document.getElementById("searchDescription").value
     const searchCategory = document.getElementById("searchCategory").value
-    var
     var xhr = new XMLHttpRequest();
     var url = mainUrl + "itemmaster"
     xhr.onloadstart = function () {
@@ -156,7 +155,6 @@ async function selectUOM(uomCode) {
 }
 async function selectItemCategory(codeCategory) {
     const language = await JSON.parse(getCookie("language"));
-    var
     var xhr = new XMLHttpRequest();
     var url = mainUrl + "itemcategory"
     xhr.onerror = function () {
@@ -228,7 +226,6 @@ async function selectItemCategory(codeCategory) {
 }
 async function selectSearchItemCategory(codeCategory) {
     const language = await JSON.parse(getCookie("language"));
-    var
     var xhr = new XMLHttpRequest();
     var url = mainUrl + "itemcategory"
     xhr.onerror = function () {

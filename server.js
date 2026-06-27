@@ -129,6 +129,41 @@ app.get('/internal_ffb', (req, res) => {
     res.render('pages/internal_ffb');
 });
 
+app.get('/print-ticket/:ticketNo', async (req, res) => {
+    try {
+        const ticketNo = req.params.ticketNo;
+        const model = require("./models/index");
+        const moment = require("moment");
+
+        const ticket = await model.mll_weigh_bridge.findOne({
+            where: { ticket_no: ticketNo }
+        });
+
+        if (!ticket) {
+            return res.status(404).send("Ticket not found");
+        }
+
+        const weightControl = await model.mll_weight_control.findOne({
+            where: { code_company: ticket.company_code }
+        });
+        const companyName = weightControl ? weightControl.name_company : 'PT SIA PLANTATION';
+
+        const ticketData = {
+            ...ticket.toJSON(),
+            entry_time_formatted: ticket.entry_time ? moment(ticket.entry_time).format('YYYY-MM-DD HH:mm:ss') : '-',
+            exit_time_formatted: ticket.exit_time ? moment(ticket.exit_time).format('YYYY-MM-DD HH:mm:ss') : '-'
+        };
+
+        res.render('internal_ffb/print-ticket', {
+            ticket: ticketData,
+            companyName: companyName
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Internal server error: " + err.message);
+    }
+});
+
 app.get('/mill_activation', (req, res) => {
     res.render('pages/mill_activation');
 });
@@ -150,6 +185,8 @@ const routes = [
     ['/millactivation', require('./routes/mill_activation')],
     ['/company', require('./routes/company')],
     ['/vehiclenumber', require('./routes/vehicle_number')],
+    ['/weightbridge', require('./routes/weight_bridge')],
+    ['/printticket', require('./routes/print_ticket')],
     ['/download-test-file.bin', require('./routes/download')],
     // [
     //     '/protected-route',

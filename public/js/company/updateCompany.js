@@ -1,17 +1,17 @@
 async function showModalUpdateCompany(id) {
-  let token = await JSON.parse(getCookie("dataToken"));
+  // let token = await JSON.parse(getCookie("dataToken"));
   let language = await JSON.parse(getCookie("language"));
-  if (token == null) {
-    await getAccessToken()
-    if (token == null) {
-      return;
-    }
-    var myModal = new bootstrap.Modal(document.getElementById("modalCompany"), { keyboard: false });
-    myModal.toggle();
-  } else {
-    var myModal = new bootstrap.Modal(document.getElementById("modalCompany"), { keyboard: false });
-    myModal.toggle();
-  }
+  // if (token == null) {
+  //   await getAccessToken()
+  //   if (token == null) {
+  //     return;
+  //   }
+  //   var myModal = new bootstrap.Modal(document.getElementById("modalCompany"), { keyboard: false });
+  //   myModal.toggle();
+  // } else {
+  // }
+  var myModal = new bootstrap.Modal(document.getElementById("modalCompany"), { keyboard: false });
+  myModal.toggle();
   const element = document.getElementById(id);
   const level = element.getAttribute("levelUpdate");
   var xhr = new XMLHttpRequest();

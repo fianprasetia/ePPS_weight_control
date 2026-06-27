@@ -37,8 +37,8 @@ async function selectMillActivation() {
                 tableItem =
                     "<tr>\
                         <td class='fw-light text-center'>" + responseData["weight_control_code"] + "</td>\
-                        <td class='fw-light text-center text-uppercase'>" + responseData["code_company"] + "</td>\
-                        <td class='fw-light text-center'>" + responseData["mill"] + "</td>\
+                        <td class='fw-light text-center text-uppercase'>" + responseData["name_company"] + "</td>\
+                        <td class='fw-light text-center'>" + responseData["name_mill"] + "</td>\
                     </tr>";
                 document.getElementById("dataTable").innerHTML = tableItem;
                 await table();

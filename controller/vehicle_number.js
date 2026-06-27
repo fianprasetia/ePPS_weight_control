@@ -1,6 +1,7 @@
 const model = require("../models/index");
 const koneksi = require("../config/database");
 const messages = require("./message");
+const sequelize = require('sequelize');
 const { Op } = require("sequelize");
 const logger = require('./logger');
 const responseHelper = require('../helpers/responseHelper');
@@ -129,6 +130,33 @@ controller.updateVehicleNumber = async function (req, res) {
     } catch (error) {
         await transaction.rollback();
         return responseHelper.error(res, error, "Terjadi kesalahan saat memperbarui password");
+    }
+};
+controller.selectVehicleNumberByTransaction = async function (req, res) {
+    try {
+        const requestData = req.body;
+        const { language_POST: language } = requestData;
+
+        const selectVehicleNumberData = await selectVehicleNumber();
+        if (selectVehicleNumberData.length === 0) {
+            return responseHelper.Unsuccessful(res, messages[language]?.nodata);
+        }
+
+        return responseHelper.success(res, messages[language]?.successfulData, selectVehicleNumberData);
+
+        async function selectVehicleNumber() {
+            return await model.adm_vehicle_number.findAll({
+                where: {
+                    status: 1,
+                },
+                order: [
+                    ['status', 'DESC'],
+                    ['id_vehicle_number', 'ASC'],
+                ],
+            });
+        }
+    } catch (error) {
+        return responseHelper.error(res, error);
     }
 };
 module.exports = controller;

@@ -28,10 +28,6 @@ async function selectContent() {
 }
 async function selectCompany() {
   const language = await JSON.parse(getCookie("language"));
-  // var token = await JSON.parse(getCookie("dataToken"));
-  // if (!token) {
-  //   token = await getAccessToken();
-  // }
   var xhr = new XMLHttpRequest();
   var url = mainUrl + "company"
   xhr.onerror = function () {
@@ -53,10 +49,7 @@ async function selectCompany() {
       var response = await JSON.parse(xhr.response);
       if (response["success"] == true) {
         let responseData = response.data;
-
-        // Buat map
         const map = {};
-
         responseData.forEach(item => {
           item.subCategories = [];
           map[item.code_company] = item;

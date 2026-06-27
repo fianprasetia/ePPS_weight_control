@@ -1,5 +1,6 @@
 const koneksi = require("../config/database");
 const Sequelize = require("sequelize");
+const adm_employee = require("./adm_employee");
 const mll_weigh_bridge = koneksi.define(
     "mll_weigh_bridge",
     {
@@ -65,12 +66,12 @@ const mll_weigh_bridge = koneksi.define(
         },
         exit_time: {
             type: Sequelize.DATE,
-            allowNull: false,
+            allowNull: true,
             comment: "jam keluar"
         },
         gross_weight: {
             type: Sequelize.DECIMAL,
-            allowNull: false,
+            allowNull: true,
             comment: "berat masuk"
         },
         tare_weight: {
@@ -125,13 +126,18 @@ const mll_weigh_bridge = koneksi.define(
         },
         seal_no: {
             type: Sequelize.STRING,
-            allowNull: false,
+            allowNull: true,
             comment: "no segel"
         },
         bunch_count: {
-            type: Sequelize.STRING,
+            type: Sequelize.INTEGER,
             allowNull: true,
             comment: "janjang"
+        },
+        loose_fruit: {
+            type: Sequelize.INTEGER,
+            allowNull: true,
+            comment: "brondol"
         },
         year_plant: {
             type: Sequelize.STRING,
@@ -139,9 +145,15 @@ const mll_weigh_bridge = koneksi.define(
             comment: "tahun tanam"
         },
         created_by: {
-            type: Sequelize.STRING,
-            allowNull: true,
-            comment: "dibuat oleh"
+            type: Sequelize.INTEGER,
+            allowNull: false,
+            comment: "dibuat oleh",
+            references: {
+                model: "adm_employee",
+                key: "employee_id"
+            },
+            onDelete: "Cascade",
+            onUpdate: "Cascade"
         },
         note: {
             type: Sequelize.TEXT,
@@ -160,4 +172,5 @@ const mll_weigh_bridge = koneksi.define(
         freezeTableName: true,
     }
 );
+mll_weigh_bridge.belongsTo(adm_employee, { foreignKey: 'created_by' });
 module.exports = mll_weigh_bridge;

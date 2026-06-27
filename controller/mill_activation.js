@@ -13,8 +13,7 @@ controller.selectWeightControl = async function (req, res) {
         const { language_POST: language } = requestData;
 
         const selectWeightControlData = await selectWeightControl();
-
-        if (selectWeightControlData.length === 0) {
+        if (selectWeightControlData === null) {
             return responseHelper.Unsuccessful(res, messages[language]?.nodata);
         }
 
@@ -74,8 +73,10 @@ controller.insertWeightControl = async function (req, res) {
             return await model.mll_weight_control.create(
                 {
                     weight_control_code: data.weight_control.weight_control_code,
-                    code_company: data.weight_control.company.name,
-                    mill: data.weight_control.factory.name,
+                    code_company: data.weight_control.company.code_company,
+                    code_mill: data.weight_control.factory.code_company,
+                    name_company: data.weight_control.company.name,
+                    name_mill: data.weight_control.factory.name,
                     note: data.weight_control.note
                 }, { transaction }
             );

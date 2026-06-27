@@ -6,6 +6,7 @@ router.post("/", controller.vehicle_number.selectVehicleNumber);
 router.post("/insert", controller.vehicle_number.insertVehicleNumber);
 router.post("/bycode", controller.vehicle_number.selectVehicleNumberByCode);
 router.post("/update", controller.vehicle_number.updateVehicleNumber);
+router.post("/bytransaction", controller.vehicle_number.selectVehicleNumberByTransaction);
 
 
 module.exports = router;

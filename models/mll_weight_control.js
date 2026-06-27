@@ -12,22 +12,18 @@ const mll_weight_control = koneksi.define(
         code_company: {
             type: Sequelize.STRING,
             allowNull: false,
-            // references: {
-            //     model: 'adm_company',
-            //     key: 'code_company',
-            // },
-            // onDelete: 'SET NULL',
-            // onUpdate: 'Cascade',
         },
-        mill: {
+        code_mill: {
             type: Sequelize.STRING,
             allowNull: false,
-            // references: {
-            //     model: 'adm_company',
-            //     key: 'code_company',
-            // },
-            // onDelete: 'SET NULL',
-            // onUpdate: 'Cascade',
+        },
+        name_company: {
+            type: Sequelize.STRING,
+            allowNull: false,
+        },
+        name_mill: {
+            type: Sequelize.STRING,
+            allowNull: false,
         },
         note: {
             type: Sequelize.TEXT,
@@ -38,6 +34,4 @@ const mll_weight_control = koneksi.define(
         freezeTableName: true,
     }
 );
-// mll_weight_control.belongsTo(adm_company, { foreignKey: 'mill', as: 'factory' });
-// mll_weight_control.belongsTo(adm_company, { foreignKey: 'code_company', as: 'company' });
 module.exports = mll_weight_control;

@@ -1205,3 +1205,27 @@ var epps_session_menu_wb = JSON.parse(sessionStorage.getItem("epps_session_menu_
 if (get_login == null || epps_session_menu_wb == null) {
   window.location.href = "/login";
 }
+function formatDate(date) {
+  return [
+    String(date.getDate()).padStart(2, '0'),
+    String(date.getMonth() + 1).padStart(2, '0'),
+    date.getFullYear()
+  ].join('-') + ' ' +
+    [
+      String(date.getHours()).padStart(2, '0'),
+      String(date.getMinutes()).padStart(2, '0'),
+      String(date.getSeconds()).padStart(2, '0')
+    ].join(':');
+}
+function formatDateTime(dateStr) {
+  const date = new Date(dateStr);
+
+  return (
+    String(date.getUTCDate()).padStart(2, '0') + '-' +
+    String(date.getUTCMonth() + 1).padStart(2, '0') + '-' +
+    date.getUTCFullYear() + ' ' +
+    String(date.getUTCHours()).padStart(2, '0') + ':' +
+    String(date.getUTCMinutes()).padStart(2, '0') + ':' +
+    String(date.getUTCSeconds()).padStart(2, '0')
+  );
+}

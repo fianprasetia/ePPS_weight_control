@@ -27,27 +27,16 @@ async function insertMillActivation(el) {
         if (this.readyState == 4 && this.status == 200) {
             let response = await JSON.parse(xhr.response);
             if (response["success"] == true) {
-                let responseDataWC = response["data"]["weight_control"];
-                const responseData = response["data"];
-                tableItem =
-                    "<tr>\
-                            <td class='fw-light text-center'>" + responseDataWC["weight_control_code"] + "</td>\
-                            <td class='fw-light text-center text-uppercase'>" + responseDataWC["company"]["name"] + "</td>\
-                            <td class='fw-light text-center text-uppercase'>" + responseDataWC["factory"]["name"] + "</td>\
-                        </tr>";
-                document.getElementById("dataActivateTable").innerHTML = tableItem;
-                document.getElementById("loadActivate").innerHTML =
-                    "<a id='cancelBtn' onclick='closeModal()' class='btn  btn-danger'>" +
-                    cancel +
-                    "</a> <a id='doneBtn' type='submit'  onclick='insertMillActivation(this)' class='btn  btn-primary'>" +
-                    done +
-                    "</a>";
-                document.getElementById("doneBtn").dataset.response = JSON.stringify(responseData);
-                await table();
-                document.getElementById("loadsearch").innerHTML = "\
-                <span onclick='activeCode()' class='input-group-text fw-semibold btn btn-primary'>\
-                        <i class='fa-solid fa-magnifying-glass'></i>\
-                    </span>"
+                message = response["message"];
+                Dashmix.helpers("jq-notify", {
+                    z_index: 2000,
+                    type: "success",
+                    icon: "fa fa-check me-1",
+                    message: message
+                });
+                setTimeout(function () {
+                    window.location.href = "/mill_activation";
+                }, 3000);
             } else {
                 message = response["message"];
                 Dashmix.helpers("jq-notify", { type: "danger", z_index: 2000, message: message });

@@ -17,17 +17,9 @@ controller.selectCompany = async function (req, res) {
             ],
         });
         if (selectCompanyData.length > 0) {
-            res.status(200).json({
-                access: "success",
-                message: messages[language]?.insertData,
-                data: selectCompanyData,
-            });
+            return responseHelper.success(res, messages[language]?.successfulData, selectCompanyData);
         } else {
-            res.status(200).json({
-                access: "failed",
-                message: messages[language]?.nodata,
-                data: [],
-            });
+            return responseHelper.Unsuccessful(res, messages[language]?.nodata);
         }
     } catch (error) {
         res.status(404).json({
