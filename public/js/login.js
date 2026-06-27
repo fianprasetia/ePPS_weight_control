@@ -51,21 +51,21 @@ function login() {
   });
   xhr.onloadend = async function () {
     if (this.readyState == 4 && this.status == 200) {
-      var responseLogin = await JSON.parse(xhr.response);
-      if (responseLogin["access"] == "success") {
-        responseLogin = JSON.parse(xhr.response);
-        message = responseLogin["message"];
+      var response = await JSON.parse(xhr.response);
+      if (response["success"] == true) {
+        responeData = response["data"];
+        message = response["message"];
         Dashmix.helpers("jq-notify", {
           type: "success",
           icon: "fa fa-check me-1",
           message: message,
         });
-        session(responseLogin, language);
+        session(responeData, language);
         setTimeout(function () {
           window.location.href = "/";
         }, 3000);
-      } else if (responseLogin["access"] == "failed") {
-        message = responseLogin["message"];
+      } else {
+        message = response["message"];
         Dashmix.helpers("jq-notify", {
           type: "danger",
           icon: "fa fa-times me-1",
@@ -74,8 +74,8 @@ function login() {
         setTimeout(function () {
           window.location.href = "/login";
         }, 3000);
-      } else if (responseLogin["access"] == "change") {
-        username = responseLogin["data"];
+      } if (response["access"] == "change") {
+        username = response["data"];
         modalResetPassword(username);
       }
     } if (this.status == 404) {
@@ -138,8 +138,8 @@ async function resetPassword() {
   const jsonData = await datalang.json(); // parsing JSON
 
   var filterLanguage = jsonData.filter((filtercontent) => filtercontent.language == language);
-      required = filterLanguage[0]["content"]["required"]
-      overload = filterLanguage[0]["content"]["overload"]
+  required = filterLanguage[0]["content"]["required"]
+  overload = filterLanguage[0]["content"]["overload"]
   !(function () {
     class e {
       static initValidation() {
@@ -149,7 +149,7 @@ async function resetPassword() {
             rules: {
               "password1": { required: !0 },
               "password2": { required: !0 },
-           
+
             },
             messages: {
               "password1": required,
@@ -206,9 +206,9 @@ async function resetPassword() {
   });
   xhr.onloadend = function () {
     if (this.readyState == 4 && this.status == 200) {
-      var responseLogin = JSON.parse(xhr.response);
-      if (responseLogin["access"] == "success") {
-        message = responseLogin["message"];
+      var response = JSON.parse(xhr.response);
+      if (response["success"] == true) {
+        message = response["message"];
         Dashmix.helpers("jq-notify", {
           z_index: 2000,
           type: "success",
@@ -218,8 +218,8 @@ async function resetPassword() {
         setTimeout(function () {
           window.location.href = "/login";
         }, 3000);
-      } else if (responseLogin["access"] == "failed") {
-        message = responseLogin["message"];
+      } else if (response["access"] == "failed") {
+        message = response["message"];
         Dashmix.helpers("jq-notify", {
           z_index: 2000,
           type: "danger",
@@ -250,7 +250,7 @@ function language(id) {
   if (id == "id") {
     document.getElementById("password").placeholder = "Kata Sandi";
     document.getElementById("username").placeholder = "Nama Pengguna";
-    document.getElementById("tagLine").innerHTML = "Solusi Strategis untuk Transformasi Digital Perkebunan...!!!";
+    // document.getElementById("tagLine").innerHTML = "Solusi Strategis untuk Transformasi Digital Perkebunan...!!!";
     // document.getElementById("loginHeader").innerHTML = "Log In";
     document.getElementById("loginButton").innerHTML = "Log In";
     document.getElementById("titleCreatePassword").innerHTML = "Buat Kata Sandi";
@@ -262,7 +262,7 @@ function language(id) {
     document.getElementById("password").placeholder = "Password";
     document.getElementById("password").placeholder = "Password";
     document.getElementById("username").placeholder = "Username";
-    document.getElementById("tagLine").innerHTML = "Strategic Solutions for Plantation Digital Transformation...!!!";
+    // document.getElementById("tagLine").innerHTML = "Strategic Solutions for Plantation Digital Transformation...!!!";
     // document.getElementById("loginHeader").innerHTML = "Log In";
     document.getElementById("loginButton").innerHTML = "Log In";
     document.getElementById("titleCreatePassword").innerHTML = "Create Password";
@@ -273,7 +273,7 @@ function language(id) {
   } else if (id == "zh") {
     document.getElementById("password").placeholder = "密码";
     document.getElementById("username").placeholder = "用户名";
-    document.getElementById("tagLine").innerHTML = "种植园数字化转型的战略解决方案...!!!";
+    // document.getElementById("tagLine").innerHTML = "种植园数字化转型的战略解决方案...!!!";
     // document.getElementById("loginHeader").innerHTML = "登录";
     document.getElementById("loginButton").innerHTML = "登录";
     document.getElementById("titleCreatePassword").innerHTML = "创建密码";
@@ -286,5 +286,4 @@ function language(id) {
 }
 function closeModal() {
   $('.modal').modal('hide');
-  // document.getElementById("form2").reset()
 }

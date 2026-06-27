@@ -1,8 +1,4 @@
 async function selectContent() {
-    token = await JSON.parse(getCookie("dataToken"));
-   if (!token) {
-        token = await getAccessToken(); 
-    }
     let language = await JSON.parse(getCookie("language"));
     const data = await "file/language.json";
     fetch(data)
@@ -23,12 +19,6 @@ async function selectContent() {
         document.getElementById("passwordLabel").innerHTML = filterLanguage[0]["content"]["password"] + "<span class='text-danger'>*</span>"
         document.getElementById("passwordLabel1").innerHTML = filterLanguage[0]["content"]["password"] + "<span class='text-danger'>*</span>"
         document.getElementById("repasswordLabel2").innerHTML = filterLanguage[0]["content"]["retype_password"] + "<span class='text-danger'>*</span>"
-        document.getElementById("location").innerHTML = filterLanguage[0]["content"]["location"]
-        document.getElementById("locationLabel").innerHTML = filterLanguage[0]["content"]["location"] + "<span class='text-danger'>*</span>"
-        document.getElementById("access_web").innerHTML = filterLanguage[0]["content"]["access_web_system"]
-        document.getElementById("access_webLabel").innerHTML = filterLanguage[0]["content"]["access_web_system"] + "<span class='text-danger'>*</span>"
-        document.getElementById("access_mobile").innerHTML = filterLanguage[0]["content"]["access_mobile_system"]
-        document.getElementById("access_mobileLabel").innerHTML = filterLanguage[0]["content"]["access_mobile_system"] + "<span class='text-danger'>*</span>"
         document.getElementById("titleUsersAccess").innerHTML = filterLanguage[0]["content"]["web_menu_access"]
         document.getElementById("status").innerHTML = filterLanguage[0]["content"]["status"]
         document.getElementById("statusLabel").innerHTML = filterLanguage[0]["content"]["status"] + "<span class='text-danger'>*</span>"
@@ -42,17 +32,13 @@ async function selectContent() {
 }
 async function selectUsers() {
     const language = await JSON.parse(getCookie("language"));
-    var token = await JSON.parse(getCookie("dataToken"));
-   if (!token) {
-        token = await getAccessToken(); 
-    }
     var xhr = new XMLHttpRequest();
     var url = mainUrl + "users"
     xhr.onerror = function () {
         Dashmix.helpers("jq-notify", {
             type: "danger",
             z_index: 2000,
-            message:overload,
+            message: overload,
         });
         setTimeout(async function () {
             await keluar()
@@ -64,26 +50,20 @@ async function selectUsers() {
     xhr.onloadend = async function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = JSON.parse(xhr.response);
-            if (response["access"] == "success") {
+            if (response["success"] == true) {
                 var responseData = response["data"]
                 var tableItem = "";
                 for (i = 0; i < responseData.length; i++) {
-                    mobile = responseData[i]["access_mobile"];
-                    web = responseData[i]["access_web"];
-                    var menuMobilebUser = (mobile == 1) ? "<button title='" + mobilemenuaccess + "' type='button' id='" + responseData[i]["username"] + "' onclick='showModalUpdateMobileAccess(id)' class='btn btn-primary'><i class='fa-solid fa-mobile-screen'></i></button>" : "";
-                    var menuWebUser = (web == 1) ? "<button title='" + webmenuaccess + "' type='button' id ='" + responseData[i]["username"] + "' onclick='showModalUpdateAccess(id)' class='btn btn-primary'><i class='fa-solid fa-display'></i>" : "";
+                    var menuWebUser = "<button title='" + webmenuaccess + "' type='button' id ='" + responseData[i]["username"] + "' onclick='showModalUpdateAccess(id)' class='btn btn-primary'><i class='fa-solid fa-display'></i>";
                     var editUser = " <button title='" + edit + "' type='button' id ='" + responseData[i]["username"] + "' onclick='showModalUpdateUsers(id)' class='btn btn-primary'><i class='fa-regular fa-pen-to-square'></i></button>"
                     var passUser = " <button title='" + changepassword + "' type='button' id ='" + responseData[i]["username"] + "' onclick='showModalUpdatePassword(id)' class='btn btn-primary'><i class='fa-solid fa-lock'></i></button>"
                     tableItem +=
                         "<tr>\
                             <td class='fw-light text-center'>" + responseData[i]["employee_id"] + "</td>\
-                            <td class='fw-light text-center text-uppercase'>" + responseData[i]["hrd_employee"]["fullname"] + "</td>\
+                            <td class='fw-light text-center text-uppercase'>" + responseData[i]["adm_employee"]["fullname"] + "</td>\
                             <td class='fw-light text-center'>" + responseData[i]["username"] + "</td>\
-                            <td class='fw-light text-center text-uppercase'>" + responseData[i]["adm_company"]["name"] + "</td>\
-                            <td class='fw-light  text-center'>" + (responseData[i]["access_web"] == 0 ? "<i class='fa-solid fa-circle-minus fa-xl text-danger'></i>" : "<i class='fa-solid fa-circle-check fa-xl text-primary'></i>") + "</td>\
-                            <td class='fw-light text-center'>" + (responseData[i]["access_mobile"] == 0 ? "<i class='fa-solid fa-circle-minus fa-xl text-danger'></i>" : "<i class='fa-solid fa-circle-check fa-xl text-primary'></i>") + "</td>\
                             <td class='fw-light text-center'>" + (responseData[i]["status"] == 0 ? "<i class='fa-solid fa-circle-minus fa-xl text-danger'></i>" : "<i class='fa-solid fa-circle-check fa-xl text-primary'></i>") + "</td>\
-                            <td class='fw-light text-center'><div class='btn-group'>" + editUser + passUser + menuWebUser + menuMobilebUser + "</div></td>\
+                            <td class='fw-light text-center'><div class='btn-group'>" + editUser + passUser + menuWebUser + "</div></td>\
                         </tr>";
                 }
                 document.getElementById("dataTable").innerHTML = tableItem;
@@ -91,7 +71,7 @@ async function selectUsers() {
                 setTimeout(() => {
                     hideSpinner();
                 }, 1000);
-            } else if (response["access"] == "failed") {
+            } else {
                 message = response["message"];
                 Dashmix.helpers("jq-notify", { type: "danger", z_index: 2000, message: message });
                 setTimeout(function () {
@@ -119,23 +99,19 @@ async function selectUsers() {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
+
     xhr.send(data);
     return false;
 }
 async function selectEmployee(employeeID) {
     const language = await JSON.parse(getCookie("language"));
-    var token = await JSON.parse(getCookie("dataToken"));
-   if (!token) {
-        token = await getAccessToken(); 
-    }
     var xhr = new XMLHttpRequest();
     var url = mainUrl + "employee"
     xhr.onerror = function () {
         Dashmix.helpers("jq-notify", {
             type: "danger",
             z_index: 2000,
-            message:overload,
+            message: overload,
         });
         setTimeout(async function () {
             await keluar()
@@ -147,8 +123,9 @@ async function selectEmployee(employeeID) {
     xhr.onloadend = async function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = await JSON.parse(xhr.response);
-            if (response["access"] == "success") {
+            if (response["success"] == true) {
                 var responseData = response["data"]
+                console.table(responseData)
                 var filterSubData = responseData.filter((filterSubData) => filterSubData.employee_id == employeeID);
                 var filternotSubData = responseData.filter((filternotSubData) => filternotSubData.employee_id != employeeID);
                 mainOptionItem = "";
@@ -168,7 +145,7 @@ async function selectEmployee(employeeID) {
                 }
 
                 document.getElementById("selectFullname").innerHTML = mainOptionItem + "" + subOptionItem;
-            } else if (response["access"] == "failed") {
+            } else {
                 message = response["message"];
                 Dashmix.helpers("jq-notify", { type: "danger", z_index: 2000, message: message });
                 setTimeout(function () {
@@ -196,201 +173,18 @@ async function selectEmployee(employeeID) {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
-    xhr.send(data);
-    return false;
-}
-async function selectCompany(companyCode) {
-    const language = await JSON.parse(getCookie("language"));
-    let token = await JSON.parse(getCookie("dataToken"));
-    if (!token) {
-        await getAccessToken();
-        token = await JSON.parse(getCookie("dataToken"));
-        if (!token) return;
-    }
-
-    const url = mainUrl + "company";
-    const data = JSON.stringify({ language_POST: language });
-
-    try {
-        const response = await fetch(url, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json;charset=UTF-8",
-                "Authorization": "Bearer " + token,
-            },
-            body: data,
-        });
-
-        if (response.status === 200) {
-            const result = await response.json();
-
-            if (result.access === "success") {
-                const responseData = result.data;
-                const filterSubData = responseData.filter(item => item.code_company == companyCode);
-                const filternotSubData = responseData.filter(item =>
-                    item.code_company !== companyCode && item.level == 3
-                );
-
-                let mainOptionItem = "";
-                let subOptionItem = "";
-
-                for (let i = 0; i < filternotSubData.length; i++) {
-                    subOptionItem += `
-                        <option class='fw-light text-uppercase' value='${filternotSubData[i]["code_company"]}'>
-                            ${kapital(filternotSubData[i]["name"])}
-                        </option>`;
-                }
-
-                if (!companyCode) {
-                    mainOptionItem += `<option class='fw-light text-uppercase' selected disabled value=''>
-                        ${kapital(select)}
-                    </option>`;
-                } else {
-                    mainOptionItem += `<option class='fw-light text-uppercase' value='${filterSubData[0]["code_company"]}'>
-                        ${kapital(filterSubData[0]["name"])}
-                    </option>`;
-                }
-
-                document.getElementById("selectLocation").innerHTML = mainOptionItem + subOptionItem;
-
-            } else if (result.access === "failed") {
-                Dashmix.helpers("jq-notify", {
-                    type: "danger",
-                    z_index: 2000,
-                   message: result.message,
-                });
-                setTimeout(() => {
-                    window.location.href = "/users";
-                }, 3000);
-            }
-
-        } else if (response.status === 404) {
-            Dashmix.helpers("jq-notify", {
-                type: "danger",
-                z_index: 2000,
-                 message: status_404,
-            });
-            setTimeout(() => {
-                window.location.href = "/";
-            }, 3000);
-
-        } else if (response.status === 401) {
-            Dashmix.helpers("jq-notify", {
-                type: "danger",
-                z_index: 2000,
-                 message: status_401,
-            });
-            setTimeout(() => {
-                window.location.href = "/";
-            }, 3000);
-
-        } else if (response.status === 500) {
-            Dashmix.helpers("jq-notify", {
-                type: "danger",
-                z_index: 2000,
-                 message: status_500,
-            });
-            setTimeout(() => {
-                window.location.href = "/";
-            }, 3000);
-        }
-
-    } catch (error) {
-        Dashmix.helpers("jq-notify", {
-            type: "danger",
-            z_index: 2000,
-            message:overload,
-        });
-        setTimeout(async () => {
-            await keluar();
-        }, 3000);
-    }
-
-    return false;
-}
-async function selectUsernameMobile() {
-    const language = await JSON.parse(getCookie("language"));
-    var token = await JSON.parse(getCookie("dataToken"));
-   if (!token) {
-        token = await getAccessToken(); 
-    }
-    var xhr = new XMLHttpRequest();
-    var url = mainUrl + "users/mobile"
-    xhr.onerror = function () {
-        Dashmix.helpers("jq-notify", {
-            type: "danger",
-            z_index: 2000,
-            message:overload,
-        });
-        setTimeout(async function () {
-            await keluar()
-        }, 3000);
-    };
-    var data = JSON.stringify({
-        language_POST: language,
-    });
-    xhr.onloadend = async function () {
-        if (this.readyState == 4 && this.status == 200) {
-            var response = await JSON.parse(xhr.response);
-            if (response["access"] == "success") {
-                var responseData = response["data"]
-                var subOptionItem = ""
-                mainOptionItem = "<option class='fw-light text-uppercase' value='' selected disabled>" + kapital(select) + "</option>";
-                for (i = 0; i < responseData.length; i++) {
-                    subOptionItem +=
-                        "<option class='fw-light text-uppercase' value='" +
-                        responseData[i]["username"] +
-                        "'>" +
-                        responseData[i]["username"] +
-                        "</option>";
-                }
-                document.getElementById("selectUsernameCopy").innerHTML = mainOptionItem + "" + subOptionItem;
-            } else if (response["access"] == "failed") {
-                message = response["message"];
-                Dashmix.helpers("jq-notify", { type: "danger", z_index: 2000, message: message });
-                setTimeout(function () {
-                    window.location.href = "/users";
-                }, 3000);
-            }
-        } if (this.status == 404) {
-            message = "Data failed";
-            Dashmix.helpers("jq-notify", { type: "danger", z_index: 2000, message: status_404 });
-            setTimeout(async function () {
-                window.location.href = "/";
-            }, 3000);
-        } if (this.status == 401) {
-            message = "data failed to load";
-            Dashmix.helpers("jq-notify", { type: "danger", z_index: 2000, message: status_401 });
-            setTimeout(async function () {
-                window.location.href = "/";
-            }, 3000);
-        } if (this.status == 500) {
-            Dashmix.helpers("jq-notify", { type: "danger", z_index: 2000, message: status_500 });
-            setTimeout(function () {
-                window.location.href = "/";
-            }, 3000);
-        }
-    };
-    xhr.open("POST", url, true);
-    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
     xhr.send(data);
     return false;
 }
 async function selectUsername() {
     const language = await JSON.parse(getCookie("language"));
-    var token = await JSON.parse(getCookie("dataToken"));
-   if (!token) {
-        token = await getAccessToken(); 
-    }
     var xhr = new XMLHttpRequest();
     var url = mainUrl + "users/web"
     xhr.onerror = function () {
         Dashmix.helpers("jq-notify", {
             type: "danger",
             z_index: 2000,
-            message:overload,
+            message: overload,
         });
         setTimeout(async function () {
             await keluar()
@@ -402,7 +196,7 @@ async function selectUsername() {
     xhr.onloadend = async function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = await JSON.parse(xhr.response);
-            if (response["access"] == "success") {
+            if (response["success"] == true) {
                 var responseData = response["data"]
                 var subOptionItem = ""
                 mainOptionItem = "<option class='fw-light text-uppercase' value='' selected disabled>" + kapital(select) + "</option>";
@@ -415,7 +209,7 @@ async function selectUsername() {
                         "</option>";
                 }
                 document.getElementById("selectUsernameCopy").innerHTML = mainOptionItem + "" + subOptionItem;
-            } else if (response["access"] == "failed") {
+            } else {
                 message = response["message"];
                 Dashmix.helpers("jq-notify", { type: "danger", z_index: 2000, message: message });
                 setTimeout(function () {
@@ -443,7 +237,7 @@ async function selectUsername() {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
+
     xhr.send(data);
     return false;
 }

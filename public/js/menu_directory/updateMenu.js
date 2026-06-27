@@ -1,16 +1,6 @@
 async function showModalUpdateMenu(id) {
-    let token = await JSON.parse(getCookie("dataToken"));
-    if (token == null) {
-        await getAccessToken()
-        if (token == null) {
-            return;
-        }
-        var myModal = new bootstrap.Modal(document.getElementById("modalMenu"), { keyboard: false });
-        myModal.toggle();
-    } else {
-        var myModal = new bootstrap.Modal(document.getElementById("modalMenu"), { keyboard: false });
-        myModal.toggle();
-    }
+    var myModal = new bootstrap.Modal(document.getElementById("modalMenu"), { keyboard: false });
+    myModal.toggle();
     await selectLanguage()
     let language = await JSON.parse(getCookie("language"));
     const dataLogin = await JSON.parse(getCookie("dataLogin"));
@@ -23,7 +13,7 @@ async function showModalUpdateMenu(id) {
         Dashmix.helpers("jq-notify", {
             type: "danger",
             z_index: 2000,
-            message:overload,
+            message: overload,
         });
         setTimeout(async function () {
             await keluar()
@@ -37,7 +27,7 @@ async function showModalUpdateMenu(id) {
     xhr.onloadend = async function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = await JSON.parse(xhr.response);
-            if (response["access"] == "success") {
+            if (response["success"] == true) {
                 var responseData = response["data"]
                 document.getElementById("code").value = responseData[0]["id_menu"]
                 document.getElementById("level").value = responseData[0]["level"]
@@ -49,8 +39,8 @@ async function showModalUpdateMenu(id) {
                 for (i = 0; i < languageData.length; i++) {
                     document.getElementById("language" + i).value = await responseData[0]["adm_menu_translations"][i]["translation"]
                 }
-                document.getElementById("load").innerHTML = "<a id='cancelBtn' onclick='closeModal()' class='btn  btn-danger'>" + kapital(cancel) + "</a> <button id='doneBtn' type='submit' onclick='updateMenu()' class='btn  btn-primary'>" + kapital(done) + "</button>"
-            } else if (response["access"] == "failed") {
+                document.getElementById("load").innerHTML = "<a id='cancelBtn' onclick='closeModal()' class='btn  btn-danger'>" + kapital(cancel) + "</a> <a id='doneBtn' type='submit' onclick='updateMenu()' class='btn  btn-primary'>" + kapital(done) + "</a>"
+            } else {
                 message = response["message"];
                 Dashmix.helpers("jq-notify", { type: "danger", z_index: 2000, message: message });
                 setTimeout(function () {
@@ -77,15 +67,9 @@ async function showModalUpdateMenu(id) {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
     xhr.send(data);
-    return false;
 }
 async function updateMenu() {
-    let token = await JSON.parse(getCookie("dataToken"));
-   if (!token) {
-        token = await getAccessToken(); 
-    }
     !(function () {
         class e {
             static initValidation() {
@@ -149,7 +133,7 @@ async function updateMenu() {
         Dashmix.helpers("jq-notify", {
             z_index: 2000,
             type: "danger",
-            message:overload,
+            message: overload,
         });
         setTimeout(async function () {
             await keluar()
@@ -159,9 +143,9 @@ async function updateMenu() {
     var data = JSON.stringify(dataMenu);
     xhr.onloadend = function () {
         if (this.readyState == 4 && this.status == 200) {
-            var responseLogin = JSON.parse(xhr.response);
-            if (responseLogin["access"] == "success") {
-                message = responseLogin["message"];
+            var response = JSON.parse(xhr.response);
+            if (response["success"] == true) {
+                message = response["message"];
                 Dashmix.helpers("jq-notify", {
                     z_index: 2000,
                     type: "success",
@@ -171,12 +155,12 @@ async function updateMenu() {
                 setTimeout(function () {
                     window.location.href = "/menu_directory";
                 }, 3000);
-            } else if (responseLogin["access"] == "failed") {
-                message = responseLogin["message"];
+            } else {
+                message = response["message"];
                 Dashmix.helpers("jq-notify", {
                     z_index: 2000,
                     type: "danger",
-                   message: message,
+                    message: message,
                 });
                 setTimeout(function () {
                     window.location.href = "/menu_directory";
@@ -202,7 +186,6 @@ async function updateMenu() {
     };
     xhr.open("PUT", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
     xhr.send(data);
     return false;
 }

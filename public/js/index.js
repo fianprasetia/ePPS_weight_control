@@ -17,8 +17,7 @@ async function content() {
 }
 NameEmplyee()
 async function NameEmplyee() {
-  sessionFullName = await JSON.parse(getCookie("dataEmployee"));
+  sessionFullName = await JSON.parse(getCookie("dataEmployeeWB"));
   fullName = sessionFullName["fullname"]
   document.getElementById("dashboardfullname").innerHTML = fullName;
 }
-// document.addEventListener('DOMContentLoaded', checkDarkMode);

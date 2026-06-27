@@ -1,8 +1,4 @@
 async function selectContent() {
-    token = await JSON.parse(getCookie("dataToken"));
-   if (!token) {
-        token = await getAccessToken(); 
-    }
     let language = await JSON.parse(getCookie("language"));
     const data = await "file/language.json";
     fetch(data)
@@ -24,17 +20,13 @@ async function selectContent() {
 }
 async function selectMenu() {
     const language = await JSON.parse(getCookie("language"));
-    var token = await JSON.parse(getCookie("dataToken"));
-   if (!token) {
-        token = await getAccessToken(); 
-    }
     var xhr = new XMLHttpRequest();
     var url = mainUrl + "menu"
     xhr.onerror = function () {
         Dashmix.helpers("jq-notify", {
             type: "danger",
             z_index: 2000,
-            message:overload,
+            message: overload,
         });
         setTimeout(async function () {
             await keluar()
@@ -46,7 +38,7 @@ async function selectMenu() {
     xhr.onloadend = async function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = await JSON.parse(xhr.response);
-            if (response["access"] == "success") {
+            if (response["success"] == true) {
                 var responseData = response["data"]
                 responseData.filter((c) => c.parent_id).forEach((c) => {
                     const parent = responseData.find((p) => p.id_menu === c.parent_id);
@@ -126,7 +118,7 @@ async function selectMenu() {
                 setTimeout(() => {
                     hideSpinner();
                 }, 1000);
-            } else if (response["access"] == "failed") {
+            } else {
                 message = response["message"];
                 Dashmix.helpers("jq-notify", { type: "danger", z_index: 2000, message: message });
                 setTimeout(function () {
@@ -154,15 +146,15 @@ async function selectMenu() {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
+
     xhr.send(data);
     return false;
 }
 function scriptTree() {
     $(function () {
-        // Hide all child elements initially
+
         $(".tree li.parent_li").hide("fast");
-        // Set event listener to toggle branches
+
         $(".tree li:has(ul)")
             .addClass("parent_li")
             .find(" > span")

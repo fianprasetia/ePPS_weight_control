@@ -24,8 +24,8 @@ async function insertCompany() {
   const username = dataLogin["username"];
   var token = await JSON.parse(getCookie("dataToken"));
   if (!token) {
-        token = await getAccessToken(); 
-    }
+    token = await getAccessToken();
+  }
   !(function () {
     class e {
       static initValidation() {
@@ -115,7 +115,7 @@ async function insertCompany() {
   xhr.onloadend = function () {
     if (this.readyState == 4 && this.status == 200) {
       var responseLogin = JSON.parse(xhr.response);
-      if (responseLogin["access"] == "success") {
+      if (response["success"] == true) {
         message = responseLogin["message"];
         Dashmix.helpers("jq-notify", {
           z_index: 2000,
@@ -159,7 +159,7 @@ async function insertCompany() {
   };
   xhr.open("POST", url, true);
   xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-  xhr.setRequestHeader("Authorization", "Bearer " + token);
+
   xhr.send(data);
   return false;
 }

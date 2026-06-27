@@ -43,8 +43,8 @@ async function insertEmployee() {
   const username = dataLogin["username"];
   var token = await JSON.parse(getCookie("dataToken"));
   if (!token) {
-        token = await getAccessToken(); 
-    }
+    token = await getAccessToken();
+  }
   !(function () {
     class e {
       static initValidation() {
@@ -236,9 +236,9 @@ async function insertEmployee() {
 
   xhr.onloadend = function () {
     if (this.readyState == 4 && this.status == 200) {
-      var responseLogin = JSON.parse(xhr.response);
-      if (responseLogin["access"] == "success") {
-        message = responseLogin["message"];
+      var response = JSON.parse(xhr.response);
+      if (response["success"] == true) {
+        message = response["message"];
         Dashmix.helpers("jq-notify", {
           z_index: 2000,
           type: "success",
@@ -248,8 +248,8 @@ async function insertEmployee() {
         setTimeout(function () {
           window.location.href = "/employee_data";
         }, 3000);
-      } else if (responseLogin["access"] == "failed") {
-        message = responseLogin["message"];
+      } else if (response["access"] == "failed") {
+        message = response["message"];
         Dashmix.helpers("jq-notify", {
           z_index: 2000,
           type: "danger",
@@ -280,7 +280,7 @@ async function insertEmployee() {
   };
   xhr.open("POST", url, true);
   // xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-  xhr.setRequestHeader("Authorization", "Bearer " + token);
+
   xhr.send(formData);
   return false;
 

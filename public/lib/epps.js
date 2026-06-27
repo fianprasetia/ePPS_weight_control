@@ -1,20 +1,12 @@
-// document.addEventListener("DOMContentLoaded", function () {
-//   document.getElementById("page-container").style.zoom = "80%";
-// });
-
-
-
 testClientBandwidth()
 window.addEventListener("DOMContentLoaded", () => {
   const iconColor = localStorage.getItem("bandwidthIconColor");
   const keterangan = localStorage.getItem("bandwidthKeterangan");
   const speed = localStorage.getItem("bandwidthSpeed");
-
   if (iconColor && keterangan) {
     document.getElementById("connection").innerHTML = `<i class="fa-solid fa-signal ${iconColor}"></i>`;
     document.getElementById("textConnection").innerHTML = `${keterangan} (${speed} Mbps)`
   } else {
-    // Kalau belum pernah diukur, tampilkan ikon abu-abu
     document.getElementById("connection").innerHTML = `<i class="fa-solid fa-signal text-gray"></i>`;
   }
 });
@@ -76,7 +68,7 @@ async function authorize() {
   const path = window.location.pathname;
   if (path === "/") return; // Skip pengecekan untuk root path
   try {
-    const { dataMenu } = JSON.parse(sessionStorage.getItem("epps_session_menu"))[0];
+    const { dataMenu } = JSON.parse(sessionStorage.getItem("epps_session_menu_wb"))[0];
     const pathExists = dataMenu.some(item => item.page?.trim() === path);
     if (!pathExists) {
       window.location.href = "/";
@@ -135,90 +127,6 @@ function getCookie(name) {
   }
   return null;
 }
-async function getAccessToken() {
-  return new Promise((resolve, reject) => {
-    const sessionLogin = JSON.parse(getCookie("dataLogin"));
-    const language = JSON.parse(getCookie("language"));
-    const username = sessionLogin["username"];
-
-    const xhr = new XMLHttpRequest();
-    const url = mainUrl + "token";
-    const data = JSON.stringify({
-      username_POST: username,
-      language_POST: language
-    });
-
-    xhr.onloadend = function () {
-      if (this.readyState === 4 && this.status === 200) {
-        const responseLogin = JSON.parse(xhr.response);
-        if (responseLogin["access"] === "success") {
-          const accessToken = responseLogin["data"];
-          setCookieToken("dataToken", JSON.stringify(accessToken), 15);
-          resolve(accessToken); // ✅ token baru dikembalikan
-        } else {
-          const message = responseLogin["message"];
-          Dashmix.helpers("jq-notify", {
-            z_index: 2000,
-            type: "danger",
-            icon: "fa fa-times me-1",
-            message: message
-          });
-          clearCookies();
-          setTimeout(() => {
-            window.location.href = "/login";
-          }, 3000);
-          reject(new Error(message));
-        }
-      } else if (this.status !== 200) {
-        reject(new Error("Failed to fetch token"));
-      }
-    };
-
-    xhr.onerror = () => reject(new Error("Network error"));
-
-    xhr.open("POST", url, true);
-    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.send(data);
-  });
-}
-
-// async function getAccessToken() {
-//   var sessionLogin = await JSON.parse(getCookie("dataLogin"));
-//   const language = await JSON.parse(getCookie("language"));
-//   username = sessionLogin["username"];
-//   var xhr = new XMLHttpRequest();
-//   var url = mainUrl + "token";
-//   var data = JSON.stringify({
-//     username_POST: username,
-//     language_POST: language
-//   });
-//   xhr.onloadend = async function () {
-//     if (this.readyState == 4 && this.status == 200) {
-//       var responseLogin = await JSON.parse(xhr.response);
-//       if (responseLogin["access"] == "success") {
-//         var accessToken = responseLogin["data"];
-//         const dataTokenString = JSON.stringify(accessToken);
-//         setCookieToken("dataToken", dataTokenString, 60);
-//       } else if (responseLogin["access"] == "failed") {
-//         message = responseLogin["message"];
-//         Dashmix.helpers("jq-notify", {
-//           z_index: 2000,
-//           type: "danger",
-//           icon: "fa fa-times me-1",
-//           message: message
-//         });
-//         await clearCookies();
-//         setTimeout(async function () {
-//           window.location.href = "/login";
-//         }, 3000);
-//       }
-//     }
-//   };
-//   xhr.open("POST", url, true);
-//   xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-//   xhr.send(data);
-//   return false;
-// }
 function setCookieToken(name, value, minutes) {
   const date = new Date();
   date.setTime(date.getTime() + minutes * 60 * 1000); // Mengatur waktu kadaluarsa
@@ -384,6 +292,8 @@ let notice_done
 let closed
 let returnd
 let notice_return
+let estate
+let vehicle_number
 
 async function content() {
   let language = await JSON.parse(getCookie("language"));
@@ -556,18 +466,14 @@ async function content() {
     closed = await filterLanguage[0]["content"]["close"];
     returnd = await filterLanguage[0]["content"]["return"];
     notice_return = await filterLanguage[0]["content"]["notice_return"];
+    estate = await filterLanguage[0]["content"]["estate"];
+    vehicle_number = await filterLanguage[0]["content"]["vehicle_number"];
     document.getElementById("mainMenuNav").innerHTML = await filterLanguage[0]["content"]["main_menu"];
     document.getElementById("homeNav").innerHTML = await filterLanguage[0]["content"]["home"];;
-    document.getElementById("signoutindex").innerHTML = await filterLanguage[0]["content"]["signout"];;
-    // document.getElementById("accountIndex").innerHTML = await filterLanguage[0]["content"]["account"];;
     document.getElementById("pleaseWait").innerHTML = await filterLanguage[0]["content"]["please_wait"];;
   }
-  await approvalTransaction();
 }
-// let loadingModalInstance;
 async function keluar() {
-  // showSpinner();
-  // if (!loadingModalInstance) {
   const modalEl = document.getElementById("loadingModal");
   loadingModalInstance = new bootstrap.Modal(modalEl, {
     keyboard: false,
@@ -575,57 +481,20 @@ async function keluar() {
   });
   // }
   loadingModalInstance.show();
-  sessionUsername = await JSON.parse(getCookie("dataLogin"));
-  username = sessionUsername["username"];
-  var xhr = new XMLHttpRequest();
-  var url = mainUrl + "token/delete";
-  var data = JSON.stringify({
-    username_POST: username
-  });
-  xhr.onloadend = async function () {
-    if (this.readyState == 4 && this.status == 200) {
-      var selectData = await JSON.parse(xhr.response);
-      if (selectData["access"] == "success") {
-        setTimeout(() => {
-          if (loadingModalInstance) {
-            loadingModalInstance.hide();
-          }
-        }, 1000);
-        Dashmix.helpers("jq-notify", { type: "danger", message: alertLogout });
-        setTimeout(function () {
-          window.location.href = "/login";
-        }, 3000);
-        clearCookies();
-      }
+  setTimeout(() => {
+    if (loadingModalInstance) {
+      loadingModalInstance.hide();
     }
-    if (this.status == 404) {
-      message = "Data failed";
-      Dashmix.helpers("jq-notify", { type: "danger", z_index: 2000, message: status_404 });
-      setTimeout(function () {
-        window.location.href = "/";
-      }, 3000);
-    }
-    if (this.status == 401) {
-      Dashmix.helpers("jq-notify", { type: "danger", z_index: 2000, message: status_401 });
-      setTimeout(function () {
-        window.location.href = "/";
-      }, 3000);
-    }
-    if (this.status == 500) {
-      Dashmix.helpers("jq-notify", { type: "danger", z_index: 2000, message: status_500 });
-      setTimeout(function () {
-        window.location.href = "/";
-      }, 3000);
-    }
-  };
-  xhr.open("POST", url, true);
-  xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-  xhr.send(data);
-  return false;
+  }, 1000);
+  Dashmix.helpers("jq-notify", { type: "danger", message: alertLogout });
+  setTimeout(function () {
+    window.location.href = "/login";
+  }, 3000);
+  clearCookies();
 }
 getePPSSessionMenu();
 async function getePPSSessionMenu() {
-  categoriesMenu = await JSON.parse(sessionStorage.getItem("epps_session_menu"));
+  categoriesMenu = await JSON.parse(sessionStorage.getItem("epps_session_menu_wb"));
   categories = categoriesMenu[0]["dataMenu"];
   categories.filter(c => c.parent_id).forEach(c => {
     const parent = categories.find(p => p.id_menu === c.parent_id);
@@ -751,20 +620,20 @@ async function getePPSSessionMenu() {
 }
 getePPSSessionNameEmplyee();
 async function getePPSSessionNameEmplyee() {
-  sessionFullName = await JSON.parse(getCookie("dataEmployee"));
+  sessionFullName = await JSON.parse(getCookie("dataEmployeeWB"));
   fullName = sessionFullName["fullname"];
   photo = sessionFullName["photo"];
   const urlPhoto = mainUrl + "img/employee/" + photo;
-  document.getElementById("photonavproflie").src = urlPhoto;
-  document.getElementById("fullnamenav").innerHTML = fullName + " ||";
-  document.getElementById("fullnamenavprofile").innerHTML = fullName;
+  // document.getElementById("photonavproflie").src = urlPhoto;
+  document.getElementById("fullnamenav").innerHTML = "OPERATOR: " + fullName;
+  // document.getElementById("fullnamenavprofile").innerHTML = fullName;
 }
-getePPSSessionUserLogin();
-async function getePPSSessionUserLogin() {
-  var sessionLogin = await JSON.parse(getCookie("dataLogin"));
-  codeCompany = sessionLogin["codeCompany"];
-  document.getElementById("lokasinav").innerHTML = codeCompany;
-}
+// getePPSSessionUserLogin();
+// async function getePPSSessionUserLogin() {
+//   var sessionLogin = await JSON.parse(getCookie("dataLogin"));
+//   codeCompany = sessionLogin["codeCompany"];
+//   document.getElementById("lokasinav").innerHTML = codeCompany;
+// }
 function ddmmyyyy(tanggal) {
   var bagianTanggal = tanggal.split("-");
   var tanggalBaru = bagianTanggal[2] + "-" + bagianTanggal[1] + "-" + bagianTanggal[0];
@@ -790,15 +659,6 @@ async function selectLanguage() {
   return new Promise(async (resolve, reject) => {
     try {
       let language = JSON.parse(getCookie("language"));
-      let token = JSON.parse(getCookie("dataToken"));
-      if (!token) {
-        await getAccessToken();
-        token = JSON.parse(getCookie("dataToken"));
-        if (!token) {
-          reject("Failed to retrieve access token");
-          return;
-        }
-      }
 
       var xhr = new XMLHttpRequest();
       var url = mainUrl + "language";
@@ -823,7 +683,7 @@ async function selectLanguage() {
       xhr.onloadend = async function () {
         if (this.readyState === 4 && this.status === 200) {
           var response = JSON.parse(xhr.response);
-          if (response["access"] === "success") {
+          if (response["success"] === true) {
             var responseData = response["data"];
             var languageMenu = `
                 <div class="col-sm-6 mb-2">
@@ -889,9 +749,8 @@ async function selectLanguage() {
         }
       };
 
-      xhr.open("GET", url, true);
+      xhr.open("POST", url, true);
       xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-      xhr.setRequestHeader("Authorization", "Bearer " + token);
       xhr.send(data);
     } catch (error) {
       reject(error.message || "An unexpected error occurred");
@@ -901,7 +760,7 @@ async function selectLanguage() {
 async function autoTranslate(param) {
   const text = document.getElementById('translate').value;
   var xhr = new XMLHttpRequest();
-  var url = secondUrl + "translate";
+  var url = mainUrl + "translate";
   xhr.onloadstart = function () {
     document.getElementById("loadTranslate").innerHTML =
       "<a class='btn btn-hero btn-primary shadow' type='submit' disabled>\n\
@@ -926,7 +785,7 @@ async function autoTranslate(param) {
   xhr.onloadend = async function () {
     if (this.readyState == 4 && this.status == 200) {
       var response = JSON.parse(xhr.response);
-      if (response["access"] == "success") {
+      if (response["success"] == true) {
         var responseData = response["data"]
         var values = Object.values(responseData);
         // console.log(param)
@@ -972,7 +831,6 @@ async function autoTranslate(param) {
   };
   xhr.open("POST", url, true);
   xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-  xhr.setRequestHeader("Authorization", "Bearer " + token);
   xhr.send(data);
 }
 async function dictionary(param) {
@@ -993,7 +851,7 @@ async function dictionary(param) {
     xhr.onloadend = function () {
       if (this.readyState == 4 && this.status == 200) {
         var response = JSON.parse(xhr.response);
-        if (response["access"] == "success") {
+        if (response["success"] == true) {
           resolve(response["data"]); // ⬅️ Kembalikan hasil
         } else {
           reject(response["message"]);
@@ -1009,7 +867,7 @@ async function dictionary(param) {
 
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
+
     xhr.send(data);
   });
 }
@@ -1112,125 +970,125 @@ function convertToMinutes(time) {
   const [hours, minutes, seconds] = time.split(":").map(Number); // Pisahkan jam, menit, dan detik
   return hours * 60 + minutes + Math.floor(seconds / 60); // Hitung total menit
 }
-async function approvalTransaction() {
-  const dataLogin = await JSON.parse(getCookie("dataLogin"));
-  const employeeID = dataLogin["idEmployee"];
-  const language = await JSON.parse(getCookie("language"));
-  var token = await JSON.parse(getCookie("dataToken"));
-  if (!token) {
-    token = await getAccessToken(); // ✅ sekarang beneran tunggu token
-  }
-  var xhr = new XMLHttpRequest();
-  var url = mainUrl + "approvaltransactions";
-  xhr.onerror = function () {
-    Dashmix.helpers("jq-notify", {
-      type: "danger",
-      z_index: 2000,
-      icon: "fa fa-exclamation me-1",
-      message: "overload"
-    });
-    setTimeout(async function () {
-      await keluar();
-    }, 3000);
-  };
-  var data = JSON.stringify({
-    language_POST: language,
-    employeeID_POST: employeeID
-  });
-  xhr.onloadend = async function () {
-    if (this.readyState == 4 && this.status == 200) {
-      var response = JSON.parse(xhr.response);
-      if (response["access"] == "success") {
-        var responseData = response["data"];
-        jmldataPurchaseRequest = responseData["dataPurchaseRequest"].length;
-        jmldataGoodsReceipt = responseData["dataGoodsReceipt"].length;
-        jmldataGoodsIssue = responseData["dataGoodsIssue"].length;
-        jmldataNotice = parseFloat(jmldataPurchaseRequest) + parseFloat(jmldataGoodsReceipt) + parseFloat(jmldataGoodsIssue);
-        if (jmldataPurchaseRequest == "") {
-          noticePurchaseRequest = "";
-        } else {
-          noticePurchaseRequest = `
-            <li>
-              <a class="d-flex text-dark py-2" href="/purchase_request_approval">
-                <div class="flex-shrink-0 mx-3">
-                  <i class="fa fa-fw fa-check-circle text-success"></i>
-                </div>
-                <div class="flex-grow-1 fs-sm pe-2">
-                  <div class="fw-semibold">${purchase_request}</div>
-                  <div class="text-muted">${jmldataPurchaseRequest} ${approval}</div>
-                </div>
-              </a>
-            </li>`;
-        }
-        if (jmldataGoodsReceipt == "") {
-          noticeGoodsreceipt = "";
-        } else {
-          noticeGoodsreceipt = `
-            <li>
-              <a class="d-flex text-dark py-2" href="/goods_receipt_approval">
-                <div class="flex-shrink-0 mx-3">
-                  <i class="fa fa-fw fa-check-circle text-success"></i>
-                </div>
-                <div class="flex-grow-1 fs-sm pe-2">
-                  <div class="fw-semibold">${goods_receipt}</div>
-                  <div class="text-muted">${jmldataGoodsReceipt} ${approval}</div>
-                </div>
-              </a>
-            </li>`;
-        }
-        if (jmldataGoodsIssue == "") {
-          noticeGoodsIssue = "";
-        } else {
-          noticeGoodsIssue = `
-            <li>
-              <a class="d-flex text-dark py-2" href="/goods_issue_approval">
-                <div class="flex-shrink-0 mx-3">
-                  <i class="fa fa-fw fa-check-circle text-success"></i>
-                </div>
-                <div class="flex-grow-1 fs-sm pe-2">
-                  <div class="fw-semibold">${goods_issue}</div>
-                  <div class="text-muted">${jmldataGoodsIssue} ${approval}</div>
-                </div>
-              </a>
-            </li>`;
-        }
-        document.getElementById("allApproval").innerHTML = jmldataNotice === 0 ? "" : jmldataNotice;;
-        document.getElementById("noticeApproval").innerHTML = noticePurchaseRequest + noticeGoodsreceipt + noticeGoodsIssue;
-      } else if (response["access"] == "failed") {
-        message = response["message"];
-        Dashmix.helpers("jq-notify", { type: "danger", z_index: 2000, message: message });
-        setTimeout(function () {
-          window.location.href = "/";
-        }, 3000);
-      }
-    }
-    if (this.status == 404) {
-      message = "Data failed";
-      Dashmix.helpers("jq-notify", { type: "danger", z_index: 2000, message: status_404 });
-      setTimeout(async function () {
-        window.location.href = "/";
-      }, 3000);
-    }
-    if (this.status == 401) {
-      message = "data failed to load";
-      Dashmix.helpers("jq-notify", { type: "danger", z_index: 2000, message: status_401 });
-      setTimeout(async function () {
-        window.location.href = "/";
-      }, 3000);
-    }
-    if (this.status == 500) {
-      Dashmix.helpers("jq-notify", { type: "danger", z_index: 2000, message: status_500 });
-      setTimeout(function () {
-        window.location.href = "/";
-      }, 3000);
-    }
-  };
-  xhr.open("POST", url, true);
-  xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-  xhr.setRequestHeader("Authorization", "Bearer " + token);
-  xhr.send(data);
-  return false;
-}
+// async function approvalTransaction() {
+//   const dataLogin = await JSON.parse(getCookie("dataLogin"));
+//   const employeeID = dataLogin["idEmployee"];
+//   const language = await JSON.parse(getCookie("language"));
+//   var token = await JSON.parse(getCookie("dataToken"));
+//   if (!token) {
+//     token = await getAccessToken(); // ✅ sekarang beneran tunggu token
+//   }
+//   var xhr = new XMLHttpRequest();
+//   var url = mainUrl + "approvaltransactions";
+//   xhr.onerror = function () {
+//     Dashmix.helpers("jq-notify", {
+//       type: "danger",
+//       z_index: 2000,
+//       icon: "fa fa-exclamation me-1",
+//       message: "overload"
+//     });
+//     setTimeout(async function () {
+//       await keluar();
+//     }, 3000);
+//   };
+//   var data = JSON.stringify({
+//     language_POST: language,
+//     employeeID_POST: employeeID
+//   });
+//   xhr.onloadend = async function () {
+//     if (this.readyState == 4 && this.status == 200) {
+//       var response = JSON.parse(xhr.response);
+//      if (response["success"] == true) {
+//         var responseData = response["data"];
+//         jmldataPurchaseRequest = responseData["dataPurchaseRequest"].length;
+//         jmldataGoodsReceipt = responseData["dataGoodsReceipt"].length;
+//         jmldataGoodsIssue = responseData["dataGoodsIssue"].length;
+//         jmldataNotice = parseFloat(jmldataPurchaseRequest) + parseFloat(jmldataGoodsReceipt) + parseFloat(jmldataGoodsIssue);
+//         if (jmldataPurchaseRequest == "") {
+//           noticePurchaseRequest = "";
+//         } else {
+//           noticePurchaseRequest = `
+//             <li>
+//               <a class="d-flex text-dark py-2" href="/purchase_request_approval">
+//                 <div class="flex-shrink-0 mx-3">
+//                   <i class="fa fa-fw fa-check-circle text-success"></i>
+//                 </div>
+//                 <div class="flex-grow-1 fs-sm pe-2">
+//                   <div class="fw-semibold">${purchase_request}</div>
+//                   <div class="text-muted">${jmldataPurchaseRequest} ${approval}</div>
+//                 </div>
+//               </a>
+//             </li>`;
+//         }
+//         if (jmldataGoodsReceipt == "") {
+//           noticeGoodsreceipt = "";
+//         } else {
+//           noticeGoodsreceipt = `
+//             <li>
+//               <a class="d-flex text-dark py-2" href="/goods_receipt_approval">
+//                 <div class="flex-shrink-0 mx-3">
+//                   <i class="fa fa-fw fa-check-circle text-success"></i>
+//                 </div>
+//                 <div class="flex-grow-1 fs-sm pe-2">
+//                   <div class="fw-semibold">${goods_receipt}</div>
+//                   <div class="text-muted">${jmldataGoodsReceipt} ${approval}</div>
+//                 </div>
+//               </a>
+//             </li>`;
+//         }
+//         if (jmldataGoodsIssue == "") {
+//           noticeGoodsIssue = "";
+//         } else {
+//           noticeGoodsIssue = `
+//             <li>
+//               <a class="d-flex text-dark py-2" href="/goods_issue_approval">
+//                 <div class="flex-shrink-0 mx-3">
+//                   <i class="fa fa-fw fa-check-circle text-success"></i>
+//                 </div>
+//                 <div class="flex-grow-1 fs-sm pe-2">
+//                   <div class="fw-semibold">${goods_issue}</div>
+//                   <div class="text-muted">${jmldataGoodsIssue} ${approval}</div>
+//                 </div>
+//               </a>
+//             </li>`;
+//         }
+//         document.getElementById("allApproval").innerHTML = jmldataNotice === 0 ? "" : jmldataNotice;;
+//         document.getElementById("noticeApproval").innerHTML = noticePurchaseRequest + noticeGoodsreceipt + noticeGoodsIssue;
+//       } else if (response["access"] == "failed") {
+//         message = response["message"];
+//         Dashmix.helpers("jq-notify", { type: "danger", z_index: 2000, message: message });
+//         setTimeout(function () {
+//           window.location.href = "/";
+//         }, 3000);
+//       }
+//     }
+//     if (this.status == 404) {
+//       message = "Data failed";
+//       Dashmix.helpers("jq-notify", { type: "danger", z_index: 2000, message: status_404 });
+//       setTimeout(async function () {
+//         window.location.href = "/";
+//       }, 3000);
+//     }
+//     if (this.status == 401) {
+//       message = "data failed to load";
+//       Dashmix.helpers("jq-notify", { type: "danger", z_index: 2000, message: status_401 });
+//       setTimeout(async function () {
+//         window.location.href = "/";
+//       }, 3000);
+//     }
+//     if (this.status == 500) {
+//       Dashmix.helpers("jq-notify", { type: "danger", z_index: 2000, message: status_500 });
+//       setTimeout(function () {
+//         window.location.href = "/";
+//       }, 3000);
+//     }
+//   };
+//   xhr.open("POST", url, true);
+//   xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+//  
+//   xhr.send(data);
+//   return false;
+// }
 function formatRupiah(money) {
   return new Intl.NumberFormat("id-ID", { minimumFractionDigits: 0 }).format(money);
 }
@@ -1256,7 +1114,7 @@ async function deleteFile(fileUrl) {
   xhr.onloadend = async function () {
     if (this.readyState == 4 && this.status == 200) {
       var response = JSON.parse(xhr.response);
-      if (response["access"] == "success") {
+      if (response["success"] == true) {
         message = await response["message"];
         Dashmix.helpers("jq-notify", {
           z_index: 2000,
@@ -1299,7 +1157,7 @@ async function deleteFile(fileUrl) {
   };
   xhr.open("DELETE", url, true);
   xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-  xhr.setRequestHeader("Authorization", "Bearer " + token);
+
   xhr.send(data);
 }
 function unformatRupiah(formatted) {
@@ -1343,7 +1201,31 @@ function validateDouble(input) {
   input.value = input.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');// hanya angka 0-9
 }
 var get_login = JSON.parse(getCookie("dataLogin"));
-var epps_session_menu = JSON.parse(sessionStorage.getItem("epps_session_menu"));
-if (get_login == null || epps_session_menu == null) {
+var epps_session_menu_wb = JSON.parse(sessionStorage.getItem("epps_session_menu_wb"));
+if (get_login == null || epps_session_menu_wb == null) {
   window.location.href = "/login";
+}
+function formatDate(date) {
+  return [
+    String(date.getDate()).padStart(2, '0'),
+    String(date.getMonth() + 1).padStart(2, '0'),
+    date.getFullYear()
+  ].join('-') + ' ' +
+    [
+      String(date.getHours()).padStart(2, '0'),
+      String(date.getMinutes()).padStart(2, '0'),
+      String(date.getSeconds()).padStart(2, '0')
+    ].join(':');
+}
+function formatDateTime(dateStr) {
+  const date = new Date(dateStr);
+
+  return (
+    String(date.getUTCDate()).padStart(2, '0') + '-' +
+    String(date.getUTCMonth() + 1).padStart(2, '0') + '-' +
+    date.getUTCFullYear() + ' ' +
+    String(date.getUTCHours()).padStart(2, '0') + ':' +
+    String(date.getUTCMinutes()).padStart(2, '0') + ':' +
+    String(date.getUTCSeconds()).padStart(2, '0')
+  );
 }

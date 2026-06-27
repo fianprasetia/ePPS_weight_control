@@ -1,17 +1,17 @@
 async function showModalUpdateCompany(id) {
-  let token = await JSON.parse(getCookie("dataToken"));
+  // let token = await JSON.parse(getCookie("dataToken"));
   let language = await JSON.parse(getCookie("language"));
-  if (token == null) {
-    await getAccessToken()
-    if (token == null) {
-      return;
-    }
-    var myModal = new bootstrap.Modal(document.getElementById("modalCompany"), { keyboard: false });
-    myModal.toggle();
-  } else {
-    var myModal = new bootstrap.Modal(document.getElementById("modalCompany"), { keyboard: false });
-    myModal.toggle();
-  }
+  // if (token == null) {
+  //   await getAccessToken()
+  //   if (token == null) {
+  //     return;
+  //   }
+  //   var myModal = new bootstrap.Modal(document.getElementById("modalCompany"), { keyboard: false });
+  //   myModal.toggle();
+  // } else {
+  // }
+  var myModal = new bootstrap.Modal(document.getElementById("modalCompany"), { keyboard: false });
+  myModal.toggle();
   const element = document.getElementById(id);
   const level = element.getAttribute("levelUpdate");
   var xhr = new XMLHttpRequest();
@@ -34,7 +34,7 @@ async function showModalUpdateCompany(id) {
   xhr.onloadend = async function () {
     if (this.readyState == 4 && this.status == 200) {
       var response = await JSON.parse(xhr.response);
-      if (response["access"] == "success") {
+      if (response["success"] == true) {
         var responseData = response["data"]
         document.getElementById("code").disabled = true
         document.getElementById("code").value = id
@@ -80,7 +80,7 @@ async function showModalUpdateCompany(id) {
   };
   xhr.open("POST", url, true);
   xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-  xhr.setRequestHeader("Authorization", "Bearer " + token);
+
   xhr.send(data);
   return false;
 }
@@ -90,8 +90,8 @@ async function updateCompany() {
   const username = dataLogin["username"];
   var token = await JSON.parse(getCookie("dataToken"));
   if (!token) {
-        token = await getAccessToken(); 
-    }
+    token = await getAccessToken();
+  }
   !(function () {
     class e {
       static initValidation() {
@@ -178,7 +178,7 @@ async function updateCompany() {
   xhr.onloadend = function () {
     if (this.readyState == 4 && this.status == 200) {
       var responseLogin = JSON.parse(xhr.response);
-      if (responseLogin["access"] == "success") {
+      if (response["success"] == true) {
         message = responseLogin["message"];
         Dashmix.helpers("jq-notify", {
           z_index: 2000,
@@ -220,7 +220,7 @@ async function updateCompany() {
   };
   xhr.open("PUT", url, true);
   xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-  xhr.setRequestHeader("Authorization", "Bearer " + token);
+
   xhr.send(data);
   return false;
 }

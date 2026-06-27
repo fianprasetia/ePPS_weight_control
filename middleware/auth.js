@@ -1,53 +1,45 @@
-// require('dotenv').config();
 const jwt = require('jsonwebtoken');
-const messages = require("../controller/message")
+const messages = require("../controller/message");
 const model = require('../models/index');
+const responseHelper = require('../helpers/responseHelper');
 
 const validateToken = async (req, res, next) => {
-    // res.json(req.body)
+    const language = "en";
     try {
-        const token = req.headers["authorization"].split(' ')[1];
-        const decoded = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
-        const username = decoded["username"]
-        var language = "en"
-        if (!token) {
-            res.status(401).json({
-                access: "failed",
-                message: messages[language]?.userToken,
-            });
-            return
+        const authHeader = req.headers["authorization"];
+        if (!authHeader) {
+            return responseHelper.unauthorized(res, messages[language]?.userToken);
         }
+
+        const token = authHeader.split(' ')[1];
+        if (!token) {
+            return responseHelper.unauthorized(res, messages[language]?.userToken);
+        }
+
+        const decoded = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
+        const username = decoded["username"];
+
         const storedToken = await model.adm_user_token.findOne({
             where: { token: token }
         });
 
         if (!storedToken) {
-            res.status(401).json({
-                access: "failed",
-                message: messages[language]?.userIlegal,
-            });
-            return
+            return responseHelper.unauthorized(res, messages[language]?.userIlegal);
         }
+
         if (new Date() > storedToken.expired_at) {
             await model.adm_user_token.destroy({
                 where: {
                     username: username
                 }
             });
-            res.status(401).json({
-                access: "failed",
-                message: messages[language]?.userSession,
-            });
-            return
+            return responseHelper.unauthorized(res, messages[language]?.userSession);
         }
+
         req.user = decoded;
         next();
     } catch (error) {
-        res.status(401).json({
-            access: "failed",
-            message: messages[language]?.userSession,
-        });
-        return
+        return responseHelper.unauthorized(res, messages[language]?.userSession);
     }
 };
 

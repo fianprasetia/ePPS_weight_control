@@ -113,7 +113,7 @@ async function selectEmployee() {
     xhr.onloadend = async function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = JSON.parse(xhr.response);
-            if (response["access"] == "success") {
+           if (response["success"] == true) {
                 var responseData = response["data"]
                 var tableItem = "";
                 for (i = 0; i < responseData.length; i++) {
@@ -207,16 +207,13 @@ async function selectEmployee() {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
+   
     xhr.send(data);
     return false;
 }
 async function selectGender(genderCode) {
     const language = await JSON.parse(getCookie("language"));
-    var token = await JSON.parse(getCookie("dataToken"));
-   if (!token) {
-        token = await getAccessToken(); 
-    }
+    var
     var xhr = new XMLHttpRequest();
     var url = mainUrl + "gender/bylanguage"
     xhr.onerror = function () {
@@ -235,7 +232,7 @@ async function selectGender(genderCode) {
     xhr.onloadend = async function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = await JSON.parse(xhr.response);
-            if (response["access"] == "success") {
+           if (response["success"] == true) {
                 var responseData = response["data"]
                 var filterSubData = responseData.filter((filterSubData) => filterSubData.gender_code == genderCode);
                 var filternotSubData = responseData.filter((filternotSubData) => filternotSubData.gender_code != genderCode);
@@ -281,7 +278,7 @@ async function selectGender(genderCode) {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
+   
     xhr.send(data);
     return false;
 }
@@ -368,10 +365,7 @@ async function selectCountry(countryCode) {
 }
 async function selectDepartment(departmentCode) {
     const language = await JSON.parse(getCookie("language"));
-    var token = await JSON.parse(getCookie("dataToken"));
-   if (!token) {
-        token = await getAccessToken(); 
-    }
+    var
     var xhr = new XMLHttpRequest();
     var url = mainUrl + "department/bylanguage"
     xhr.onerror = function () {
@@ -390,7 +384,7 @@ async function selectDepartment(departmentCode) {
     xhr.onloadend = async function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = await JSON.parse(xhr.response);
-            if (response["access"] == "success") {
+           if (response["success"] == true) {
                 var responseData = response["data"]
                 var filterSubData = responseData.filter((filterSubData) => filterSubData.department_code == departmentCode);
                 var filternotSubData = responseData.filter((filternotSubData) => filternotSubData.department_code != departmentCode);
@@ -438,16 +432,13 @@ async function selectDepartment(departmentCode) {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
+   
     xhr.send(data);
     return false;
 }
 async function selectJobTitle(jobTitleCode) {
     const language = await JSON.parse(getCookie("language"));
-    var token = await JSON.parse(getCookie("dataToken"));
-   if (!token) {
-        token = await getAccessToken(); 
-    }
+    var
     var xhr = new XMLHttpRequest();
     var url = mainUrl + "jobtitle/bylanguage"
     xhr.onerror = function () {
@@ -466,7 +457,7 @@ async function selectJobTitle(jobTitleCode) {
     xhr.onloadend = async function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = await JSON.parse(xhr.response);
-            if (response["access"] == "success") {
+           if (response["success"] == true) {
                 var responseData = response["data"]
                 var filterSubData = responseData.filter((filterSubData) => filterSubData.id_job_title == jobTitleCode);
                 var filternotSubData = responseData.filter((filternotSubData) => filternotSubData.id_job_title != jobTitleCode);
@@ -514,7 +505,7 @@ async function selectJobTitle(jobTitleCode) {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
+   
     xhr.send(data);
     return false;
 }
@@ -547,7 +538,7 @@ async function selectCompany(companyCode) {
     xhr.onloadend = async function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = await JSON.parse(xhr.response);
-            if (response["access"] == "success") {
+           if (response["success"] == true) {
                 var responseData = response["data"]
                 var filterSubData = responseData.filter((filterSubData) => filterSubData.code_company == companyCode);
                 var filternotSubData = responseData.filter((filternotSubData) => filternotSubData.code_company != companyCode);
@@ -593,16 +584,13 @@ async function selectCompany(companyCode) {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
+   
     xhr.send(data);
     return false;
 }
 async function selectType(typeCode) {
     const language = await JSON.parse(getCookie("language"));
-    var token = await JSON.parse(getCookie("dataToken"));
-   if (!token) {
-        token = await getAccessToken(); 
-    }
+    var
     var xhr = new XMLHttpRequest();
     var url = mainUrl + "employeetype/bylanguage"
     xhr.onerror = function () {
@@ -621,7 +609,7 @@ async function selectType(typeCode) {
     xhr.onloadend = async function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = await JSON.parse(xhr.response);
-            if (response["access"] == "success") {
+           if (response["success"] == true) {
                 var responseData = response["data"]
                 var filterSubData = responseData.filter((filterSubData) => filterSubData.employee_type_code == typeCode);
                 var filternotSubData = responseData.filter((filternotSubData) => filternotSubData.employee_type_code != typeCode);
@@ -669,16 +657,13 @@ async function selectType(typeCode) {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
+   
     xhr.send(data);
     return false;
 }
 async function selectStatus(statusCode) {
     const language = await JSON.parse(getCookie("language"));
-    var token = await JSON.parse(getCookie("dataToken"));
-   if (!token) {
-        token = await getAccessToken(); 
-    }
+    var
     var xhr = new XMLHttpRequest();
     var url = mainUrl + "employeestatus/bylanguage"
     xhr.onerror = function () {
@@ -697,7 +682,7 @@ async function selectStatus(statusCode) {
     xhr.onloadend = async function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = await JSON.parse(xhr.response);
-            if (response["access"] == "success") {
+           if (response["success"] == true) {
                 var responseData = response["data"]
                 var filterSubData = responseData.filter((filterSubData) => filterSubData.code_employee_status == statusCode);
                 var filternotSubData = responseData.filter((filternotSubData) => filternotSubData.code_employee_status != statusCode);
@@ -745,16 +730,13 @@ async function selectStatus(statusCode) {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
+   
     xhr.send(data);
     return false;
 }
 async function selectGrade(gradeCode) {
     const language = await JSON.parse(getCookie("language"));
-    var token = await JSON.parse(getCookie("dataToken"));
-   if (!token) {
-        token = await getAccessToken(); 
-    }
+    var
     var xhr = new XMLHttpRequest();
     var url = mainUrl + "grade/bylanguage"
     xhr.onerror = function () {
@@ -773,7 +755,7 @@ async function selectGrade(gradeCode) {
     xhr.onloadend = async function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = await JSON.parse(xhr.response);
-            if (response["access"] == "success") {
+           if (response["success"] == true) {
                 var responseData = response["data"]
                 var filterSubData = responseData.filter((filterSubData) => filterSubData.grade_code == gradeCode);
                 var filternotSubData = responseData.filter((filternotSubData) => filternotSubData.grade_code != gradeCode);
@@ -821,7 +803,7 @@ async function selectGrade(gradeCode) {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
+   
     xhr.send(data);
     return false;
 }
@@ -856,7 +838,7 @@ async function selectWorksite(worksiteCode) {
     xhr.onloadend = async function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = await JSON.parse(xhr.response);
-            if (response["access"] == "success") {
+           if (response["success"] == true) {
                 var responseData = response["data"]
                 var filterSubData = responseData.filter((filterSubData) => filterSubData.code_company == worksiteCode);
                 var filternotSubData = responseData.filter((filternotSubData) => filternotSubData.code_company != worksiteCode);
@@ -904,16 +886,13 @@ async function selectWorksite(worksiteCode) {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
+   
     xhr.send(data);
     return false;
 }
 async function selectProvinceReception(provinceReceptionCode) {
     const language = await JSON.parse(getCookie("language"));
-    var token = await JSON.parse(getCookie("dataToken"));
-   if (!token) {
-        token = await getAccessToken(); 
-    }
+    var
     var xhr = new XMLHttpRequest();
     var url = mainUrl + "company/province"
     xhr.onerror = function () {
@@ -932,7 +911,7 @@ async function selectProvinceReception(provinceReceptionCode) {
     xhr.onloadend = async function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = await JSON.parse(xhr.response);
-            if (response["access"] == "success") {
+           if (response["success"] == true) {
                 var responseDataProvince = response["data"]
                 var detailCode = []
                 for (i = 0; i < responseDataProvince.length; i++) {
@@ -994,16 +973,13 @@ async function selectProvinceReception(provinceReceptionCode) {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
+   
     xhr.send(data);
     return false;
 }
 async function selectCatu(catuCode) {
     const language = await JSON.parse(getCookie("language"));
-    var token = await JSON.parse(getCookie("dataToken"));
-   if (!token) {
-        token = await getAccessToken(); 
-    }
+    var
     var xhr = new XMLHttpRequest();
     var url = mainUrl + "catu/bylanguage"
     xhr.onerror = function () {
@@ -1022,7 +998,7 @@ async function selectCatu(catuCode) {
     xhr.onloadend = async function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = await JSON.parse(xhr.response);
-            if (response["access"] == "success") {
+           if (response["success"] == true) {
                 var responseData = response["data"]
                 var filterSubData = responseData.filter((filterSubData) => filterSubData.catu_code == catuCode);
                 var filternotSubData = responseData.filter((filternotSubData) => filternotSubData.catu_code != catuCode);
@@ -1070,16 +1046,13 @@ async function selectCatu(catuCode) {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
+   
     xhr.send(data);
     return false;
 }
 async function selectStatusTax(statusTaxCode) {
     const language = await JSON.parse(getCookie("language"));
-    var token = await JSON.parse(getCookie("dataToken"));
-   if (!token) {
-        token = await getAccessToken(); 
-    }
+    var
     var xhr = new XMLHttpRequest();
     var url = mainUrl + "employeestatustax/bylanguage"
     xhr.onerror = function () {
@@ -1098,7 +1071,7 @@ async function selectStatusTax(statusTaxCode) {
     xhr.onloadend = async function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = await JSON.parse(xhr.response);
-            if (response["access"] == "success") {
+           if (response["success"] == true) {
                 var responseData = response["data"]
                 var filterSubData = responseData.filter((filterSubData) => filterSubData.employee_tax_code == statusTaxCode);
                 var filternotSubData = responseData.filter((filternotSubData) => filternotSubData.employee_tax_code != statusTaxCode);
@@ -1146,16 +1119,13 @@ async function selectStatusTax(statusTaxCode) {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
+   
     xhr.send(data);
     return false;
 }
 async function selectSalary(salaryCode) {
     const language = await JSON.parse(getCookie("language"));
-    var token = await JSON.parse(getCookie("dataToken"));
-   if (!token) {
-        token = await getAccessToken(); 
-    }
+    var
     var xhr = new XMLHttpRequest();
     var url = mainUrl + "employeesalary/bylanguage"
     xhr.onerror = function () {
@@ -1174,7 +1144,7 @@ async function selectSalary(salaryCode) {
     xhr.onloadend = async function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = await JSON.parse(xhr.response);
-            if (response["access"] == "success") {
+           if (response["success"] == true) {
                 var responseData = response["data"]
                 var filterSubData = responseData.filter((filterSubData) => filterSubData.employee_salary_code == salaryCode);
                 var filternotSubData = responseData.filter((filternotSubData) => filternotSubData.employee_salary_code != salaryCode);
@@ -1224,16 +1194,13 @@ async function selectSalary(salaryCode) {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
+   
     xhr.send(data);
     return false;
 }
 async function selectMarital(maritalCode) {
     const language = await JSON.parse(getCookie("language"));
-    var token = await JSON.parse(getCookie("dataToken"));
-   if (!token) {
-        token = await getAccessToken(); 
-    }
+    var
     var xhr = new XMLHttpRequest();
     var url = mainUrl + "employeemarital/bylanguage"
     xhr.onerror = function () {
@@ -1252,7 +1219,7 @@ async function selectMarital(maritalCode) {
     xhr.onloadend = async function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = await JSON.parse(xhr.response);
-            if (response["access"] == "success") {
+           if (response["success"] == true) {
                 var responseData = response["data"]
                 var filterSubData = responseData.filter((filterSubData) => filterSubData.marital_code == maritalCode);
                 var filternotSubData = responseData.filter((filternotSubData) => filternotSubData.marital_code != maritalCode);
@@ -1302,16 +1269,13 @@ async function selectMarital(maritalCode) {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
+   
     xhr.send(data);
     return false;
 }
 async function selectReligion(religionCode) {
     const language = await JSON.parse(getCookie("language"));
-    var token = await JSON.parse(getCookie("dataToken"));
-   if (!token) {
-        token = await getAccessToken(); 
-    }
+    var
     var xhr = new XMLHttpRequest();
     var url = mainUrl + "religion/bylanguage"
     xhr.onerror = function () {
@@ -1330,7 +1294,7 @@ async function selectReligion(religionCode) {
     xhr.onloadend = async function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = await JSON.parse(xhr.response);
-            if (response["access"] == "success") {
+           if (response["success"] == true) {
                 var responseData = response["data"]
                 var filterSubData = responseData.filter((filterSubData) => filterSubData.code_religion == religionCode);
                 var filternotSubData = responseData.filter((filternotSubData) => filternotSubData.code_religion != religionCode);
@@ -1380,16 +1344,13 @@ async function selectReligion(religionCode) {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
+   
     xhr.send(data);
     return false;
 }
 async function selectEducation(educationCode) {
     const language = await JSON.parse(getCookie("language"));
-    var token = await JSON.parse(getCookie("dataToken"));
-   if (!token) {
-        token = await getAccessToken(); 
-    }
+    var
     var xhr = new XMLHttpRequest();
     var url = mainUrl + "education/bylanguage"
     xhr.onerror = function () {
@@ -1408,7 +1369,7 @@ async function selectEducation(educationCode) {
     xhr.onloadend = async function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = await JSON.parse(xhr.response);
-            if (response["access"] == "success") {
+           if (response["success"] == true) {
                 var responseData = response["data"]
                 var filterSubData = responseData.filter((filterSubData) => filterSubData.code_education == educationCode);
                 var filternotSubData = responseData.filter((filternotSubData) => filternotSubData.code_education != educationCode);
@@ -1458,7 +1419,7 @@ async function selectEducation(educationCode) {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
+   
     xhr.send(data);
     return false;
 }

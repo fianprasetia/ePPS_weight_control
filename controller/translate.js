@@ -1,83 +1,77 @@
 const fs = require('fs');
-const fsj = require('fs').promises;
 const path = require('path');
+const { GoogleGenAI } = require("@google/genai");
+const responseHelper = require('../helpers/responseHelper');
 
 const controller = {};
 
 controller.translate = async function (req, res) {
     try {
+        const { text, targetLangs } = req.body;
 
-        const { text, targetLangs } = req.body; // array of languages
-        // const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
-        const OPENROUTER_API_KEY = "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";
+        const ai = new GoogleGenAI({
+            apiKey: process.env.GEMINI_API_KEY
+        });
 
         const results = {};
 
         for (const lang of targetLangs) {
-            const apiRes = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-                method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${OPENROUTER_API_KEY}`,
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    model: "openai/gpt-4o-mini",
-                    // model: "deepseek/deepseek-r1:free",
-                    messages: [
-                        { role: "system", content: "You are a translator. Translate text only, no explanation." },
-                        { role: "user", content: `Translate this into ${lang}: ${text}` }
-                    ]
-                })
+            const response = await ai.models.generateContent({
+                model: "gemini-2.5-flash",
+                contents: `
+                    Translate the following text into ${lang}.
+                    Return only the translated text without explanation.
+
+                    Text:
+                    ${text}
+                `
             });
 
-            const data = await apiRes.json();
-            results[lang] = data.choices[0].message.content.trim();
+            results[lang] = response.text.trim();
         }
-        res.status(200).json({
-            access: "success",
-            data: results,
-        });
-        // return res.json({ translated: results });
+
+        return responseHelper.success(res, "Translation success", results);
+
     } catch (err) {
-        console.error(err);
-        return res.status(500).json({ error: "Translation failed" });
+        return responseHelper.error(res, err, "Translation failed");
     }
 };
+
 controller.autoTranslate = async function (req, res) {
     try {
+        const { text, targetLangs } = req.body;
+        const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
-        const { text, targetLangs } = req.body; // array of languages
-        // const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
-        const OPENROUTER_API_KEY = "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";
+        if (!GEMINI_API_KEY) {
+            return responseHelper.error(res, new Error("API Key is not configured."), "API Key is not configured.");
+        }
 
-        const apiRes = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-            method: "POST",
-            headers: {
-                "Authorization": `Bearer ${OPENROUTER_API_KEY}`,
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                model: "openai/gpt-4o-mini",
-                // model: "deepseek/deepseek-r1:free",
-                messages: [
-                    { role: "system", content: "You are a translator. Translate text only, no explanation." },
-                    { role: "user", content: `Translate this into ${targetLangs}: ${text}` }
-                ]
-            })
+        const ai = new GoogleGenAI({
+            apiKey: GEMINI_API_KEY
         });
 
-        const data = await apiRes.json();
-        const translated = data.choices[0].message.content.trim();
-        res.status(200).json({
-            access: "success",
-            data: translated,
+        const response = await ai.models.generateContent({
+            model: "gemini-2.5-flash",
+            contents: `
+                        You are a translator.
+
+                        Translate the following text into ${targetLangs}.
+
+                        Return only the translated text without explanation.
+
+                        Text:
+                        ${text}
+                        `
         });
-        // return res.json({ translated: results });
+
+        const translated = response.text.trim();
+        return responseHelper.success(res, "Translation success", translated);
+
     } catch (err) {
-        console.error(err);
-        return res.status(500).json({ error: "Translation failed" });
+        return responseHelper.error(res, err, "Translation failed");
     }
 };
+
 controller.inserttranslate = async function (req, res) {
     try {
         const newData = req.body["dataLanguage"][0]["detail"];
@@ -85,15 +79,11 @@ controller.inserttranslate = async function (req, res) {
         const keyCode = req.body["dataLanguage"][0]["key_POST"];
 
         const filePath = path.join(__dirname, "../public/file/language.json");
-        let data = JSON.parse(fs.readFileSync(filePath, "utf8"));
+        const data = JSON.parse(fs.readFileSync(filePath, "utf8"));
 
         const baseKey = keyCode || newData.find(d => d.code_POST === "en")?.language_POST;
         if (!baseKey) {
-            return res.status(200).json({
-                success: false,
-                access: "failed",
-                message: "Data dengan code_POST 'en' wajib ada untuk membuat key"
-            });
+            return responseHelper.Unsuccessful(res, "Data dengan code_POST 'en' wajib ada untuk membuat key");
         }
 
         const key = baseKey.toLowerCase().replace(/\s+/g, "_");
@@ -117,11 +107,7 @@ controller.inserttranslate = async function (req, res) {
                 "Duplicate data found for key '{key}'";
             messageTemplate = messageTemplate.replace("{key}", key);
 
-            return res.status(200).json({
-                success: false,
-                access: "failed",
-                message: messageTemplate
-            });
+            return responseHelper.Unsuccessful(res, messageTemplate);
         }
 
         // insert/update
@@ -134,59 +120,49 @@ controller.inserttranslate = async function (req, res) {
 
         fs.writeFileSync(filePath, JSON.stringify(data, null, 2), "utf8");
 
-        return res.status(200).json({
-            success: true,
-            access: "success",
-            message: lang?.content?.insert_data || "Insert success"
-        });
+        return responseHelper.success(res, lang?.content?.insert_data || "Insert success");
     } catch (err) {
-        res.status(500).json({ success: false, error: err.message });
+        return responseHelper.error(res, err, "Terjadi kesalahan saat menyimpan data terjemahan");
     }
 };
-controller.updateTranslate = async function name(req, res) {
-    const { dataLanguage } = req.body;
-    const langCode = dataLanguage[0].language_POST; // bahasa respon
-    const key = dataLanguage[0].key_POST;           // key yang akan diupdate
-    const newData = dataLanguage[0].detail;         // array detail per bahasa
 
-    const filePath = path.join(__dirname, "../public/file/language.json");
-    let data = JSON.parse(fs.readFileSync(filePath, "utf8"));
+controller.updateTranslate = async function (req, res) {
+    try {
+        const { dataLanguage } = req.body;
+        const langCode = dataLanguage[0].language_POST; // bahasa respon
+        const key = dataLanguage[0].key_POST;           // key yang akan diupdate
+        const newData = dataLanguage[0].detail;         // array detail per bahasa
 
-    // Cek duplikasi
-    let duplicateFound = false;
-    newData.forEach(item => {
-        const lang = data.find(d => d.language === item.code_POST);
-        if (lang && lang.content[key] && lang.content[key] === item.language_POST) {
-            duplicateFound = true;
-        }
-    });
-    const lang = data.find(d => d.language === langCode);
+        const filePath = path.join(__dirname, "../public/file/language.json");
+        const data = JSON.parse(fs.readFileSync(filePath, "utf8"));
 
-    // if (duplicateFound) {
-    //   return res.status(200).json({
-    //     success: false,
-    //     message: `Duplicate data found for key '${key}'`
-    //   });
-    // }
+        // Cek duplikasi
+        let duplicateFound = false;
+        newData.forEach(item => {
+            const lang = data.find(d => d.language === item.code_POST);
+            if (lang && lang.content[key] && lang.content[key] === item.language_POST) {
+                duplicateFound = true;
+            }
+        });
+        const lang = data.find(d => d.language === langCode);
 
-    // Update data
-    newData.forEach(item => {
-        const lang = data.find(d => d.language === item.code_POST);
-        if (lang) {
-            lang.content[key] = item.language_POST;
-        }
-    });
-    let messageTemplate =
-        lang?.content?.update_data ||
-        `Data for key '${key}' updated successfully`;
+        // Update data
+        newData.forEach(item => {
+            const l = data.find(d => d.language === item.code_POST);
+            if (l) {
+                l.content[key] = item.language_POST;
+            }
+        });
+        let messageTemplate =
+            lang?.content?.update_data ||
+            `Data for key '${key}' updated successfully`;
 
-    await fs.writeFileSync(filePath, JSON.stringify(data, null, 2), "utf8");
-    messageTemplate = messageTemplate.replace("{key}", key);
-    res.status(200).json({
-        // success: true,
-        access: "success",
-        message: messageTemplate
-    });
-}
+        fs.writeFileSync(filePath, JSON.stringify(data, null, 2), "utf8");
+        messageTemplate = messageTemplate.replace("{key}", key);
+        return responseHelper.success(res, messageTemplate);
+    } catch (err) {
+        return responseHelper.error(res, err, "Terjadi kesalahan saat memperbarui terjemahan");
+    }
+};
 
 module.exports = controller;

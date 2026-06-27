@@ -1,16 +1,6 @@
 async function showModalUpdateLanguage(el) {
-    let token = await JSON.parse(getCookie("dataToken"));
-    if (token == null) {
-        await getAccessToken()
-        if (token == null) {
-            return;
-        }
-        var myModal = new bootstrap.Modal(document.getElementById("modalLanguage"), { keyboard: false });
-        myModal.toggle();
-    } else {
-        var myModal = new bootstrap.Modal(document.getElementById("modalLanguage"), { keyboard: false });
-        myModal.toggle();
-    }
+    var myModal = new bootstrap.Modal(document.getElementById("modalLanguage"), { keyboard: false });
+    myModal.toggle();
     await selectLanguage()
     const key = el.getAttribute("data-keycode");
     const response = await fetch("file/language.json");
@@ -36,10 +26,6 @@ async function showModalUpdateLanguage(el) {
     document.getElementById("load").innerHTML = "<a id='cancelBtn' onclick='closeModal()' class='btn  btn-danger'>" + kapital(cancel) + "</a> <a id='doneBtn' type='submit' onclick='updateLanguage()' class='btn  btn-primary'>" + kapital(done) + "</a>"
 }
 async function updateLanguage() {
-    let token = await JSON.parse(getCookie("dataToken"));
-   if (!token) {
-        token = await getAccessToken(); 
-    }
     const language = await JSON.parse(getCookie("language"));
     const key = document.getElementById("key").value
     const elements = document.getElementsByName("language[]");
@@ -91,7 +77,7 @@ async function updateLanguage() {
     xhr.onloadend = async function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = await JSON.parse(xhr.response);
-            if (response["access"] == "success") {
+            if (response["success"] == true) {
                 message = response["message"];
                 Dashmix.helpers("jq-notify", {
                     z_index: 2000,
@@ -133,7 +119,6 @@ async function updateLanguage() {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
     xhr.send(data);
     return false;
 }

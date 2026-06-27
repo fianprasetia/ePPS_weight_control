@@ -18,7 +18,7 @@ async function showModalUpdatePartners(id) {
         Dashmix.helpers("jq-notify", {
             type: "danger",
             z_index: 2000,
-            message:overload,
+            message: overload,
         });
         setTimeout(async function () {
             await keluar()
@@ -31,7 +31,7 @@ async function showModalUpdatePartners(id) {
     xhr.onloadend = async function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = await JSON.parse(xhr.response);
-            if (response["access"] == "success") {
+            if (response["success"] == true) {
                 var responseData = response["data"]
                 const status = responseData[0]["status"]
                 const city = responseData[0]["city"]
@@ -78,7 +78,7 @@ async function showModalUpdatePartners(id) {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
+
     xhr.send(data);
     return false;
 }
@@ -86,10 +86,6 @@ async function updatePartners() {
     const language = await JSON.parse(getCookie("language"));
     const dataLogin = await JSON.parse(getCookie("dataLogin"));
     const username = dataLogin["username"];
-    var token = await JSON.parse(getCookie("dataToken"));
-   if (!token) {
-        token = await getAccessToken(); 
-    }
     const code = document.getElementById("code").value
     const partnersType = document.getElementById("partnersType").value
     const name = document.getElementById("name").value
@@ -154,7 +150,7 @@ async function updatePartners() {
         Dashmix.helpers("jq-notify", {
             z_index: 2000,
             type: "danger",
-            message:overload,
+            message: overload,
         });
         setTimeout(async function () {
             await keluar()
@@ -182,7 +178,7 @@ async function updatePartners() {
     xhr.onloadend = function () {
         if (this.readyState == 4 && this.status == 200) {
             var responseLogin = JSON.parse(xhr.response);
-            if (responseLogin["access"] == "success") {
+            if (responseLogin["success"] == true) {
                 message = responseLogin["message"];
                 Dashmix.helpers("jq-notify", {
                     z_index: 2000,
@@ -198,7 +194,7 @@ async function updatePartners() {
                 Dashmix.helpers("jq-notify", {
                     z_index: 2000,
                     type: "danger",
-                   message: message,
+                    message: message,
                 });
                 setTimeout(function () {
                     window.location.href = "/partners";
@@ -224,7 +220,7 @@ async function updatePartners() {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
+
     xhr.send(data);
     return false;
 }

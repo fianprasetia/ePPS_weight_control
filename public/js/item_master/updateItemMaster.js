@@ -33,7 +33,7 @@ async function showModalUpdateItemMaster(id) {
   xhr.onloadend = async function () {
     if (this.readyState == 4 && this.status == 200) {
       var response = await JSON.parse(xhr.response);
-      if (response["access"] == "success") {
+      if (response["success"] == true) {
         var responseData = response["data"]
         document.getElementById("selectCode").value = id
         document.getElementById("selectDescription").value = responseData[0]["name"]
@@ -73,7 +73,7 @@ async function showModalUpdateItemMaster(id) {
   };
   xhr.open("POST", url, true);
   xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-  xhr.setRequestHeader("Authorization", "Bearer " + token);
+
   xhr.send(data);
   return false;
 }
@@ -83,8 +83,8 @@ async function updateItemMaster() {
   const username = dataLogin["username"];
   var token = await JSON.parse(getCookie("dataToken"));
   if (!token) {
-        token = await getAccessToken(); 
-    }
+    token = await getAccessToken();
+  }
   !(function () {
     class e {
       static initValidation() {
@@ -161,7 +161,7 @@ async function updateItemMaster() {
   xhr.onloadend = function () {
     if (this.readyState == 4 && this.status == 200) {
       var responseLogin = JSON.parse(xhr.response);
-      if (responseLogin["access"] == "success") {
+      if (response["success"] == true) {
         message = responseLogin["message"];
         Dashmix.helpers("jq-notify", { z_index: 2000, type: "success", message: message, });
         setTimeout(function () {
@@ -195,7 +195,7 @@ async function updateItemMaster() {
   };
   xhr.open("PUT", url, true);
   xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-  xhr.setRequestHeader("Authorization", "Bearer " + token);
+
   xhr.send(data);
   return false;
 }

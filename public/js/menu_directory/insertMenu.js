@@ -3,32 +3,18 @@ async function showModalInsertMenu(id) {
   const level = element.getAttribute("leveladd");
   const parent = element.getAttribute("parentadd");
   await selectLanguage();
-  let token = await JSON.parse(getCookie("dataToken"));
-  if (token == null) {
-    await getAccessToken();
-    var myModal = new bootstrap.Modal(document.getElementById("modalMenu"), { keyboard: false });
-    myModal.toggle();
-  } else {
-    var myModal = new bootstrap.Modal(document.getElementById("modalMenu"), { keyboard: false });
-    myModal.toggle();
-  }
+  var myModal = new bootstrap.Modal(document.getElementById("modalMenu"), { keyboard: false });
+  myModal.toggle();
   document.getElementById("level").value = level;
   document.getElementById("parent").value = id;
   document.getElementById("load").innerHTML =
     "<a id='cancelBtn' onclick='closeModal()' class='btn  btn-danger'>" +
     cancel +
-    "</a> <button id='doneBtn' type='submit' onclick='insertMenu()' class='btn  btn-primary'>" +
+    "</a> <a id='doneBtn' type='submit' onclick='insertMenu()' class='btn  btn-primary'>" +
     done +
-    "</button>";
+    "</a>";
 }
 async function insertMenu() {
-  let token = await JSON.parse(getCookie("dataToken"));
-  if (token == null) {
-    await getAccessToken();
-    if (token == null) {
-      return;
-    }
-  }
   !(function () {
     class e {
       static initValidation() {
@@ -106,11 +92,11 @@ async function insertMenu() {
   };
 
   var data = JSON.stringify(dataMenu);
-  xhr.onloadend = function () {
+  xhr.onloadend = async function () {
     if (this.readyState == 4 && this.status == 200) {
-      var responseLogin = JSON.parse(xhr.response);
-      if (responseLogin["access"] == "success") {
-        message = responseLogin["message"];
+      var response = await JSON.parse(xhr.response);
+      if (response["success"] == true) {
+        message = response["message"];
         Dashmix.helpers("jq-notify", {
           z_index: 2000,
           type: "success",
@@ -120,8 +106,8 @@ async function insertMenu() {
         setTimeout(function () {
           window.location.href = "/menu_directory";
         }, 3000);
-      } else if (responseLogin["access"] == "failed") {
-        message = responseLogin["message"];
+      } else {
+        message = response["message"];
         Dashmix.helpers("jq-notify", {
           z_index: 2000,
           type: "danger",
@@ -170,7 +156,6 @@ async function insertMenu() {
   };
   xhr.open("POST", url, true);
   xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-  xhr.setRequestHeader("Authorization", "Bearer " + token);
   xhr.send(data);
   return false;
 }
