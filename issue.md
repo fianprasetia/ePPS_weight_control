@@ -1,412 +1,166 @@
-# Issue: Implement Browser Print Preview for Internal FFB Weighbridge
+# Implementasi Komunikasi WebSocket untuk QZ Tray Printer (Browser -> Server -> Local Agent)
 
-## Overview
+## Deskripsi Tugas
+Tugas ini bertujuan untuk merapikan dan melengkapi arsitektur komunikasi WebSocket antara **Browser**, **Cloud Server**, dan **Local Agent (localhost:4000)** untuk kebutuhan mengambil daftar printer melalui QZ Tray.
 
-Implement Browser Print feature for Internal FFB (TBS Inti) module.
-
-The print process must use browser native printing and support Epson LQ-310 with Continuous Form Paper size 1/2 A4 (148mm x 210mm).
-
-Before printing, the user must be able to review the ticket information inside a preview modal.
-
----
-
-## Objective
-
-Create a print workflow for Internal FFB transaction after data is successfully saved.
-
-Flow:
-
+**Alur Komunikasi:**
 ```text
-Save & Print
-    ↓
-Save Data
-    ↓
-Show Preview Modal
-    ↓
-Print Button
-    ↓
-window.open('/print-ticket/:ticketNo')
-    ↓
-window.print()
+Browser
+    │
+    │ socket.emit("getPrinters")
+    ▼
+Cloud Server
+    │
+    │ requestPrinters
+    ▼
+Local Agent (localhost:4000)
+    │
+    │ qz.printers.find()
+    ▼
+Cloud Server
+    │
+    │ callback(printers)
+    ▼
+Browser
 ```
 
----
+## Spesifikasi Implementasi
 
-## Requirements
-
-### Print Method
-
-Use Browser Print.
-
-Do not use:
-
-* PDF generation
-* ESC/POS
-* QZ Tray
-* Third-party printing library
-
-Use:
+### 1. Skrip Local Agent (Referensi)
+Pastikan agen lokal (_local agent_) memiliki penanganan event `requestPrinters` dengan menggunakan `callback` acknowledgement dari Socket.IO. Berikut adalah acuan kode yang diimplementasikan pada local agent:
 
 ```javascript
-window.open('/print-ticket/' + ticketNo);
+socket.on("requestPrinters", async (data, callback) => {
+    console.log("Request Printer:", data);
+    
+    try {
+        if (data.scaleId !== SCALE_ID) {
+            return callback({
+                success: false,
+                message: "Scale ID tidak sesuai"
+            });
+        }
+        
+        console.log("Connect QZ");
+        if (!qz.websocket.isActive()) {
+            await qz.websocket.connect();
+        }
+        
+        console.log("QZ Connected");
+        const printers = await qz.printers.find();
+        
+        console.log(printers);
+        
+        callback({
+            success: true,
+            printers
+        });
+        
+    } catch (err) {
+        callback({
+            success: false,
+            message: err.message
+        });
+    }
+});
 ```
 
-and
+### 2. Pembaruan pada `server.js` (Cloud Server)
+Pada kode *Cloud Server* (`server.js`), kita perlu melengkapi struktur *Socket Events* yang sudah ada agar mencakup 3 fungsi utama ini:
+- ✅ **Registrasi agent (`registerAgent`)**: Menyimpan ID socket berdasarkan `scaleId`.
+- ✅ **Pengambilan daftar printer (`getPrinters`)**: Mem-forward request dari browser menuju spesifik agent, menggunakan `timeout` dan `callback`.
+- ✅ **Penghapusan agent otomatis saat disconnect**: Saat agent atau browser terputus koneksinya, bersihkan memori dari *map* agar status agen benar-benar offline (menghindari memory leak/false positive).
 
+#### Detail Kode untuk `server.js`:
+
+Cari bagian `io.on('connection', (socket) => { ... })` di `server.js` lalu perbarui/sesuaikan event listeners-nya sebagai berikut:
+
+**1. Event `registerAgent`**
+Ubah metode registrasi agent dengan menambahkan variabel `scaleId` di dalam _instance_ socket, agar mudah dikenali ketika event _disconnect_ dipicu.
 ```javascript
-window.print();
+socket.on("registerAgent", (data) => {
+    // Simpan ke koleksi Map
+    agents.set(data.scaleId, socket.id);
+    
+    // Simpan identitas scaleId pada instance socket itu sendiri
+    socket.scaleId = data.scaleId; 
+    
+    console.log(`Agent ${data.scaleId} registered (${socket.id})`);
+});
 ```
 
----
-
-## Save Print Flow
-
-### Function
-
-Create or update:
-
+**2. Event `getPrinters`**
+Lengkapi event handler ini untuk me-routing _request_ dengan acknowledgement. Bagian ini sebelumnya sudah lumayan lengkap di `server.js`, namun perhatikan dengan detail.
 ```javascript
-savePrint()
+socket.on("getPrinters", (data, callback) => {
+    console.log("Request dari browser:", data);
+    
+    const agentSocketId = agents.get(data.scaleId);
+
+    // Cek apakah agent terdaftar
+    if (!agentSocketId) {
+        return callback({
+            success: false,
+            message: "Agent Offline"
+        });
+    }
+
+    // Forward request ke agent
+    io.to(agentSocketId)
+        .timeout(3000)
+        .emit(
+            "requestPrinters",
+            { scaleId: data.scaleId },
+            (err, responses) => {
+                // Handle jika tidak ada balasan dari local agent dalam 3000ms
+                if (err) {
+                    return callback({
+                        success: false,
+                        message: "Agent Timeout"
+                    });
+                }
+                
+                console.log("Response dari Local Agent:", responses[0]);
+                
+                // Teruskan data balasan ke browser
+                callback(responses[0]);
+            }
+        );
+});
 ```
 
-### Flow
-
-1. Validate form.
-2. Save weighbridge data.
-3. Retrieve generated ticket number.
-4. Open preview modal.
-5. Display ticket information inside modal.
-6. User clicks Print.
-7. Open print page.
-8. Automatically trigger browser print dialog.
-9. User prints ticket.
-
----
-
-## Preview Modal
-
-### Modal ID
-
-```html
-modalInternalFFB
-```
-
-### Buttons
-
-#### Print
-
-```html
-<button id="btnPrintTicket">
-    Print
-</button>
-```
-
-Action:
-
+**3. Event `disconnect`**
+Tambahkan logika **Otomatis Hapus Agent** ketika Socket terputus.
 ```javascript
-window.open(
-    '/print-ticket/' + ticketNo,
-    '_blank'
-);
+socket.on('disconnect', () => {
+    console.log('Socket Disconnect:', socket.id);
+    
+    // Jika socket ini merupakan agent yang sudah ter-register, hapus datanya dari Map
+    if (socket.scaleId) {
+        agents.delete(socket.scaleId);
+        console.log(`Agent ${socket.scaleId} terputus dan dihapus dari registry.`);
+    }
+});
 ```
 
 ---
 
-#### Cancel
-
-```html
-<button id="btnCancelPrint">
-    Cancel
-</button>
-```
-
-Action:
-
-```javascript
-Close modal
-```
-
----
-
-## Backend Endpoint
-
-Create new route:
-
-```http
-GET /print-ticket/:ticketNo
-```
-
-Purpose:
-
-Render printable weighbridge ticket.
-
----
-
-## Data Source
-
-### Company Information
-
-Table:
-
-```text
-mll_weight_control
-```
-
-Field:
-
-```text
-name_company
-```
-
-Purpose:
-
-Display as ticket header.
-
-Example:
-
-```text
-PT SIA PLANTATION
-```
-
----
-
-### Ticket Information
-
-Table:
-
-```text
-mll_weigh_bridge
-```
-
-Retrieve the following fields:
-
-```text
-ticket_no
-estate_code
-division_code
-unit_type
-entry_time
-exit_time
-gross_weight
-tare_weight
-bruto
-netto
-driver_name
-spb_no
-vehicle_no
-year_plant
-created_by
-note
-```
-
----
-
-## Preview Modal Layout
-
-Display the following information:
-
-```text
-Company Name
-
-Ticket No
-SPB No
-Vehicle No
-Driver
-Estate
-Division
-Unit Type
-Year Plant
-
-Entry Time
-Exit Time
-
-Gross Weight
-Tare Weight
-Bruto
-Netto
-
-Note
-Created By
-```
-
----
-
-## Print Page
-
-### File
-
-Create new EJS template:
-
-```text
-views/internal_ffb/print-ticket.ejs
-```
-
----
-
-### Auto Print
-
-After page load:
-
-```javascript
-window.onload = function () {
-    window.print();
-};
-```
-
----
-
-## Print Layout
-
-### Header
-
-Display:
-
-```text
-PT SIA PLANTATION
-TIKET TIMBANG TBS INTI
-```
-
-Company name comes from:
-
-```text
-mll_weight_control.name_company
-```
-
----
-
-### Body
-
-Display:
-
-```text
-Ticket No
-SPB No
-Vehicle No
-Driver
-
-Estate
-Division
-Unit Type
-Year Plant
-
-Entry Time
-Exit Time
-
-Gross Weight
-Tare Weight
-
-Bruto
-Netto
-
-Note
-
-Created By
-```
-
----
-
-## Paper Configuration
-
-Printer:
-
-```text
-Epson LQ-310
-```
-
-Paper:
-
-```text
-Continuous Form
-1/2 A4
-148mm x 210mm
-```
-
----
-
-## Print CSS
-
-Create print stylesheet.
-
-Requirements:
-
-```css
-@page {
-    size: 148mm 210mm;
-    margin: 5mm;
-}
-```
-
-```css
-body {
-    width: 148mm;
-    font-family: Consolas, monospace;
-}
-```
-
----
-
-## Acceptance Criteria
-
-### AC-01
-
-User can click Save & Print.
-
-### AC-02
-
-Data is saved successfully.
-
-### AC-03
-
-Preview modal appears after save.
-
-### AC-04
-
-Preview modal displays ticket information correctly.
-
-### AC-05
-
-Print button opens print page.
-
-### AC-06
-
-Print page automatically triggers browser print dialog.
-
-### AC-07
-
-Company name is displayed from:
-
-```text
-mll_weight_control.name_company
-```
-
-### AC-08
-
-Ticket data is retrieved from:
-
-```text
-mll_weigh_bridge
-```
-
-### AC-09
-
-Layout fits Continuous Form 1/2 A4 (148mm x 210mm).
-
-### AC-10
-
-Print output is compatible with Epson LQ-310.
-
----
-
-## Notes
-
-* Use existing Bootstrap 5 modal styling.
-* Use existing Internal FFB module structure.
-* Keep implementation simple and maintainable.
-* No external printing libraries are required.
-* Browser print must be the only printing mechanism.
-* Preview modal must always appear before printing.
-* Print page should be accessible for future reprint functionality.
-
-```
-GET /print-ticket/:ticketNo
-```
+## Rencana Pengetesan (Testing Plan)
+Setelah implementasi dilakukan, jalankan urutan tes berikut untuk memastikan fitur berjalan dengan baik:
+
+1. **Jalankan Aplikasi:**
+   Jalankan server menggunakan `node server.js` dan pastikan tidak ada error sintaks.
+2. **Koneksikan & Register Local Agent:**
+   Gunakan skrip Node.js (sebagai simulator agent) untuk koneksi ke Socket.IO Server dan trigger `registerAgent` dengan payload `{ scaleId: "SC-001" }`.
+   *Ekspektasi*: Di console `server.js` akan muncul `"Agent SC-001 registered (xxxx)"`.
+3. **Ambil Data dari Browser:**
+   Gunakan socket.io client dari sisi Frontend/Browser. Jalankan perintah `socket.emit("getPrinters", { scaleId: "SC-001" }, (response) => console.log(response))`.
+   *Ekspektasi*: Data mengalir lancar dari Browser -> Server -> Agent, dan callback mengembalikan _Array_ dari printers QZ.
+4. **Tes Timeout Agent:**
+   Beri delay lebih dari 3 detik (3000ms) pada respons callback agen atau hilangkan pemanggilan callback dari agen sama sekali.
+   *Ekspektasi*: Browser mendapat respons `{ success: false, message: "Agent Timeout" }`.
+5. **Tes Fitur Auto Remove Agent (Disconnect):**
+   * Matikan proses simulator Agent.
+   * *Ekspektasi*: Di console `server.js` muncul pesan `"Agent SC-001 terputus dan dihapus dari registry."`.
+   * Panggil kembali `getPrinters` dari Browser.
+   * *Ekspektasi*: Browser otomatis mendapatkan respons `{ success: false, message: "Agent Offline" }`.

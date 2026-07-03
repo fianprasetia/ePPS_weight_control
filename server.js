@@ -248,18 +248,59 @@ app.use((err, req, res, next) => {
 /* =========================================
    SOCKET EVENTS
 ========================================= */
-// io.on('connection', (socket) => {
-//     console.log('Socket Connected:', socket.id);
+io.on('connection', (socket) => {
+    console.log('Socket Connected:', socket.id);
 
-//     socket.on('weightFromScale', (data) => {
-//         console.log('Weight Receive:', data);
-//         io.emit('weightUpdate', data);
-//     });
+    socket.on('weightFromScale', (data) => {
+        console.log('Weight Receive:', data);
+        io.emit('weightUpdate', data);
+    });
 
-//     socket.on('disconnect', () => {
-//         console.log('Socket Disconnect');
-//     });
-// });
+    socket.on("registerAgent", (data) => {
+        agents.set(data.scaleId, socket.id);
+        socket.scaleId = data.scaleId;
+        console.log(`Agent ${data.scaleId} registered (${socket.id})`);
+    });
+
+    socket.on("getPrinters", (data, callback) => {
+        console.log("Request dari browser:", data);
+        const agentSocketId = agents.get(data.scaleId);
+
+        if (!agentSocketId) {
+            return callback({
+                success: false,
+                message: "Agent Offline"
+            });
+        }
+
+        io.to(agentSocketId)
+            .timeout(3000)
+            .emit(
+                "requestPrinters",
+                {
+                    scaleId: data.scaleId
+                },
+                (err, responses) => {
+                    if (err) {
+                        return callback({
+                            success: false,
+                            message: "Agent Timeout"
+                        });
+                    }
+                    console.log("Response dari Local Agent:", responses[0]);
+                    callback(responses[0]);
+                }
+            );
+    });
+
+    socket.on('disconnect', () => {
+        console.log('Socket Disconnect:', socket.id);
+        if (socket.scaleId) {
+            agents.delete(socket.scaleId);
+            console.log(`Agent ${socket.scaleId} removed from registry.`);
+        }
+    });
+});
 
 /* =========================================
    SERVER START
