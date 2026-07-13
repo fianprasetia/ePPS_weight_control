@@ -484,7 +484,12 @@
       "save_&_print": "Save & Print",
       "weighbridge_data": "Weighbridge Data",
       "time": "Time",
-      "mill_activation": "Mill Activation"
+      "mill_activation": "Mill Activation",
+      "operator": "Operator",
+      "tare_weight": "Tare Weight",
+      "weighing_print_preview": "Weighing Ticket Print Preview",
+      "date_of_entry": "Date of Entry",
+      "checked_by": "Checked By"
     }
   },
   {
@@ -972,7 +977,12 @@
       "save_&_print": "simpan & cetak",
       "weighbridge_data": "Data Timbangan",
       "time": "Waktu",
-      "mill_activation": "Aktivasi Mill"
+      "mill_activation": "Aktivasi Mill",
+      "operator": "Operator",
+      "tare_weight": "Tara",
+      "weighing_print_preview": "Pratinjau Cetak Tiket Timbang",
+      "date_of_entry": "Tanggal Masuk",
+      "checked_by": "Diperiksa Oleh"
     }
   },
   {
@@ -1460,7 +1470,12 @@
       "save_&_print": "保存并打印",
       "weighbridge_data": "地磅数据",
       "time": "时间",
-      "mill_activation": "激活磨机"
+      "mill_activation": "激活磨机",
+      "operator": "操作员",
+      "tare_weight": "皮重",
+      "weighing_print_preview": "称重单打印预览",
+      "date_of_entry": "进场日期",
+      "checked_by": "检查人"
     }
   }
 ]

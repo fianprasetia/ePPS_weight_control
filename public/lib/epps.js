@@ -250,8 +250,8 @@ let mud
 let undulating
 let flat
 let hill
-let nucleus_estate
-let plasma_estate
+let nucleus_scaleID
+let plasma_scaleID
 let auto_translate
 let working_day
 let holiday
@@ -292,8 +292,10 @@ let notice_done
 let closed
 let returnd
 let notice_return
-let estate
+let scaleID
 let vehicle_number
+let insert_data
+var operator
 
 async function content() {
   let language = await JSON.parse(getCookie("language"));
@@ -425,8 +427,8 @@ async function content() {
     undulating = await filterLanguage[0]["content"]["undulating"];
     flat = await filterLanguage[0]["content"]["flat"];
     hill = await filterLanguage[0]["content"]["hill"];
-    nucleus_estate = await filterLanguage[0]["content"]["nucleus_estate"];
-    plasma_estate = await filterLanguage[0]["content"]["plasma_estate"];
+    nucleus_scaleID = await filterLanguage[0]["content"]["nucleus_scaleID"];
+    plasma_scaleID = await filterLanguage[0]["content"]["plasma_scaleID"];
     auto_translate = await filterLanguage[0]["content"]["auto_translate"];
     working_day = await filterLanguage[0]["content"]["working_day"];
     holiday = await filterLanguage[0]["content"]["holiday"];
@@ -466,13 +468,16 @@ async function content() {
     closed = await filterLanguage[0]["content"]["close"];
     returnd = await filterLanguage[0]["content"]["return"];
     notice_return = await filterLanguage[0]["content"]["notice_return"];
-    estate = await filterLanguage[0]["content"]["estate"];
+    scaleID = await filterLanguage[0]["content"]["scaleID"];
     vehicle_number = await filterLanguage[0]["content"]["vehicle_number"];
+    insert_data = await filterLanguage[0]["content"]["insert_data"];
+    operator = await filterLanguage[0]["content"]["operator"];
     document.getElementById("mainMenuNav").innerHTML = await filterLanguage[0]["content"]["main_menu"];
     document.getElementById("homeNav").innerHTML = await filterLanguage[0]["content"]["home"];;
     document.getElementById("pleaseWait").innerHTML = await filterLanguage[0]["content"]["please_wait"];;
   }
 }
+
 async function keluar() {
   const modalEl = document.getElementById("loadingModal");
   loadingModalInstance = new bootstrap.Modal(modalEl, {
@@ -624,9 +629,109 @@ async function getePPSSessionNameEmplyee() {
   fullName = sessionFullName["fullname"];
   photo = sessionFullName["photo"];
   const urlPhoto = mainUrl + "img/employee/" + photo;
-  // document.getElementById("photonavproflie").src = urlPhoto;
   document.getElementById("fullnamenav").innerHTML = "OPERATOR: " + fullName;
-  // document.getElementById("fullnamenavprofile").innerHTML = fullName;
+}
+
+
+getScaleDBID()
+async function getScaleDBID() {
+  const request = indexedDB.open("ePPS_WC", 1);
+
+  request.onsuccess = (event) => {
+    const db = event.target.result;
+
+    const transaction = db.transaction("scale_id", "readonly");
+    const store = transaction.objectStore("scale_id");
+
+    const getRequest = store.getAll();
+    getRequest.onsuccess = () => {
+      if (getRequest.result.length === 0) {
+        var myModal = new bootstrap.Modal(document.getElementById("scaleModal"), { keyboard: false });
+        myModal.toggle();
+        return ``
+      }
+      const scaleID = getRequest.result[0].scale_id;
+      loadScale(scaleID)
+    };
+
+    getRequest.onerror = () => {
+      console.error("Gagal mengambil data");
+    };
+  };
+
+}
+async function loadScale(scaleID) {
+  const socket = io("http://119.11.152.18:8084");
+  socket.on("weightUpdate", (data) => {
+
+    if (data["scaleId"] == scaleID) {
+      document.getElementById("idScalenav").innerText = data["scaleId"]
+    }
+  });
+}
+async function insertScaleID() {
+  !(function () {
+    class e {
+      static initValidation() {
+        Dashmix.helpers("jq-validation"),
+          jQuery("#form2").validate({
+            ignore: [],
+            rules: {
+              "scaleID": { required: !0 },
+            },
+            messages: {
+              "scaleID": required,
+            },
+          }),
+          jQuery(".js-select2").on("change", (e) => {
+            jQuery(e.currentTarget).valid();
+          });
+        jQuery(".js-flatpickr").on("change", (e) => {
+          jQuery(e.currentTarget).valid();
+        });
+      }
+      static init() {
+        this.initValidation();
+      }
+    }
+    Dashmix.onLoad(() => e.init());
+  })();
+  const form = jQuery("#form2");
+  const isValid = form.valid();
+  if (!isValid) {
+    return false
+  }
+  const scaleID = document.getElementById("scaleID").value;
+  const request = indexedDB.open("ePPS_WC", 1);
+
+  request.onsuccess = (event) => {
+
+    const db = event.target.result;
+
+    const transaction = db.transaction("scale_id", "readwrite");
+    const store = transaction.objectStore("scale_id");
+
+    const insertRequest = store.add({
+      id: 1,
+      scale_id: scaleID
+    });
+
+    insertRequest.onsuccess = () => {
+      Dashmix.helpers("jq-notify", {
+        z_index: 2000,
+        type: "success",
+        icon: "fa fa-check me-1",
+        message: insert_data
+      });
+      setTimeout(function () {
+        window.location.href = "/";
+      }, 3000);
+    };
+
+    insertRequest.onerror = () => {
+      console.error("Gagal insert:", insertRequest.error);
+    };
+  };
 }
 // getePPSSessionUserLogin();
 // async function getePPSSessionUserLogin() {
@@ -837,7 +942,7 @@ async function dictionary(param) {
   return new Promise((resolve, reject) => {
     const language = JSON.parse(getCookie("language"));
     var xhr = new XMLHttpRequest();
-    var url = secondUrl + "translate/auto";
+    var url = mainUrl + "translate/auto";
 
     xhr.onerror = function () {
       reject("Network error");
@@ -1095,7 +1200,7 @@ function formatRupiah(money) {
 async function deleteFile(fileUrl) {
   const language = await JSON.parse(getCookie("language"));
   var xhr = new XMLHttpRequest();
-  var url = secondUrl + "deletefile";
+  var url = mainUrl + "deletefile";
   xhr.onerror = function () {
     Dashmix.helpers("jq-notify", {
       z_index: 2000,
@@ -1228,4 +1333,42 @@ function formatDateTime(dateStr) {
     String(date.getUTCMinutes()).padStart(2, '0') + ':' +
     String(date.getUTCSeconds()).padStart(2, '0')
   );
+}
+
+const socket = io(mainUrl);
+function getScaleID() {
+  return new Promise((resolve, reject) => {
+
+    const request = indexedDB.open("ePPS_WC", 1);
+
+    request.onerror = () => {
+      reject("Gagal membuka IndexedDB");
+    };
+
+    request.onsuccess = (event) => {
+
+      const db = event.target.result;
+
+      const transaction = db.transaction("scale_id", "readonly");
+      const store = transaction.objectStore("scale_id");
+
+      const getRequest = store.getAll();
+
+      getRequest.onsuccess = () => {
+
+        if (getRequest.result.length > 0) {
+          resolve(getRequest.result[0].scale_id);
+        } else {
+          resolve(null);
+        }
+
+      };
+
+      getRequest.onerror = () => {
+        reject("Gagal mengambil Scale ID");
+      };
+
+    };
+
+  });
 }

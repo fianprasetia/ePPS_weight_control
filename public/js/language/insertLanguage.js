@@ -73,7 +73,7 @@ async function insertLanguage() {
     $.extend(languageMenu, keyLanguage, { detail });
     dataLanguage.push(languageMenu);
     var xhr = new XMLHttpRequest();
-    var url = secondUrl + "translate/insert"
+    var url = mainUrl + "translate/insert"
     xhr.onloadstart = function () {
         document.getElementById("load").innerHTML =
             "<button class='btn btn-hero btn-primary shadow' type='button' disabled>\n\

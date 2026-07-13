@@ -1,6 +1,7 @@
 const koneksi = require("../config/database");
 const Sequelize = require("sequelize");
 const adm_employee = require("./adm_employee");
+const adm_company = require("./adm_company");
 const mll_weigh_bridge = koneksi.define(
     "mll_weigh_bridge",
     {
@@ -27,7 +28,13 @@ const mll_weigh_bridge = koneksi.define(
         division_code: {
             type: Sequelize.STRING,
             allowNull: true,
-            comment: "kode divisi"
+            comment: "kode divisi",
+            references: {
+                model: "adm_company",
+                key: "code_company"
+            },
+            onDelete: "SET NULL",
+            onUpdate: "Cascade",
         },
         unit_type: {
             type: Sequelize.STRING,
@@ -173,4 +180,5 @@ const mll_weigh_bridge = koneksi.define(
     }
 );
 mll_weigh_bridge.belongsTo(adm_employee, { foreignKey: 'created_by' });
+mll_weigh_bridge.belongsTo(adm_company, { foreignKey: 'division_code', as: 'division' });
 module.exports = mll_weigh_bridge;

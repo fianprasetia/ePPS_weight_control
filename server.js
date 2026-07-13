@@ -11,7 +11,7 @@ const { notFound, error, internalServerError } = require('./helpers/responseHelp
 
 const app = express();
 const server = http.createServer(app);
-
+const agents = new Map();
 /* =========================================
    SOCKET.IO
 ========================================= */
@@ -257,13 +257,16 @@ io.on('connection', (socket) => {
     });
 
     socket.on("registerAgent", (data) => {
-        agents.set(data.scaleId, socket.id);
-        socket.scaleId = data.scaleId;
-        console.log(`Agent ${data.scaleId} registered (${socket.id})`);
-    });
 
+        agents.set(data.scaleId, socket.id);
+
+        console.log(
+            `Agent ${data.scaleId} registered (${socket.id})`
+        );
+
+    });
     socket.on("getPrinters", (data, callback) => {
-        console.log("Request dari browser:", data);
+
         const agentSocketId = agents.get(data.scaleId);
 
         if (!agentSocketId) {
@@ -274,23 +277,50 @@ io.on('connection', (socket) => {
         }
 
         io.to(agentSocketId)
-            .timeout(3000)
+            .timeout(10000)
+            .emit("requestPrinters", data, (err, responses) => {
+
+                if (err) {
+                    return callback({
+                        success: false,
+                        message: "Agent Timeout"
+                    });
+                }
+
+                callback(responses[0]);
+
+            });
+
+    });
+    socket.on("printTicketTBSInti", (data, callback) => {
+        const agentSocketId = agents.get(data.scaleId);
+        if (!agentSocketId) {
+            return callback({
+                success: false,
+                message: "Agent Offline"
+            });
+        }
+        io.to(agentSocketId)
+            .timeout(30000)
             .emit(
-                "requestPrinters",
-                {
-                    scaleId: data.scaleId
-                },
+                "requestPrintTicketTBSInti",
+                data,
                 (err, responses) => {
+
                     if (err) {
+
                         return callback({
                             success: false,
                             message: "Agent Timeout"
                         });
+
                     }
-                    console.log("Response dari Local Agent:", responses[0]);
+
                     callback(responses[0]);
+
                 }
             );
+
     });
 
     socket.on('disconnect', () => {

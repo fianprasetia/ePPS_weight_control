@@ -11,34 +11,47 @@ const controller = {};
 
 controller.selectPrintTicket = async function (req, res) {
     try {
-        const ticketNo = req.params.ticketNo;
-        const ticket = await model.mll_weigh_bridge.findOne({
-            where: { ticket_no: ticketNo }
-        });
+        const requestData = req.body;
+        const {
+            language_POST: language,
+            ticket_POST: ticketNo
+        } = requestData;
 
-        if (!ticket) {
-            return res.status(404).send("Ticket not found");
+        const selectWeighControlData = await selectWeighControl();
+        if (selectWeighControlData.length === 0) {
+            return responseHelper.Unsuccessful(res, messages[language]?.nodata);
+        }
+        const selectWeighBridgeData = await selectWeighBridge(ticketNo);
+        if (selectWeighBridgeData.length === 0) {
+            return responseHelper.Unsuccessful(res, messages[language]?.nodata);
+        }
+        const responseData = {
+            dataWeighControl: selectWeighControlData,
+            dataWeighBridge: selectWeighBridgeData
+        };
+        return responseHelper.success(res, messages[language]?.successfulData, responseData);
+
+        async function selectWeighControl() {
+            return await model.mll_weight_control.findOne({
+                attributes: ["code_company", "code_mill", "name_company", "name_mill"],
+            });
+        }
+        async function selectWeighBridge() {
+            return await model.mll_weigh_bridge.findOne({
+                where: { ticket_no: ticketNo },
+                include: [
+                    {
+                        model: model.adm_company,
+                        as: "division"
+                    },
+                    {
+                        model: model.adm_employee,
+                    },
+
+                ]
+            });
         }
 
-        const weightControl = await model.mll_weight_control.findOne({
-            where: { code_company: ticket.company_code }
-        });
-        const companyName = weightControl ? weightControl.name_company : 'PT SIA PLANTATION';
-
-        const ticketData = {
-            ...ticket.toJSON(),
-            entry_time_formatted: ticket.entry_time ? moment(ticket.entry_time).format('YYYY-MM-DD HH:mm:ss') : '-',
-            exit_time_formatted: ticket.exit_time ? moment(ticket.exit_time).format('YYYY-MM-DD HH:mm:ss') : '-'
-        };
-        const responseData = {
-            ticket: ticketData,
-            company: companyName
-        };
-        return responseHelper.success(res, responseData);
-        // res.render('internal_ffb/print-ticket', {
-        //     ticket: ticketData,
-        //     companyName: companyName
-        // });
     } catch (error) {
         return responseHelper.error(res, error);
     }

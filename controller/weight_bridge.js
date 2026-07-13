@@ -22,12 +22,18 @@ controller.selectWeighBridge = async function (req, res) {
 
         async function selectWeighBridge() {
             return await model.mll_weigh_bridge.findAll({
-                order: [
-                    ['ticket_no', 'ASC'],
+                include: [
+                    {
+                        attributes: ["fullname"],
+                        model: model.adm_employee,
+                    },
                 ],
                 where: {
                     status: 1
-                }
+                },
+                order: [
+                    ['ticket_no', 'ASC'],
+                ],
             });
         }
     } catch (error) {
@@ -57,8 +63,8 @@ controller.insertWeightBridge = async function (req, res) {
         const [date, time] = dateIn.split(' ');
         const [day, month, year] = date.split('-');
         const formattedDate = `${year}`;
-        const codeBlockList = detailBlock.map((item) => item.code_block_POST).join(',');
         const resultDateTime = `${year}-${month}-${day} ${time}`;
+        const codeBlockList = detailBlock.map((item) => item.code_block_POST).join(',');
 
         const selectWeightControlData = await selectWeightControl();
         if (selectWeightControlData.length === 0) {
@@ -205,110 +211,110 @@ controller.selectWeighBrigeByTicketNo = async function (req, res) {
 controller.updateWeightBridge = async function (req, res) {
     const transaction = await koneksi.transaction();
     try {
-        const requestData = req.body[0];
+        const requestData = req.body;
         const {
             language_POST: language,
             employeeID_POST: employeeID,
             ticket_no: ticketNo,
-            // estate_POST: estate,
-            // division_POST: division,
-            // driver_POST: driver,
-            // delivery_POST: delivery,
-            // totalBunches_POST: totalBunches,
-            // looseFruit_POST: looseFruit,
-            // plantingYear_POST: plantingYear,
-            // note_POST: note,
-            // weightIn_POST: weightIn,
-            dateIn_POST: dateIn,
             weightOut_POST: weightOut,
             dateOut_POST: dateOut,
             grossWeight_POST: bruto,
             deduction_POST: deduction,
             netWeight_POST: netto,
-            // noVehicle_POST: noVehicle,
-            detailBlock: detailBlock,
         } = requestData;
 
-        const codeBlockList = detailBlock ? detailBlock.map((item) => item.code_block_POST).join(',') : '';
+        const [date, time] = dateOut.split(' ');
+        const [day, month, year] = date.split('-');
+        const formattedDateOut = `${year}-${month}-${day} ${time}`;
 
-        const existingTicket = await model.mll_weigh_bridge.findOne({
-            where: { ticket_no: ticketNo },
-            transaction
-        });
-
-        if (!existingTicket) {
-            await transaction.rollback();
-            return responseHelper.Unsuccessful(res, messages[language]?.nodata || "Ticket not found");
+        const updateWeightBridgeData = await updateWeightBridge();
+        if (!updateWeightBridgeData) {
+            return responseHelper.Unsuccessful(res, messages[language]?.nodata);
         }
-
-        const formattedDateOut = null;
-        if (dateOut) {
-            const [date, time] = dateOut.split(' ');
-            const [day, month, year] = date.split('-');
-            formattedDateOut = `${year}-${month}-${day} ${time}`;
-        }
-
-        let formattedDateIn = existingTicket.entry_time;
-        if (dateIn) {
-            const [date, time] = dateIn.split(' ');
-            const [day, month, year] = date.split('-');
-            formattedDateIn = `${year}-${month}-${day} ${time}`;
-        }
-
-        const updatedWeighBridge = await existingTicket.update({
-            // estate_code: estate,
-            // division_code: division,
-            // unit_type: codeBlockList,
-            // driver_name: driver,
-            // spb_no: delivery,
-            // vehicle_no: noVehicle,
-            // bunch_count: totalBunches,
-            // loose_fruit: looseFruit,
-            // year_plant: plantingYear,
-            // note: note,
-            // entry_time: formattedDateIn,
-            exit_time: formattedDateOut,
-            // gross_weight: weightIn,
-            tare_weight: weightOut,
-            bruto: bruto,
-            deduction: deduction,
-            netto: netto,
-            status: 2,
-            // detail_block: codeBlockList,
-        }, { transaction });
 
         await transaction.commit();
-        return responseHelper.success(res, messages[language]?.updateData || "Updated successfully", updatedWeighBridge);
+        return responseHelper.success(res, messages[language]?.updateData || "Updated successfully", updateWeightBridgeData);
+
+        async function updateWeightBridge() {
+            return await model.mll_weigh_bridge.update({
+                exit_time: formattedDateOut,
+                tare_weight: weightOut,
+                bruto: bruto,
+                transaction_type: "OUT",
+                deduction: deduction,
+                netto: netto,
+                // status: 2,
+            }, {
+                where: {
+                    ticket_no: ticketNo,
+                },
+                transaction,
+            });
+        }
+
     } catch (error) {
         await transaction.rollback();
         return responseHelper.error(res, error);
     }
 };
-controller.selectVehicleNumberByTransaction = async function (req, res) {
+controller.updateWeightBridgeByStatus = async function (req, res) {
+    const transaction = await koneksi.transaction();
     try {
         const requestData = req.body;
-        const { language_POST: language } = requestData;
+        const {
+            language_POST: language,
+            ticket_no: ticketNo,
+        } = requestData;
 
-        const selectVehicleNumberData = await selectVehicleNumber();
-        if (selectVehicleNumberData.length === 0) {
+        const updateWeightBridgeData = await updateWeightBridge();
+        if (!updateWeightBridgeData) {
             return responseHelper.Unsuccessful(res, messages[language]?.nodata);
         }
 
-        return responseHelper.success(res, messages[language]?.successfulData, selectVehicleNumberData);
+        await transaction.commit();
+        return responseHelper.success(res, messages[language]?.updateData || "Updated successfully", updateWeightBridgeData);
 
-        async function selectVehicleNumber() {
-            return await model.adm_vehicle_number.findAll({
+        async function updateWeightBridge() {
+            return await model.mll_weigh_bridge.update({
+                status: 2,
+            }, {
                 where: {
-                    status: 1,
+                    ticket_no: ticketNo,
                 },
-                order: [
-                    ['status', 'DESC'],
-                    ['id_vehicle_number', 'ASC'],
-                ],
+                transaction,
             });
         }
+
     } catch (error) {
+        await transaction.rollback();
         return responseHelper.error(res, error);
     }
 };
+// controller.selectVehicleNumberByTransaction = async function (req, res) {
+//     try {
+//         const requestData = req.body;
+//         const { language_POST: language } = requestData;
+
+//         const selectVehicleNumberData = await selectVehicleNumber();
+//         if (selectVehicleNumberData.length === 0) {
+//             return responseHelper.Unsuccessful(res, messages[language]?.nodata);
+//         }
+
+//         return responseHelper.success(res, messages[language]?.successfulData, selectVehicleNumberData);
+
+//         async function selectVehicleNumber() {
+//             return await model.adm_vehicle_number.findAll({
+//                 where: {
+//                     status: 1,
+//                 },
+//                 order: [
+//                     ['status', 'DESC'],
+//                     ['id_vehicle_number', 'ASC'],
+//                 ],
+//             });
+//         }
+//     } catch (error) {
+//         return responseHelper.error(res, error);
+//     }
+// };
 module.exports = controller;

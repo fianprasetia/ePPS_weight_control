@@ -8,6 +8,7 @@ async function selectContent() {
     await selectEstate()
     await selectVehicleNumber()
     await selectWeighBridge()
+    await loadScale()
     async function dataContent(data) {
         var filterLanguage = data.filter((filtercontent) => filtercontent.language == language);
         const content = filterLanguage[0]["content"];
@@ -43,14 +44,32 @@ async function selectContent() {
         document.getElementById("grossWeightLabel").innerHTML = filterLanguage[0]["content"]["gross_weight"]
         document.getElementById("deductionLabel").innerHTML = filterLanguage[0]["content"]["deduction"]
         document.getElementById("netWeightLabel").innerHTML = filterLanguage[0]["content"]["net_weight"]
-        // document.getElementById("save").innerHTML = filterLanguage[0]["content"]["save_&_print"]
         document.getElementById("save").innerHTML = filterLanguage[0]["content"]["save"]
         document.getElementById("weighbridgeData").innerHTML = filterLanguage[0]["content"]["weighbridge_data"]
         document.getElementById("noVehicleThead").innerHTML = filterLanguage[0]["content"]["vehicle_number"]
         document.getElementById("driverThead").innerHTML = filterLanguage[0]["content"]["driver"]
         document.getElementById("estateThead").innerHTML = filterLanguage[0]["content"]["estate"]
         document.getElementById("divisionThead").innerHTML = filterLanguage[0]["content"]["division"]
-        document.getElementById("plantingYearThead").innerHTML = filterLanguage[0]["content"]["planting_year"]
+        document.getElementById("operatorThead").innerHTML = filterLanguage[0]["content"]["operator"]
+        document.getElementById("previewWeightInThead").innerHTML = filterLanguage[0]["content"]["gross_weight"]
+        document.getElementById("previewWeightOutThead").innerHTML = filterLanguage[0]["content"]["tare_weight"]
+        document.getElementById("previewWeightDeductionThead").innerHTML = filterLanguage[0]["content"]["deduction"]
+        document.getElementById("previewWeightNettoThead").innerHTML = filterLanguage[0]["content"]["net_weight"]
+        document.getElementById("titleInternalFFB").innerHTML = filterLanguage[0]["content"]["weighing_print_preview"]
+        document.getElementById("previewTicketNoLabel").innerHTML = filterLanguage[0]["content"]["ticket"]
+        document.getElementById("previewDivisionCodeLabel").innerHTML = filterLanguage[0]["content"]["division"]
+        document.getElementById("previewUnitTypeLabel").innerHTML = filterLanguage[0]["content"]["block"]
+        document.getElementById("previewBunchCountLabel").innerHTML = filterLanguage[0]["content"]["total_bunches"]
+        document.getElementById("previewLooseFruitLabel").innerHTML = filterLanguage[0]["content"]["brondolan"]
+        document.getElementById("previewYearPlantLabel").innerHTML = filterLanguage[0]["content"]["planting_year"]
+        document.getElementById("previewSpbNoLabel").innerHTML = filterLanguage[0]["content"]["delivery_note"]
+        document.getElementById("previewDriverNameLabel").innerHTML = filterLanguage[0]["content"]["driver"]
+        document.getElementById("previewVehicleNoLabel").innerHTML = filterLanguage[0]["content"]["vehicle_number"]
+        document.getElementById("previewDateInLabel").innerHTML = filterLanguage[0]["content"]["date_of_entry"]
+        document.getElementById("previewDateOutLabel").innerHTML = filterLanguage[0]["content"]["date_of_exit"]
+        document.getElementById("previewOperatorLabel").innerHTML = filterLanguage[0]["content"]["operator"]
+        document.getElementById("previewDriverLabel").innerHTML = filterLanguage[0]["content"]["driver"]
+        document.getElementById("previewDipeLabel").innerHTML = filterLanguage[0]["content"]["checked_by"]
         const btnOut = document.getElementById('getWeightOutBtn');
         btnOut.style.pointerEvents = 'none';
         const saveBtn = document.getElementById('saveBtn');
@@ -91,7 +110,7 @@ async function selectWeighBridge() {
                         <td class='fw-light text-center text-uppercase'>" + responseData[i]["driver_name"] + "</td>\
                         <td class='fw-light text-center text-uppercase'>" + responseData[i]["estate_code"] + "</td>\
                         <td class='fw-light text-center text-uppercase'>" + responseData[i]["division_code"] + "</td>\
-                        <td class='fw-light text-center text-uppercase'>" + responseData[i]["year_plant"] + "</td>\
+                        <td class='fw-light text-center text-uppercase'>" + responseData[i]["adm_employee"]["fullname"] + "</td>\
                         </tr>";
                     no++;
                 }
@@ -417,190 +436,15 @@ async function getWeightOut() {
     document.getElementById("save").innerHTML = filterLanguage[0]["content"]["save_&_print"]
 
 }
+async function loadScale() {
+    const scaleID = await getScaleID();
+    socket.on("weightUpdate", (data) => {
 
-
-
-async function printInternalFFB() {
-
-    const language = await JSON.parse(getCookie("language"));
-    const id = document.getElementById("ticket").value; ``
-    let xhr = new XMLHttpRequest();
-    let url = mainUrl + "weightbridge/byticketno";
-    xhr.onerror = function () {
-        Dashmix.helpers("jq-notify", {
-            type: "danger",
-            z_index: 2000,
-            message: overload,
-        });
-        setTimeout(async function () {
-            await keluar()
-        }, 3000);
-    };
-    let data = JSON.stringify({
-        language_POST: language,
-        code_POST: id
+        if (data["scaleId"] == scaleID) {
+            document.getElementById("indicatorValue").innerText = data["weight"]
+        }
     });
-
-    xhr.onloadend = async function () {
-        if (this.readyState == 4 && this.status == 200) {
-            let response = await JSON.parse(xhr.response);
-            if (response["success"] == true) {
-                let responseData = response["data"];
-                await printTicket(responseData)
-                // let estateID = responseData["estate_code"];
-                // let divisionID = responseData["division_code"];
-                // let blockID = responseData["unit_type"];
-                // let vehicleID = responseData["vehicle_no"];
-                // await selectEstate(estateID)
-                // await selectDivision(estateID, divisionID)
-                // await selectBlock(divisionID, blockID)
-                // await selectVehicleNumber(vehicleID)
-                // document.getElementById("ticket").value = responseData["ticket_no"];
-                // document.getElementById("division").value = responseData["division_code"];
-                // document.getElementById("block").value = responseData["block_code"];
-                // document.getElementById("noVehicle").value = responseData["vehicle_no"];
-                // document.getElementById("driver").value = responseData["driver_name"];
-                // document.getElementById("delivery").value = responseData["spb_no"];
-                // document.getElementById("totalBunches").value = responseData["bunch_count"];
-                // document.getElementById("looseFruit").value = responseData["loose_fruit"];
-                // document.getElementById("plantingYear").value = responseData["year_plant"];
-                // document.getElementById("weightIn").value = responseData["gross_weight"];
-                // document.getElementById("note").value = responseData["note"];
-                // document.getElementById("dateIn").value = formatDateTime(responseData["entry_time"]);
-            } else {
-                message = response["message"];
-                Dashmix.helpers("jq-notify", { type: "danger", z_index: 2000, message: message });
-                setTimeout(() => {
-                    hideSpinner();
-                }, 1000);
-            }
-
-        }
-    }
-    xhr.open("POST", url, true);
-    xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.send(data);
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-async function printTicket(responseData) {
-    // window.open(`/print-ticket/${encodeURIComponent(ticketNo)}`, '_blank');
-    try {
-        const ticketNo = document.getElementById("ticket").value; ``
-
-        await connectQZ();
-
-        // const printer = await qz.printers.getDefault();
-        const printer = document.getElementById("printer").value;
-        console.log("Default Printer:", printer);
-        const config = qz.configs.create(printer);
-        const WIDTH = 116;
-
-        function center(text) {
-            text = String(text ?? "");
-
-            const left = Math.max(0, Math.floor((WIDTH - text.length) / 2));
-
-            return " ".repeat(left) + text;
-        }
-
-        function line(char = "-") {
-            return char.repeat(WIDTH);
-        }
-
-        function twoColumn(left, right) {
-            left = String(left ?? "");
-            right = String(right ?? "");
-
-            const pad = WIDTH - left.length - right.length;
-
-            return left + " ".repeat(Math.max(1, pad)) + right;
-        }
-
-        function field(label, value) {
-            return label.padEnd(14) + ": " + value;
-        }
-
-        let data = [];
-
-        // Init Printer
-        data.push("\x1B@");
-
-        const html = document.getElementById("previewTicketContent").outerHTML;
-
-        // const data = [{
-        //     type: 'html',
-        //     format: 'plain',
-        //     data: html
-        // }];
-        // const data = [
-        //     "\x1B@", // Initialize
-
-        //     "                    PT. SEDJAHTERA INDO AGRO\r\n",
-        //     "                  Bukit Ajong Palm Oil Factory\r\n",
-        //     "Dusun Kopar, Desa Dosan, Kec. Parindu, Kabupaten Sanggau\r\n",
-        //     "======================================================================\r\n",
-        //     "\r\n",
-        //     `No Tiket   : ${ticketNo}                    NO SPB         : \r\n`,
-        //     "Customer   : PT. BARRA BINTANG NUSANTARA    Date In        : 22/06/2026 15:31\r\n",
-        //     "Penjual    : PT. SEDJAHTERA INDO AGRO       First Weight   : 3810 Kg\r\n",
-        //     "Produk     : PK OUTSPECK                    Second Weight  : 12890 Kg\r\n",
-        //     "Vehicle No : KB 8013 AL                     Net Weight     : 9080 Kg\r\n",
-        //     "Driver     : ABDUL ROSIP\r\n",
-        //     "No Kontrak : `${}`\r\n",
-        //     "\r\n",
-        //     "\r\n",
-        //     "Weighbridge Operator     Driver               Diperiksa\r\n",
-        //     "\r\n",
-        //     "\r\n",
-        //     "___________________      _________________    _________________\r\n",
-        //     "DEPILIA                 ABDUL ROSIP\r\n",
-
-        //     "\x0C"
-        // ];
-
-        await qz.print(config, data);
-
-        Dashmix.helpers('jq-notify', {
-            type: 'success',
-            icon: 'fa fa-check me-1',
-            message: 'Print Success'
-        });
-        console.log(data);
-    } catch (err) {
-        console.error(err);
-
-        Dashmix.helpers('jq-notify', {
-            type: 'danger',
-            icon: 'fa fa-times me-1',
-            message: err.message
-        });
-    }
-}
-
-
-
-
-
 
 async function connectQZ() {
 

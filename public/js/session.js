@@ -36,9 +36,26 @@ async function sessionEmployee(responeData, language) {
   const dataEmployee = responeData["dataLogin"][0]["adm_employee"];
   const dataEmployeeString = JSON.stringify(dataEmployee);
   setCookie('dataEmployeeWB', dataEmployeeString, 8);
+  await sessionDBScaleID()
+}
 
-  // Panggil fungsi selanjutnya jika ada
-  // await sessionCompany(responeData, language);
+async function sessionDBScaleID() {
+  const request = indexedDB.open("ePPS_WC", 1);
+  request.onupgradeneeded = (event) => {
+    const db = event.target.result;
+    // Membuat Object Store (seperti tabel)
+    db.createObjectStore("scale_id", {
+      keyPath: "id"
+    });
+    console.log("Object Store 'scale_id' berhasil dibuat.");
+  };
+  request.onsuccess = (event) => {
+    const db = event.target.result;
+    // console.log("Database ePPS_WC berhasil dibuka.", db);
+  };
+  request.onerror = (event) => {
+    console.error("Gagal membuka database:", event.target.error);
+  };
 }
 function setCookie(name, value, hours) {
   const date = new Date();
