@@ -2470,3 +2470,12 @@
 {"level":"info","message":"Login Success","timestamp":"2026-07-13 11:05:40","username":"fian.prasetia"}
 {"level":"info","message":"Login Success","timestamp":"2026-07-13 11:11:32","username":"fian.prasetia"}
 {"level":"info","message":"Login Success","timestamp":"2026-07-13 13:35:01","username":"fian.prasetia"}
+{"level":"info","message":"Login Success","timestamp":"2026-07-14 04:39:56","username":"fian.prasetia"}
+{"level":"info","message":"Login Success","timestamp":"2026-07-14 10:17:13","username":"fian.prasetia"}
+{"1.username":"fian.prasetia","2.module":"insertMenu","3.status":"success","4.action":[{"batch_POST":2,"detail":[{"language_POST":"PARTNERS"},{"language_POST":"MITRA"},{"language_POST":"合作伙伴"}],"icon_POST":"","language_POST":"id","level_POST":2,"parent_POST":14,"url_POST":"/partners","username_POST":"fian.prasetia"}],"level":"info","message":"Insert Menu","timestamp":"2026-07-14 15:56:02"}
+{"1.username":"fian.prasetia","2.module":"insertAuthByUsername","3.status":"success","4.action":{"dataAuth":[{"username_POST":"fian.prasetia","userprivilege_POST":1},{"username_POST":"fian.prasetia","userprivilege_POST":17},{"username_POST":"fian.prasetia","userprivilege_POST":2},{"username_POST":"fian.prasetia","userprivilege_POST":3},{"username_POST":"fian.prasetia","userprivilege_POST":6},{"username_POST":"fian.prasetia","userprivilege_POST":15},{"username_POST":"fian.prasetia","userprivilege_POST":4},{"username_POST":"fian.prasetia","userprivilege_POST":16},{"username_POST":"fian.prasetia","userprivilege_POST":19},{"username_POST":"fian.prasetia","userprivilege_POST":9},{"username_POST":"fian.prasetia","userprivilege_POST":14},{"username_POST":"fian.prasetia","userprivilege_POST":18},{"username_POST":"fian.prasetia","userprivilege_POST":20}],"dataLanguage":{"language_POST":"id"},"dataUsername":{"username_POST":"fian.prasetia"}},"level":"info","message":"Insert Auth By Username","timestamp":"2026-07-14 15:56:33"}
+{"level":"info","message":"Login Success","timestamp":"2026-07-14 17:26:22","username":"fian.prasetia"}
+{"level":"info","message":"Login Success","timestamp":"2026-07-15 11:24:28","username":"fian.prasetia"}
+{"level":"info","message":"Login Success","timestamp":"2026-07-16 06:59:26","username":"fian.prasetia"}
+{"level":"info","message":"Login Success","timestamp":"2026-07-16 09:30:04","username":"fian.prasetia"}
+{"level":"info","message":"Login Success","timestamp":"2026-07-17 10:13:57","username":"fian.prasetia"}

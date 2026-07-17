@@ -58,6 +58,7 @@ controller.insertWeightBridge = async function (req, res) {
             weightIn_POST: weightIn,
             dateIn_POST: dateIn,
             noVehicle_POST: noVehicle,
+            source_POST: source,
             detailBlock: detailBlock,
         } = requestData;
         const [date, time] = dateIn.split(' ');
@@ -149,6 +150,7 @@ controller.insertWeightBridge = async function (req, res) {
                     year_plant: plantingYear,
                     note: note,
                     created_by: employeeID,
+                    ffb_source: source,
                     status: 1,
                     detail_block: codeBlockList,
                 }, { transaction }

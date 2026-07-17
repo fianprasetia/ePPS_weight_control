@@ -1,40 +1,22 @@
 async function showModalInsertPartners() {
-  let token = await JSON.parse(getCookie("dataToken"));
-  if (token == null) {
-    await getAccessToken()
-    if (token == null) {
-      return;
-    }
-    var myModal = new bootstrap.Modal(document.getElementById("modalPartners"), { keyboard: false });
-    myModal.toggle();
-  } else {
-    var myModal = new bootstrap.Modal(document.getElementById("modalPartners"), { keyboard: false });
-    myModal.toggle();
-  }
+  var myModal = new bootstrap.Modal(document.getElementById("modalPartners"), { keyboard: false });
+  myModal.toggle();
   document.getElementById("load").innerHTML = "<a id='cancelBtn' onclick='closeModal()' class='btn  btn-danger'>" + kapital(cancel) + "</a>  <a id='doneBtn' type='submit' onclick='insertPartners()' class='btn  btn-primary'>" + kapital(done) + "</a>"
-  document.getElementById("status").innerHTML = "<option class='fw-light text-uppercase' selected disabled value=''>" + kapital(select) + "</option> <option value='0'>" + active + "</option><option value='1'>" + nonactive + "</option>"
-  await selectPartnersType()
+  document.getElementById("status").innerHTML = "<option class='fw-light text-uppercase' selected disabled value=''>" + kapital(select) + "</option> <option class='fw-light text-uppercase' value='0'>" + kapital(active) + "</option><option class='fw-light text-uppercase' value='1'>" + kapital(nonactive) + "</option>"
+  // await selectPartnersType()
   await selectCity()
-  document.getElementById("partnersType").disabled = false
 }
 async function insertPartners() {
   const language = await JSON.parse(getCookie("language"));
-  const dataLogin = await JSON.parse(getCookie("dataLogin"));
-  const username = dataLogin["username"];
-  var token = await JSON.parse(getCookie("dataToken"));
-  if (!token) {
-    token = await getAccessToken();
-  }
-  const partnersType = document.getElementById("partnersType").value
   const name = document.getElementById("name").value
   const address = document.getElementById("address").value
   const city = document.getElementById("city").value
   const phone = document.getElementById("phone").value
   const email = document.getElementById("email").value
   const contactName = document.getElementById("contactName").value
-  const tax = document.getElementById("tax").value
-  const bankName = document.getElementById("bankName").value
-  const bankAccount = document.getElementById("bankAccount").value
+  const isSupplier = document.getElementById("isSupplier").checked ? 1 : 0
+  const isSupplierTBS = document.getElementById("isSupplierTBS").checked ? 1 : 0
+  const isTransporter = document.getElementById("isTransporter").checked ? 1 : 0
   const status = document.getElementById("status").value
   !(function () {
     class e {
@@ -70,9 +52,21 @@ async function insertPartners() {
     }
     Dashmix.onLoad(() => e.init());
   })();
+  // if (!$("#isSupplier").is(":checked") &&
+  //   !$("#isSupplierTBS").is(":checked") &&
+  //   !$("#isTransporter").is(":checked")) {
+
+  //   $("#partnerType-error").text("Pilih minimal satu tipe partner.");
+  //   return false;
+  // } else {
+  //   $("#partnerType-error").text("");
+  // }
   const form = jQuery(".js-validation");
   const isValid = form.valid();
-  if (!isValid) {
+  if (!isValid || !$("#isSupplier").is(":checked") &&
+    !$("#isSupplierTBS").is(":checked") &&
+    !$("#isTransporter").is(":checked")) {
+    $("#partnerType-error").text("Pilih minimal satu tipe partner.");
     return false;
   }
   var xhr = new XMLHttpRequest();
@@ -99,18 +93,16 @@ async function insertPartners() {
   var data = JSON.stringify(
     {
       language_POST: language,
-      partners_type_POST: partnersType,
       name_POST: name,
       address_POST: address,
       city_POST: city,
       phone_POST: phone,
       email_POST: email,
       contact_name_POST: contactName,
-      tax_POST: tax,
-      bank_name_POST: bankName,
-      bank_account_POST: bankAccount,
+      isSupplier_POST: isSupplier,
+      isSupplierTBS_POST: isSupplierTBS,
+      isTransporter_POST: isTransporter,
       status_POST: status,
-      username_POST: username
     }
   );
   xhr.onloadend = function () {

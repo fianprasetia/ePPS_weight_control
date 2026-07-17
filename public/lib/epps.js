@@ -296,6 +296,9 @@ let scaleID
 let vehicle_number
 let insert_data
 var operator
+var estate
+var plasma_smallholder
+var independent_smallholder
 
 async function content() {
   let language = await JSON.parse(getCookie("language"));
@@ -471,7 +474,10 @@ async function content() {
     scaleID = await filterLanguage[0]["content"]["scaleID"];
     vehicle_number = await filterLanguage[0]["content"]["vehicle_number"];
     insert_data = await filterLanguage[0]["content"]["insert_data"];
+    estate = await filterLanguage[0]["content"]["estate"];
     operator = await filterLanguage[0]["content"]["operator"];
+    plasma_smallholder = await filterLanguage[0]["content"]["plasma_smallholder"];
+    independent_smallholder = await filterLanguage[0]["content"]["independent_smallholder"];
     document.getElementById("mainMenuNav").innerHTML = await filterLanguage[0]["content"]["main_menu"];
     document.getElementById("homeNav").innerHTML = await filterLanguage[0]["content"]["home"];;
     document.getElementById("pleaseWait").innerHTML = await filterLanguage[0]["content"]["please_wait"];;
@@ -629,7 +635,7 @@ async function getePPSSessionNameEmplyee() {
   fullName = sessionFullName["fullname"];
   photo = sessionFullName["photo"];
   const urlPhoto = mainUrl + "img/employee/" + photo;
-  document.getElementById("fullnamenav").innerHTML = "OPERATOR: " + fullName;
+  document.getElementById("fullnamenav").innerHTML = "<i class='fa-solid fa-user-gear me-1'></i>" + fullName;
 }
 
 

@@ -151,6 +151,11 @@ const mll_weigh_bridge = koneksi.define(
             allowNull: true,
             comment: "tahun tanam"
         },
+        ffb_source: {
+            type: Sequelize.STRING,
+            allowNull: true,
+            comment: "sumber TBS"
+        },
         created_by: {
             type: Sequelize.INTEGER,
             allowNull: false,

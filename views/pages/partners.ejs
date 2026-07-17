@@ -5,7 +5,7 @@
   </head>
 
   <body>
-  <div id="page-container" class="sidebar-dark enable-page-overlay side-scroll page-header-fixed page-footer-fixed side-trans-enabled">
+    <div id="page-container" class="sidebar-dark enable-page-overlay side-scroll page-header-fixed page-footer-fixed side-trans-enabled">
       <nav id="sidebar" aria-label="Main Navigation"><%- include('../partials/navigasi'); %></nav>
       <!-- END Sidebar -->
 
@@ -40,14 +40,14 @@
                     <tr>
                       <th id="codePartnersThead" class="text-center text-uppercase">Code Partners</th>
                       <th id="nameThead" class="text-center text-uppercase">Name</th>
-                      <th id="addressThead" class="text-center text-uppercase">Address</th>
+                      <!-- <th id="addressThead" class="text-center text-uppercase">Address</th> -->
                       <th id="cityThead" class="text-center text-uppercase">City</th>
-                      <th id="phoneThead" class="text-center text-uppercase">Phone</th>
-                      <th id="emailThead" class="text-center text-uppercase">Email</th>
+                      <!-- <th id="phoneThead" class="text-center text-uppercase">Phone</th>
+                      <th id="emailThead" class="text-center text-uppercase">Email</th> -->
                       <th id="contactPersonThead" class="text-center text-uppercase">Contact Person</th>
-                      <th id="taxThead" class="text-center text-uppercase">Tax</th>
-                      <th id="bankNameThead" class="text-center text-uppercase">Bank Name</th>
-                      <th id="bankAccountThead" class="text-center text-uppercase">Bank Account</th>
+                      <th id="supplierThead" class="text-center text-uppercase">Supplier</th>
+                      <th id="supplierTBSThead" class="text-center text-uppercase">Supplier TBS</th>
+                      <th id="transporterThead" class="text-center text-uppercase">Transporter</th>
                       <th id="statusThead" class="text-center text-uppercase">Status</th>
                       <th id="actionsThead" class="text-center text-uppercase">Actions</th>
                     </tr>
@@ -74,14 +74,6 @@
             </div>
             <form id="form1" class="js-validation">
               <div class="block-content">
-                <div hidden class="col-sm-12 mb-2">
-                  <label id="codeLabel" class="form-label text-uppercase" for="code">Code </label>
-                  <input type="text" class="form-control fw-light text-uppercase" id="code" name="code" />
-                </div>
-                <div class="col-sm-12 mb-2">
-                  <label id="partnersTypeLabel" class="form-label text-uppercase" for="partnersType">Partners Type </label>
-                  <select class="js-select2 form-select fw-light text-uppercase" name="partnersType" id="partnersType" style="width: 100%" data-container="#modalPartners"></select>
-                </div>
                 <div class="col-sm-12 mb-2">
                   <label id="nameLabel" class="form-label text-uppercase" for="name">Name</label>
                   <input type="text" class="form-control fw-light text-uppercase" id="name" name="name" />
@@ -107,16 +99,68 @@
                   <input type="text" class="form-control fw-light text-uppercase" id="contactName" name="contactName" />
                 </div>
                 <div class="col-sm-12 mb-2">
-                  <label id="taxLabel" class="form-label text-uppercase" for="tax">Tax</label>
-                  <input type="number" value="0" onfocus="removeZero(this)" class="form-control fw-light text-uppercase" id="tax" name="tax" />
-                </div>
-                <div class="col-sm-12 mb-2">
-                  <label id="bankNameLabel" class="form-label text-uppercase" for="bankName">Bank Name</label>
-                  <input type="text" class="form-control fw-light text-uppercase" id="bankName" name="bankName" />
-                </div>
-                <div class="col-sm-12 mb-2">
-                  <label id="bankAccountLabel" class="form-label text-uppercase" for="bankAccount">Bank Account</label>
-                  <input type="number" value="0" onfocus="removeZero(this)" class="form-control fw-light" id="bankAccount" name="bankAccount" />
+                  <label id="typeLabel" class="form-label text-uppercase" for="type">Type</label>
+                  <div class="row items-push">
+                    <div class="col-md-4">
+                      <div class="form-check form-block">
+                        <input class="form-check-input" type="checkbox" id="isSupplier" name="isSupplier" />
+                        <label class="form-check-label w-100 py-2" for="isSupplier">
+                          <div class="d-flex align-items-center">
+                            <div class="flex-shrink-0">
+                              <div class="rounded-circle bg-info bg-opacity-10 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px">
+                                <i class="fa-solid fa-box fa-xl"></i>
+                              </div>
+                            </div>
+                            <div class="ms-3">
+                              <div class="fw-semibold fs-5">Supplier</div>
+                              <small class="text-muted">Mitra pemasok barang atau bahan baku</small>
+                            </div>
+                          </div>
+                        </label>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-check form-block">
+                        <input class="form-check-input" type="checkbox" id="isSupplierTBS" name="isSupplierTBS" />
+                        <label class="form-check-label w-100 py-2" for="isSupplierTBS">
+                          <div class="d-flex align-items-center">
+                            <div class="flex-shrink-0">
+                              <div class="rounded-circle bg-success bg-opacity-10 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px">
+                                <i class="fa-brands fa-pagelines fa-xl"></i>
+                              </div>
+                            </div>
+                            <div class="ms-3">
+                              <div class="fw-semibold fs-5">Supplier TBS</div>
+                              <small class="text-muted"> Mitra pemasok Tandan Buah Segar </small>
+                            </div>
+                          </div>
+                        </label>
+                      </div>
+                    </div>
+
+                    <!-- Transportir -->
+                    <div class="col-md-4">
+                      <div class="form-check form-block">
+                        <input class="form-check-input" type="checkbox" id="isTransporter" name="isTransporter" />
+
+                        <label class="form-check-label w-100 py-2" for="isTransporter">
+                          <div class="d-flex align-items-center">
+                            <div class="flex-shrink-0">
+                              <div class="rounded-circle bg-primary bg-opacity-10 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px">
+                                <i class="fa-solid fa-truck fa-xl"></i>
+                              </div>
+                            </div>
+
+                            <div class="ms-3">
+                              <div class="fw-semibold fs-5">Transportir</div>
+                              <small class="text-muted"> Penyedia jasa transportasi dan pengangkutan </small>
+                            </div>
+                          </div>
+                        </label>
+                      </div>
+                    </div>
+                    <label id="partnerType-error" class="invalid-feedback d-block text-danger"></label>
+                  </div>
                 </div>
                 <div class="col-sm-12 mb-4">
                   <label id="statusLabel" class="form-label text-uppercase" for="status">Status</label>

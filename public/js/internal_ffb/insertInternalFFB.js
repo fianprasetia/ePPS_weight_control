@@ -13,11 +13,11 @@ async function save() {
                             "delivery": { required: !0 },
                             "totalBunches": { required: !0 },
                             "looseFruit": { required: !0 },
-                            // "emptyBunch": { required: !0 },
-                            // "overripe": { required: !0 },
-                            // "unripe": { required: !0 },
-                            // "longStalk": { required: !0 },
-                            // "mandatoryDeduction": { required: !0 },
+                            "emptyBunch": { required: !0 },
+                            "overripe": { required: !0 },
+                            "unripe": { required: !0 },
+                            "longStalk": { required: !0 },
+                            "mandatoryDeduction": { required: !0 },
                             "weightIn": { required: !0 },
                             "dateIn": { required: !0 },
                             "noVehicle": { required: !0 },
@@ -33,11 +33,6 @@ async function save() {
                             "delivery": required,
                             "totalBunches": required,
                             "looseFruit": required,
-                            // "emptyBunch": required,
-                            // "overripe": required,
-                            // "unripe": required,
-                            // "longStalk": required,
-                            // "mandatoryDeduction": required,
                             "weightIn": required,
                             "dateIn": required,
                             "noVehicle": required,
@@ -102,10 +97,11 @@ async function save() {
     const looseFruitData = JSON.parse('{"looseFruit_POST":"' + looseFruit + '"}');
     const plantingYearData = JSON.parse('{"plantingYear_POST":"' + plantingYear + '"}');
     const noteData = JSON.parse('{"note_POST":"' + note + '"}');
+    const sourceData = JSON.parse('{"source_POST":"INTERNAL"}');
     const weightInData = JSON.parse('{"weightIn_POST":' + weightIn + '}');
     const dateInData = JSON.parse('{"dateIn_POST":"' + dateIn + '"}');
 
-    $.extend(languageData, employeeIDData, estateData, divisionData, driverData, deliveryData, totalBunchesData, looseFruitData, plantingYearData, noteData, weightInData, dateInData, noVehicleData, { detailBlock });
+    $.extend(languageData, employeeIDData, estateData, divisionData, driverData, deliveryData, totalBunchesData, looseFruitData, plantingYearData, noteData, sourceData, weightInData, dateInData, noVehicleData, { detailBlock });
     dataWeightIn.push(languageData);
 
     var xhr = new XMLHttpRequest();

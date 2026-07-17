@@ -10,6 +10,7 @@ const adm_company = require("./adm_company")
 const mll_weigh_bridge = require("./mll_weigh_bridge")
 const mll_grading = require("./mll_grading")
 const adm_vehicle_number = require("./adm_vehicle_number")
+const adm_partners = require("./adm_partners")
 
 const model = {};
 
@@ -25,5 +26,6 @@ model.adm_company = adm_company
 model.mll_weigh_bridge = mll_weigh_bridge
 model.mll_grading = mll_grading
 model.adm_vehicle_number = adm_vehicle_number
+model.adm_partners = adm_partners
 
 module.exports = model;

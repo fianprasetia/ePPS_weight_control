@@ -489,7 +489,11 @@
       "tare_weight": "Tare Weight",
       "weighing_print_preview": "Weighing Ticket Print Preview",
       "date_of_entry": "Date of Entry",
-      "checked_by": "Checked By"
+      "checked_by": "Checked By",
+      "external_ffb": "External FFB",
+      "transporter": "Transporter",
+      "plasma_smallholder": "Plasma Smallholder",
+      "independent_smallholder": "Independent Smallholder"
     }
   },
   {
@@ -982,7 +986,11 @@
       "tare_weight": "Tara",
       "weighing_print_preview": "Pratinjau Cetak Tiket Timbang",
       "date_of_entry": "Tanggal Masuk",
-      "checked_by": "Diperiksa Oleh"
+      "checked_by": "Diperiksa Oleh",
+      "external_ffb": "TBS Eksternal",
+      "transporter": "Transportir",
+      "plasma_smallholder": "Plasma",
+      "independent_smallholder": "Swadaya"
     }
   },
   {
@@ -1475,7 +1483,11 @@
       "tare_weight": "皮重",
       "weighing_print_preview": "称重单打印预览",
       "date_of_entry": "进场日期",
-      "checked_by": "检查人"
+      "checked_by": "检查人",
+      "external_ffb": "外部鲜果串",
+      "transporter": "运输商",
+      "plasma_smallholder": "合作农户",
+      "independent_smallholder": "独立小农户"
     }
   }
 ]

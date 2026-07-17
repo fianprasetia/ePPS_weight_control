@@ -1,19 +1,10 @@
-async function showModalUpdatePartners(id) {
-    let token = await JSON.parse(getCookie("dataToken"));
-    if (token == null) {
-        await getAccessToken()
-        if (token == null) {
-            return;
-        }
-        var myModal = new bootstrap.Modal(document.getElementById("modalPartners"), { keyboard: false });
-        myModal.toggle();
-    } else {
-        var myModal = new bootstrap.Modal(document.getElementById("modalPartners"), { keyboard: false });
-        myModal.toggle();
-    }
-    document.getElementById("load").innerHTML = "<a id='cancelBtn' onclick='closeModal()' class='btn btn-danger'>" + kapital(cancel) + "</a> <a id='doneBtn' type='submit' onclick='updatePartners()' class='btn btn-primary'>" + kapital(done) + "</a>"
+async function showModalUpdatePartners(code) {
+    const language = await JSON.parse(getCookie("language"));
+    var myModal = new bootstrap.Modal(document.getElementById("modalPartners"), { keyboard: false });
+    myModal.toggle();
+    document.getElementById("load").innerHTML = "<a id='cancelBtn' onclick='closeModal()' class='btn btn-danger'>" + kapital(cancel) + "</a> <a id='doneBtn' type='submit'code =" + code + " onclick='updatePartners(this)' class='btn btn-primary'>" + kapital(done) + "</a>"
     var xhr = new XMLHttpRequest();
-    var url = mainUrl + "partners/code"
+    var url = mainUrl + "partners/bycode"
     xhr.onerror = function () {
         Dashmix.helpers("jq-notify", {
             type: "danger",
@@ -25,37 +16,33 @@ async function showModalUpdatePartners(id) {
         }, 3000);
     };
     var data = JSON.stringify({
-        code_partners_POST: id,
-        // language_POST: language,
+        code_partners_POST: code,
+        language_POST: language,
     });
     xhr.onloadend = async function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = await JSON.parse(xhr.response);
             if (response["success"] == true) {
                 var responseData = response["data"]
-                const status = responseData[0]["status"]
-                const city = responseData[0]["city"]
-                const partnersType = responseData[0]["code_partners_type"]
-                await selectPartnersType(partnersType)
+                const status = responseData["status"]
+                const city = responseData["city"]
                 await selectCity(city)
-                document.getElementById("code").value = responseData[0]["code_partners"]
-                document.getElementById("name").value = responseData[0]["name"]
-                document.getElementById("address").value = responseData[0]["address"]
-                document.getElementById("phone").value = responseData[0]["phone"]
-                document.getElementById("email").value = responseData[0]["email"]
-                document.getElementById("contactName").value = responseData[0]["contact_person"]
-                document.getElementById("tax").value = responseData[0]["tax_id"]
-                document.getElementById("bankName").value = responseData[0]["bank_name"]
-                document.getElementById("bankAccount").value = responseData[0]["bank_account"]
+                document.getElementById("name").value = responseData["name"]
+                document.getElementById("address").value = responseData["address"]
+                document.getElementById("phone").value = responseData["phone"]
+                document.getElementById("email").value = responseData["email"]
+                document.getElementById("contactName").value = responseData["contact_person"]
+                document.getElementById("isSupplier").checked = responseData["is_supplier"]
+                document.getElementById("isSupplierTBS").checked = responseData["is_tbs_supplier"]
+                document.getElementById("isTransporter").checked = responseData["is_transporter"]
                 mainOptionStatus = "<option  class='fw-light text-uppercase' value=" + status + ">" + (status == "0" ? kapital(active) : kapital(nonactive)) + "</option>";
                 optionStatus = "<option  class='fw-light text-uppercase' value=" + (status != "0" ? "0" : "1") + ">" + (status != "0" ? kapital(nonactive) : kapital(active)) + "</option>";
                 document.getElementById("status").innerHTML = "" + mainOptionStatus + "" + optionStatus + "";
-                document.getElementById("partnersType").disabled = true
-            } else if (response["access"] == "failed") {
+            } else {
                 message = response["message"];
                 Dashmix.helpers("jq-notify", { type: "danger", z_index: 2000, message: message });
                 setTimeout(function () {
-                    window.location.href = "/company";
+                    window.location.href = "/partners";
                 }, 3000);
             }
         } if (this.status == 404) {
@@ -82,21 +69,18 @@ async function showModalUpdatePartners(id) {
     xhr.send(data);
     return false;
 }
-async function updatePartners() {
+async function updatePartners(id) {
+    const code = id.getAttribute('code');
     const language = await JSON.parse(getCookie("language"));
-    const dataLogin = await JSON.parse(getCookie("dataLogin"));
-    const username = dataLogin["username"];
-    const code = document.getElementById("code").value
-    const partnersType = document.getElementById("partnersType").value
     const name = document.getElementById("name").value
     const address = document.getElementById("address").value
     const city = document.getElementById("city").value
     const phone = document.getElementById("phone").value
     const email = document.getElementById("email").value
     const contactName = document.getElementById("contactName").value
-    const tax = document.getElementById("tax").value
-    const bankName = document.getElementById("bankName").value
-    const bankAccount = document.getElementById("bankAccount").value
+    const isSupplier = document.getElementById("isSupplier").checked ? 1 : 0
+    const isSupplierTBS = document.getElementById("isSupplierTBS").checked ? 1 : 0
+    const isTransporter = document.getElementById("isTransporter").checked ? 1 : 0
     const status = document.getElementById("status").value
     !(function () {
         class e {
@@ -134,7 +118,10 @@ async function updatePartners() {
     })();
     const form = jQuery(".js-validation");
     const isValid = form.valid();
-    if (!isValid) {
+    if (!isValid || !$("#isSupplier").is(":checked") &&
+        !$("#isSupplierTBS").is(":checked") &&
+        !$("#isTransporter").is(":checked")) {
+        $("#partnerType-error").text("Pilih minimal satu tipe partner.");
         return false;
     }
     var xhr = new XMLHttpRequest();
@@ -161,18 +148,16 @@ async function updatePartners() {
         {
             language_POST: language,
             code_POST: code,
-            partners_type_POST: partnersType,
             name_POST: name,
             address_POST: address,
             city_POST: city,
             phone_POST: phone,
             email_POST: email,
             contact_name_POST: contactName,
-            tax_POST: tax,
-            bank_name_POST: bankName,
-            bank_account_POST: bankAccount,
+            isSupplier_POST: isSupplier,
+            isSupplierTBS_POST: isSupplierTBS,
+            isTransporter_POST: isTransporter,
             status_POST: status,
-            username_POST: username
         }
     );
     xhr.onloadend = function () {
@@ -189,7 +174,7 @@ async function updatePartners() {
                 setTimeout(function () {
                     window.location.href = "/partners";
                 }, 3000);
-            } else if (responseLogin["access"] == "failed") {
+            } else {
                 message = responseLogin["message"];
                 Dashmix.helpers("jq-notify", {
                     z_index: 2000,
@@ -220,7 +205,6 @@ async function updatePartners() {
     };
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-
     xhr.send(data);
     return false;
 }

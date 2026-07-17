@@ -5,13 +5,9 @@ async function selectContent() {
     const data = await "file/language.json";
     const response = await fetch(data);
     const jsonData = await response.json();
-
-    // Proses data
     await dataContent(jsonData);
 
     await selectPartners()
-
-
     async function dataContent(data) {
         var filterLanguage = data.filter((filtercontent) => filtercontent.language == language);
         const content = filterLanguage[0]["content"];
@@ -19,27 +15,30 @@ async function selectContent() {
         document.getElementById("titleModal").innerHTML = filterLanguage[0]["content"]["partners"]
         document.getElementById("codePartnersThead").innerHTML = filterLanguage[0]["content"]["code_partners"]
         document.getElementById("nameThead").innerHTML = filterLanguage[0]["content"]["name"]
-        document.getElementById("addressThead").innerHTML = filterLanguage[0]["content"]["address"]
-        document.getElementById("cityThead").innerHTML = filterLanguage[0]["content"]["city"]
-        document.getElementById("phoneThead").innerHTML = filterLanguage[0]["content"]["phone_number"]
-        document.getElementById("emailThead").innerHTML = filterLanguage[0]["content"]["email"]
-        document.getElementById("contactPersonThead").innerHTML = filterLanguage[0]["content"]["contact_name"]
-        document.getElementById("contactNameLabel").innerHTML = filterLanguage[0]["content"]["contact_name"]
-        document.getElementById("taxThead").innerHTML = filterLanguage[0]["content"]["tax_identification_number"]
-        document.getElementById("bankNameThead").innerHTML = filterLanguage[0]["content"]["bank_name"]
-        document.getElementById("bankAccountThead").innerHTML = filterLanguage[0]["content"]["bank_account_number"]
-        document.getElementById("statusThead").innerHTML = filterLanguage[0]["content"]["status"]
-        document.getElementById("actionsThead").innerHTML = filterLanguage[0]["content"]["actions"]
-        document.getElementById("partnersTypeLabel").innerHTML = filterLanguage[0]["content"]["partners_type"] + "<span class='text-danger'>*</span>"
+        // document.getElementById("addressThead").innerHTML = filterLanguage[0]["content"]["address"]
+        // document.getElementById("cityThead").innerHTML = filterLanguage[0]["content"]["city"]
+        // document.getElementById("phoneThead").innerHTML = filterLanguage[0]["content"]["phone_number"]
+        // document.getElementById("emailThead").innerHTML = filterLanguage[0]["content"]["email"]
+        // document.getElementById("contactPersonThead").innerHTML = filterLanguage[0]["content"]["contact_name"]
+        // document.getElementById("taxThead").innerHTML = filterLanguage[0]["content"]["tax_identification_number"]
+        // document.getElementById("bankNameThead").innerHTML = filterLanguage[0]["content"]["bank_name"]
+        // document.getElementById("bankAccountThead").innerHTML = filterLanguage[0]["content"]["bank_account_number"]
+        // document.getElementById("statusThead").innerHTML = filterLanguage[0]["content"]["status"]
+        // document.getElementById("actionsThead").innerHTML = filterLanguage[0]["content"]["actions"]
+        // document.getElementById("partnersTypeLabel").innerHTML = filterLanguage[0]["content"]["partners_type"] + "<span class='text-danger'>*</span>"
         document.getElementById("nameLabel").innerHTML = filterLanguage[0]["content"]["name"] + "<span class='text-danger'>*</span>"
         document.getElementById("addressLabel").innerHTML = filterLanguage[0]["content"]["address"]
-        document.getElementById("taxLabel").innerHTML = filterLanguage[0]["content"]["tax_identification_number"]
+        // document.getElementById("taxLabel").innerHTML = filterLanguage[0]["content"]["tax_identification_number"]
         document.getElementById("cityLabel").innerHTML = filterLanguage[0]["content"]["city"]
         document.getElementById("phoneLabel").innerHTML = filterLanguage[0]["content"]["phone_number"]
         document.getElementById("emailLabel").innerHTML = filterLanguage[0]["content"]["email"]
-        document.getElementById("bankNameLabel").innerHTML = filterLanguage[0]["content"]["bank_name"]
-        document.getElementById("bankAccountLabel").innerHTML = filterLanguage[0]["content"]["bank_account_number"]
+        document.getElementById("contactNameLabel").innerHTML = filterLanguage[0]["content"]["contact_name"]
+        document.getElementById("typeLabel").innerHTML = filterLanguage[0]["content"]["type"] + "<span class='text-danger'>*</span>"
+        // document.getElementById("bankNameLabel").innerHTML = filterLanguage[0]["content"]["bank_name"]
+        // document.getElementById("bankAccountLabel").innerHTML = filterLanguage[0]["content"]["bank_account_number"]
         document.getElementById("statusLabel").innerHTML = filterLanguage[0]["content"]["status"] + "<span class='text-danger'>*</span>"
+        // document.getElementById("supplierThead").innerHTML = filterLanguage[0]["content"]["supplier"]
+        // document.getElementById("transporterThead").innerHTML = filterLanguage[0]["content"]["transporter"]
     }
 
 }
@@ -58,6 +57,9 @@ async function selectPartners() {
             await keluar()
         }, 3000);
     };
+    var data = JSON.stringify({
+        language_POST: language,
+    });
     xhr.onloadend = async function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = JSON.parse(xhr.response);
@@ -69,16 +71,13 @@ async function selectPartners() {
                         "<tr>\
                             <td class='fw-light text-center text-uppercase'>" + responseData[i]["code_partners"] + "</td>\
                             <td class='fw-light text-center text-uppercase'>" + responseData[i]["name"] + "</td>\
-                            <td class='fw-light text-center text-uppercase'>" + responseData[i]["address"] + "</td>\
                             <td class='fw-light text-center text-uppercase'>" + responseData[i]["city"] + "</td>\
-                            <td class='fw-light text-center text-uppercase'>" + responseData[i]["phone"] + "</td>\
-                            <td class='fw-light text-center text-uppercase'>" + responseData[i]["email"] + "</td>\
                             <td class='fw-light text-center text-uppercase'>" + responseData[i]["contact_person"] + "</td>\
-                            <td class='fw-light text-center text-uppercase'>" + responseData[i]["tax_id"] + "</td>\
-                            <td class='fw-light text-center text-uppercase'>" + responseData[i]["bank_name"] + "</td>\
-                            <td class='fw-light text-center text-uppercase'>" + responseData[i]["bank_account"] + "</td>\
-                            <td class='fw-light text-center'>" + (responseData[i]["status"] == 0 ? active : nonactive) + "</td>\
-                            <td class='fw-light text-center'><div class='btn-group'><button type='button' id ='" + responseData[i]["code_partners"] + "' onclick='showModalUpdateBankAccount(id)' class='btn btn-primary'><i class='fa-regular fa-pen-to-square'></i></div></td>\
+                            <td class='fw-light text-center text-uppercase'>" + (responseData[i]["is_supplier"] == false ? "<i class='fa-solid fa-circle-minus fa-xl text-danger'></i>" : "<i class='fa-solid fa-circle-check fa-xl text-primary'></i>") + "</td>\
+                            <td class='fw-light text-center text-uppercase'>" + (responseData[i]["is_tbs_supplier"] == false ? "<i class='fa-solid fa-circle-minus fa-xl text-danger'></i>" : "<i class='fa-solid fa-circle-check fa-xl text-primary'></i>") + "</td>\
+                            <td class='fw-light text-center text-uppercase'>" + (responseData[i]["is_transporter"] == false ? "<i class='fa-solid fa-circle-minus fa-xl text-danger'></i>" : "<i class='fa-solid fa-circle-check fa-xl text-primary'></i>") + "</td>\
+                            <td class='fw-light text-center'>" + (responseData[i]["status"] == 0 ? kapital(active) : kapital(nonactive)) + "</td>\
+                            <td class='fw-light text-center'><div class='btn-group'><button type='button' id ='" + responseData[i]["code_partners"] + "' onclick='showModalUpdatePartners(id)' class='btn btn-primary'><i class='fa-regular fa-pen-to-square'></i></div></td>\
                         </tr>";
                 }
                 document.getElementById("dataTable").innerHTML = tableItem;
@@ -112,10 +111,10 @@ async function selectPartners() {
             }, 3000);
         }
     };
-    xhr.open("GET", url, true);
+    xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 
-    xhr.send();
+    xhr.send(data);
     return false;
 }
 async function selectPartnersType(code) {
